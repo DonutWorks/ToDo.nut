@@ -9,9 +9,12 @@ class HistoriesController < ApplicationController
 	end
 
 	def create
+		client = SlackNotify::Client.new("donutworks", "G0QAYXA6uqygRTXjXCZ5Th2g")
+
 		@history = History.new(history_params)
 
 		@history.save
+    client.notify("히스토리가 추가되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")
 
 		params[:history][:todo_ids].each do |id|
 			history_todo = HistoryTodo.new
@@ -33,9 +36,13 @@ class HistoriesController < ApplicationController
 	end
 
 	def update
+		client = SlackNotify::Client.new("donutworks", "G0QAYXA6uqygRTXjXCZ5Th2g")
+
 		@history = History.find(params[:id])
 
 		if @history.update(history_params)
+			client.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")
+
 			@history.todos.destroy_all
 			params[:history][:todo_ids].each do |id|
 				history_todo = HistoryTodo.new
