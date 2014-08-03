@@ -1,27 +1,7 @@
 <div class="todo_title">
-  <h1 class="title">ToDo.nut</h1> 
-  
-
+  <h1 class="title">ToDo.nut</h1>   
 </div>
 
-<table>
-  <thead>
-    <th>아이디</th>
-    <th>타이틀</th>
-  </thead>
-  <tbody>
-    <% @todos.each do |todo| %>
-      <tr>
-        <td><%= todo.id %></td>
-        <td><%= todo.title %></td>
-        <td><%= link_to 'Show', todo_path(todo) %></td>
-        <td><%= link_to 'Edit', edit_todo_path(todo) %></td>
-        
-      </tr>
-    <% end %>
-    
-  </tbody>
-</table>
 
 
 <%= render 'todos/form' %>
