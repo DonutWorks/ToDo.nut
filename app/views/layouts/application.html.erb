@@ -42,9 +42,12 @@
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="../navbar/">Default</a></li>
-            <li><a href="../navbar-static-top/">Static top</a></li>
-            <li class="active"><a href="./">Fixed top</a></li>
+            
+            <% if user_signed_in? %>
+            <li><a href="../navbar/"><%=  current_user.email %></a></li>
+            <li><%= link_to 'Sign Out', destroy_user_session_path,
+                    method: :delete %></li>
+            <% end %>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
