@@ -45,8 +45,10 @@ gem 'spring',        group: :development
 
 # Slack notify
 gem "slack-notify"
+gem "devise"
 
 group :production do 
 	gem 'rails_12factor'
   gem 'pg'
 end
+
