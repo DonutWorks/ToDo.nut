@@ -9,3 +9,8 @@
 </p>
 
 <%= link_to 'Back', root_path %>
+
+<h2> Tagged Todos </h2>
+<% @history.todos.each do |todo| %>
+  <%= link_to todo.title, todo %><br />
+<% end %>

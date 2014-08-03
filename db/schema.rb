@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140803053149) do
+ActiveRecord::Schema.define(version: 20140803061722) do
 
   create_table "histories", force: true do |t|
     t.string   "title"
@@ -19,6 +19,16 @@ ActiveRecord::Schema.define(version: 20140803053149) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "history_todos", force: true do |t|
+    t.integer  "history_id"
+    t.integer  "todo_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "history_todos", ["history_id"], name: "index_history_todos_on_history_id"
+  add_index "history_todos", ["todo_id"], name: "index_history_todos_on_todo_id"
 
   create_table "todos", force: true do |t|
     t.string   "title"

@@ -5,12 +5,21 @@ class HistoriesController < ApplicationController
 
 	def new
 		@history = History.new
+		@todos = Todo.all
 	end
 
 	def create
 		@history = History.new(history_params)
 
 		@history.save
+
+		params[:history][:todo_ids].each do |id|
+			history_todo = HistoryTodo.new
+			history_todo.history_id = @history.id
+			history_todo.todo_id = id
+			history_todo.save
+		end
+
 		redirect_to root_path
 	end
 
