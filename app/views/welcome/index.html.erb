@@ -10,6 +10,8 @@
       <tr>
         <td><%= todo.id %></td>
         <td><%= todo.title %></td>
+        <td><%= link_to 'Show', todo_path(todo) %></td>
+        <td><%= link_to 'Edit', edit_todo_path(todo) %></td>
       </tr>
     <% end %>
     
