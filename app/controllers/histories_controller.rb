@@ -12,6 +12,7 @@ class HistoriesController < ApplicationController
 		client = SlackNotify::Client.new("donutworks", "G0QAYXA6uqygRTXjXCZ5Th2g")
 
 		@history = History.new(history_params)
+		@history.user_id = current_user.id
 
 		@history.save
     client.notify("히스토리가 추가되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")

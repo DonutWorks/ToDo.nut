@@ -7,6 +7,8 @@ class TodosController < ApplicationController
     client = SlackNotify::Client.new("donutworks", "G0QAYXA6uqygRTXjXCZ5Th2g")
 
     @todo = Todo.new(todo_params)
+    @todo.user_id = current_user.id
+    
     if @todo.save
       client.notify("투두가 추가되었어용 : #{@todo.title} (#{Rails.application.routes.url_helpers.todo_url(@todo)})")
       redirect_to root_path
