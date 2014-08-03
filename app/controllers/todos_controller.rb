@@ -4,8 +4,11 @@ class TodosController < ApplicationController
   end
 
   def create
+    client = SlackNotify::Client.new("donutworks", "G0QAYXA6uqygRTXjXCZ5Th2g")
+
     @todo = Todo.new(todo_params)
     if @todo.save
+      client.notify("투두가 추가되었어용 : #{@todo.title} (#{Rails.application.routes.url_helpers.todo_url(@todo)})")
       redirect_to root_path
     else 
       render 'new'
@@ -21,9 +24,13 @@ class TodosController < ApplicationController
   end
 
   def update 
+    client = SlackNotify::Client.new("donutworks", "G0QAYXA6uqygRTXjXCZ5Th2g")
+
     @todo = Todo.find(params[:id])
 
     if @todo.update(todo_params)
+      client.notify("투두가 수정되었어용 : #{@todo.title} (#{Rails.application.routes.url_helpers.todo_url(@todo)})")
+
       redirect_to @todo
     else
       render 'edit'
