@@ -1,0 +1,17 @@
+<h1>List 차트 들어가는 </h1>
+
+<%= link_to 'New History', new_history_path %> 
+
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Description</th>
+  </tr>
+ 
+  <% @histories.each do |history| %>
+    <tr>
+      <td><%= history.title %></td>
+      <td><%= history.description %></td>
+    </tr>
+  <% end %>
+</table>

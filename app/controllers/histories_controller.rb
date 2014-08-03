@@ -1,4 +1,8 @@
 class HistoriesController < ApplicationController
+	def index
+		@histories = History.all
+	end
+
 	def new
 	end
 
@@ -6,7 +10,11 @@ class HistoriesController < ApplicationController
 		@history = History.new(history_params)
 
 		@history.save
-		redirect_to @history
+		redirect_to root_path
+	end
+
+	def show
+		@history = History.find(params[:id])
 	end
 
 	private
