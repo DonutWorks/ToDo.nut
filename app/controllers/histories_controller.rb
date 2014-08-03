@@ -5,12 +5,21 @@ class HistoriesController < ApplicationController
 
 	def new
 		@history = History.new
+		@todos = Todo.all
 	end
 
 	def create
 		@history = History.new(history_params)
 
 		@history.save
+
+		params[:history][:todo_ids].each do |id|
+			history_todo = HistoryTodo.new
+			history_todo.history_id = @history.id
+			history_todo.todo_id = id
+			history_todo.save
+		end
+
 		redirect_to root_path
 	end
 
@@ -20,12 +29,20 @@ class HistoriesController < ApplicationController
 
 	def edit
 		@history = History.find(params[:id])
+		@todos = Todo.all
 	end
 
 	def update
 		@history = History.find(params[:id])
 
 		if @history.update(history_params)
+			@history.todos.destroy_all
+			params[:history][:todo_ids].each do |id|
+				history_todo = HistoryTodo.new
+				history_todo.history_id = @history.id
+				history_todo.todo_id = id
+				history_todo.save
+			end
 			redirect_to @history
 		else
 			render 'edit'
