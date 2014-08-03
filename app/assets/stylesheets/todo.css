@@ -1,0 +1,8 @@
+.todo_title {
+	display: :inline-block;
+}
+
+
+.todo_button {
+	float:right;
+}
