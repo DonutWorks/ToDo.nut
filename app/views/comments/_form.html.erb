@@ -1,0 +1,9 @@
+<%= form_for Comment.new, url:history_comments_path(@history) do |f| %>
+<p>
+  <%= f.label :contents %><br>
+  <%= f.text_area :contents %>
+</p>
+<p>
+  <%= f.submit %>
+</p>
+<% end %>

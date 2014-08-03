@@ -13,6 +13,25 @@
   <%= @history.user.email %>
 </p>
 
+<h2>Comments</h2>
+<table>
+  <thead>
+    <th>댓글</th>
+    <th>이메일</th>
+  </thead>
+  <tbody>
+    <% @history.comments.each do |comment| %>
+      <tr>
+        <td><%= comment.contents %></td>
+        <td><%= comment.user.email %></td>
+        <td><%= link_to 'Delete', [@history, comment], method: :delete %> </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= render 'comments/form' %>
+
 <%= link_to 'Back', root_path %>
 
 <h2> Tagged Todos </h2>

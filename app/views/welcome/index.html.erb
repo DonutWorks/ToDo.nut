@@ -18,6 +18,7 @@
         <td><%= todo.title %></td>
         <td><%= link_to 'Show', todo_path(todo) %></td>
         <td><%= link_to 'Edit', edit_todo_path(todo) %></td>
+        
       </tr>
     <% end %>
     
@@ -45,6 +46,7 @@
         <td><%= history.description %></td>
         <td><%= link_to 'Show', history_path(history) %></td>
         <td><%= link_to 'Edit', edit_history_path(history) %></td>
+        <td><%= link_to 'Delete', history_path(history), method: :delete %></td>
       </tr>
     <% end %>
   </tbody>

@@ -57,6 +57,13 @@ class HistoriesController < ApplicationController
 		end
 	end
 
+	def destroy
+		@history = History.find(params[:id])
+		@history.destroy
+
+		redirect_to root_path
+	end
+
 	private
 	def history_params
 		params.require(:history).permit(:title, :description, :evented_at)
