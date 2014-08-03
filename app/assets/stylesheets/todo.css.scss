@@ -28,28 +28,25 @@
   }
 }
 
+.form-container {
+  border:1px dashed;
+  padding:10px;
+  width:60%;
+  margin:0 auto;
 
-
-select#todo_color {
-  option[value="#ff7f0e"] {
-    display: none;
-    background-color: #ff7f0e;
+  select#history_todo_ids {
+    width:100%;
   }
 }
 
-
-#option-1 {
-    color: red;
+.form-buttons {
+  text-align :right;
 }
 
-#option-2 {
-    color: green;
+.word-break {
+  word-break:break-all;
 }
 
-#option-3 {
-    color: yellow;
-}
-
-#option-4 {
-    color: blue;
+.text-align-right {
+  text-align:right;
 }

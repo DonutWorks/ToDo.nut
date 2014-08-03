@@ -1,9 +1,9 @@
 <%= form_for Comment.new, url:history_comments_path(@history) do |f| %>
 <p>
-  <%= f.label :contents %><br>
-  <%= f.text_area :contents %>
+	<%= f.label '댓글달기' %><br>
+	<%= f.text_area :contents, :class => 'form-control' %>
 </p>
 <p>
-  <%= f.submit %>
+	<%= f.submit :class => 'btn btn-default' %>
 </p>
 <% end %>

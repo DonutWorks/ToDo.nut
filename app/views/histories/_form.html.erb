@@ -1,21 +1,27 @@
-<%= form_for @history do |f| %>
-<p>
-	<%= f.label :title %><br>
-	<%= f.text_field :title %>
-</p>
 
-<p>
-	<%= f.label :description %><br>
-	<%= f.text_area :description %>
-</p>
-<p>
-	<%= f.label :evented_at %><br>
-	<%= f.date_select :evented_at %>
-</p>
-<p>
+<%= form_for @history, :role => 'form' do |f|%>
+<div class="form-group">
+	<%= f.label :title %>
+	<%= f.text_field :title, :class => 'form-control'%>
+</div>
+
+<div class="form-group">
+	<%= f.label :description %>
+	<%= f.text_area :description, :class => 'form-control'%>
+</div>
+<div class="form-group">
+	<%= f.label :evented_at %>
+	<%= f.date_select :evented_at, :class => 'form-control'%>
+</div>
+
+<div class="form-group">
   <%= f.collection_select :todo_ids, @todos, :id, :title, {}, {multiple: true} %>
-</p>
-<p>
-	<%= f.submit %>
-</p>
+</div>
+
+<div class="form-buttons">
+
+<%= link_to 'Back', root_path, :class => 'btn btn-default'%>
+<%= f.submit :class => 'btn btn-success'%>
+</div>
 <% end %>
+

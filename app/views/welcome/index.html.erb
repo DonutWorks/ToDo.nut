@@ -28,7 +28,7 @@
 
     <tbody>
       <% @histories.each do |history| %>
-        <tr>
+        <tr onmouseover="" style="cursor: pointer;">
           <%= link_to history_path(history) do %>
             <td><%= history.title %></td>
             <td><%= history.description %></td>
