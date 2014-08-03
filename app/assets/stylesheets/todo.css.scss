@@ -28,3 +28,28 @@
   }
 }
 
+
+
+select#todo_color {
+  option[value="#ff7f0e"] {
+    display: none;
+    background-color: #ff7f0e;
+  }
+}
+
+
+#option-1 {
+    color: red;
+}
+
+#option-2 {
+    color: green;
+}
+
+#option-3 {
+    color: yellow;
+}
+
+#option-4 {
+    color: blue;
+}

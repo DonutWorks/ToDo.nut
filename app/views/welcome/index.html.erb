@@ -78,7 +78,7 @@
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    data = JSON.parse('<%= raw @data %>');
+    data = JSON.parse(gon.deco);
     
     x.domain([start_year, end_year]);
     var xScale = d3.scale.linear()
@@ -111,14 +111,14 @@
       .attr("cx", function(d, i) { return xScale(d[0]); })
       .attr("cy", j*20+20)
       .attr("r", function(d) { return rScale(d[1]); })
-      .style("fill", function(d) { return c(j); });
+      .style("fill", data[j]['color']);
 
       text
       .attr("y", j*20+25)
       .attr("x",function(d, i) { return xScale(d[0])-5; })
       .attr("class","value")
       .text(function(d){ return d[1]; })
-      .style("fill", function(d) { return c(j); })
+      .style("fill", data[j]['color'])
       .style("display","none");
 
       g.append("text")
@@ -126,7 +126,7 @@
       .attr("x",width+20)
       .attr("class","label")
       .text(truncate(data[j]['name'],30,"..."))
-      .style("fill", function(d) { return c(j); })
+      .style("fill", data[j]['color'])
       .on("mouseover", mouseover)
       .on("mouseout", mouseout);
     };

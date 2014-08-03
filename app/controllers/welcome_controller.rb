@@ -7,7 +7,8 @@ class WelcomeController < ApplicationController
 		@todos = Todo.all
 		@histories = History.all
 
-		@data = decorate
+		gon.deco = decorate
+		#@data = gon.deco
 		# render plain: decorate
 
 		# output = File.open( "../assets/javascripts/test_data.json", w+)
@@ -35,7 +36,8 @@ class WelcomeController < ApplicationController
 			data.push({
 				"articles" => articles,
 				"total" => total,
-				"name" => t.title
+				"name" => t.title,
+				"color" => t.color
 			})
 
 		end

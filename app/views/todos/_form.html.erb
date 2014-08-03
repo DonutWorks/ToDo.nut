@@ -1,7 +1,17 @@
+<script>
+
+</script>
+<% color = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"]
+%>
+
 <%= form_for @todo, html: {class: 'todo-form form-inline'} do |f| %>
 	<div class="form-group">
 		<%= f.label :title %>
 		<%= f.text_field :title, class: "form-control" %>
+    <%#= f.select :color, [["<font color='red'>test</font>","#1f77b4"]] %>
+    <%#= f.select :color, color, {}, id: 'combobox' %>
+    <%= f.text_field :color, id: 'combobox' %>
+
 	</div>
 
 	<%= f.submit class: "btn btn-default" %>
