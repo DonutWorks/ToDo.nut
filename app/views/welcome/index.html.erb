@@ -1,0 +1,19 @@
+<table>
+  <thead>
+    <th>아이디</th>
+    <th>타이틀</th>
+  </thead>
+  <tbody>
+    <% @todos.each do |todo| %>
+      <tr>
+        <td><%= todo.id %></td>
+        <td><%= todo.title %></td>
+      </tr>
+    <% end %>
+    
+  </tbody>
+</table>
+
+<%= link_to 'New Todo', [:new, :todo] %>
+
+
