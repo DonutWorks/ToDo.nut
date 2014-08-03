@@ -1,40 +1,47 @@
-<p>
-	Title:
-	<%= @history.title %>
-</p>
+<div class="form-container">
+  <div class="row">
 
-<p>
-	Description:
-	<%= @history.description %>
-</p>
+    <div class="col-md-6">
+      <h3>
 
-<p>
-  User:
-  <%= @history.user.email %>
-</p>
+       <%= @history.title %>
+     </h3>
 
-<h2>Comments</h2>
-<table>
-  <thead>
-    <th>댓글</th>
-    <th>이메일</th>
-  </thead>
-  <tbody>
-    <% @history.comments.each do |comment| %>
+     <p class="text-align-right">
+      <%= @history.user.email %>
+    </p>
+
+    <p class="word-break">
+     <%= @history.description %>
+   </p>
+
+
+   <div>
+     <% @history.todos.each do |todo| %>
+     #<%= link_to todo.title, todo %><br />
+     <% end %>
+   </div>
+ </div>
+ <div class="col-md-6">
+  <table class="table">
+    <thead>
+      <th>댓글</th>
+      <th>이메일</th>
+    </thead>
+    <tbody>
+      <% @history.comments.each do |comment| %>
       <tr>
         <td><%= comment.contents %></td>
         <td><%= comment.user.email %></td>
-        <td><%= link_to 'Delete', [@history, comment], method: :delete %> </td>
+        <td><%= link_to 'Delete', [@history, comment], method: :delete, :class => "btn btn-default" %> </td>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+      <% end %>
+    </tbody>
+  </table>
 
-<%= render 'comments/form' %>
+  <%= render 'comments/form' %>
 
-<%= link_to 'Back', root_path %>
+</div>
+</div>
 
-<h2> Tagged Todos </h2>
-<% @history.todos.each do |todo| %>
-  <%= link_to todo.title, todo %><br />
-<% end %>
+</div>
