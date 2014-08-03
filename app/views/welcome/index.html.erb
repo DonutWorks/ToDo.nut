@@ -32,6 +32,8 @@
     <tr>
       <td><%= history.title %></td>
       <td><%= history.description %></td>
+			<td><%= link_to 'Show', history_path(history) %></td>
+			<td><%= link_to 'Edit', edit_history_path(history) %></td>
     </tr>
   <% end %>
 </table>
