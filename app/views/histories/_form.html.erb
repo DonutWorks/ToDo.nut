@@ -9,6 +9,10 @@
 	<%= f.text_area :description %>
 </p>
 <p>
+	<%= f.label :evented_at %><br>
+	<%= f.date_select :evented_at %>
+</p>
+<p>
   <%= f.collection_select :todo_ids, @todos, :id, :title, {}, {multiple: true} %>
 </p>
 <p>

@@ -11,13 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140803061722) do
+ActiveRecord::Schema.define(version: 20140803073949) do
 
   create_table "histories", force: true do |t|
     t.string   "title"
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "evented_at"
   end
 
   create_table "history_todos", force: true do |t|

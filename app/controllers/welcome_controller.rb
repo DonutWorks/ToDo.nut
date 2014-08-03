@@ -15,22 +15,30 @@ class WelcomeController < ApplicationController
 
 	private	
 	def decorate
-		data = {
-			"articles" => [],
-			"total" => 0,
-			"name" => "history name"
-		}
+		data=[];
 
-		total = 0
-		
 		@todos.each do |t|
-			data["articles"].push([t.created_at.day,5])
-			total += 5
+			articles = [];
+			
+
+			total = 0
+		
+			t.histories.each do |h|
+				articles.push([(h.evented_at.to_date-Time.now.to_date).to_i,5])
+				total += 5
+			end
+			
+			data.push({
+				"articles" => articles,
+				"total" => total,
+				"name" => t.title
+			})
+
 		end
 
-		data["total"] = total
+		
 
-		return [data].to_json
+		return data.to_json
 
 	end
 end
