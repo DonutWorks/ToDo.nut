@@ -1,5 +1,11 @@
-<h1>ToDo 차트 들어가는 </h1>
+<h1>ToDo.nut</h1>
 
+<div id="chart"></div>
+
+
+<div class="row">
+
+</div>
 <table>
   <thead>
     <th>아이디</th>
@@ -65,7 +71,7 @@
     var formatYears = d3.format("0000");
     xAxis.tickFormat(formatYears);
 
-    var svg = d3.select("body").append("svg")
+    var svg = d3.select("div#chart").append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .style("margin-left", margin.left + "px")
