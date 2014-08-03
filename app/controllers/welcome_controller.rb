@@ -1,5 +1,9 @@
 class WelcomeController < ApplicationController
+	
+
 	def index
+		
+		@todo = Todo.new		
 		@todos = Todo.all
 		@histories = History.all
 
