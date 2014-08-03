@@ -4,6 +4,7 @@ class HistoriesController < ApplicationController
 	end
 
 	def new
+		@history = History.new
 	end
 
 	def create
@@ -15,6 +16,20 @@ class HistoriesController < ApplicationController
 
 	def show
 		@history = History.find(params[:id])
+	end
+
+	def edit
+		@history = History.find(params[:id])
+	end
+
+	def update
+		@history = History.find(params[:id])
+
+		if @history.update(history_params)
+			redirect_to @history
+		else
+			render 'edit'
+		end
 	end
 
 	private
