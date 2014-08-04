@@ -10,7 +10,7 @@ class HistoriesController < ApplicationController
 	end
 
 	def create
-		#client = SlackNotify::Client.new("donutworks", "G0QAYXA6uqygRTXjXCZ5Th2g")
+		client = SlackNotify::Client.new("donutworks", "G0QAYXA6uqygRTXjXCZ5Th2g")
 
 		@history = History.new(history_params)
 		@history.user_id = current_user.id
@@ -19,7 +19,7 @@ class HistoriesController < ApplicationController
   	  associate_history_with_todos!
 	    associate_history_with_assignees!
 
-    	#client.notify("히스토리가 추가되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")
+    	client.notify("히스토리가 추가되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")
     end
 
 		redirect_to root_path
@@ -32,10 +32,11 @@ class HistoriesController < ApplicationController
 	def edit
 		@history = History.find(params[:id])
 		@todos = Todo.all
+		@users = User.all
 	end
 
 	def update
-		#client = SlackNotify::Client.new("donutworks", "G0QAYXA6uqygRTXjXCZ5Th2g")
+		client = SlackNotify::Client.new("donutworks", "G0QAYXA6uqygRTXjXCZ5Th2g")
 
 		@history = History.find(params[:id])
 
@@ -43,7 +44,7 @@ class HistoriesController < ApplicationController
 	    associate_history_with_todos!
 	    associate_history_with_assignees!
 
-			#client.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")
+			client.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")
 			redirect_to @history
 		else
 			render 'edit'
