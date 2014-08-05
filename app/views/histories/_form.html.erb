@@ -1,4 +1,3 @@
-
 <%= form_for @history, :role => 'form' do |f|%>
 <div class="form-group">
 	<%= f.label :title %>
@@ -15,7 +14,13 @@
 </div>
 
 <div class="form-group">
+  <%= f.label :todos %>
   <%= f.collection_select :todo_ids, @todos, :id, :title, {}, {multiple: true} %>
+</div>
+
+<div class="form-group">
+  <%= f.label :assignees %>
+  <%= f.collection_select :assignee_ids, @users, :id, :email, {}, {multiple: true} %>
 </div>
 
 <div class="form-buttons">
