@@ -7,4 +7,6 @@ class History < ActiveRecord::Base
 
   belongs_to :user
   has_many :comments
+
+  has_many :images, :foreign_key => 'history_id', :class_name => "HistoryImage"
 end
