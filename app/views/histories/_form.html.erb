@@ -23,6 +23,11 @@
   <%= f.collection_select :assignee_ids, @users, :id, :email, {}, {multiple: true} %>
 </div>
 
+<div class="form-group">
+  <%= f.label :images %>
+  <%= f.file_field :images, :multiple => true %>
+</div>
+
 <div class="form-buttons">
 
 <%= link_to 'Back', root_path, :class => 'btn btn-default'%>
