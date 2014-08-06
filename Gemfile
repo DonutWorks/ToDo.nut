@@ -52,6 +52,8 @@ gem "devise"
 gem 'gon'
 gem 'rabl-rails'
 
+gem 'omniauth-facebook'
+
 group :production do 
 	gem 'rails_12factor'
   gem 'pg'
