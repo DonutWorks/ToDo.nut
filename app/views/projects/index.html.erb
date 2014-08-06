@@ -1,0 +1,43 @@
+<div>
+    <h1>Project List</h1>
+    <%= link_to 'New Project', new_project_path, class: "btn btn-default float-right" %>
+</div>
+<table id="projects" class="table table-condensed table-hover">
+  <thead>
+    <tr>
+
+      <th>Title</th>
+      <th>Description</th>
+      <th>Date</th>
+      <th>Creator</th>
+      <th></th>
+
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @projects.each do |project| %>
+      <tr onmouseover="" style="cursor: pointer;">
+        <%= link_to project_path(project) do %>
+          <td><%= project.title %></td>
+          <td><%= project.description %></td>
+          <td><%= project.created_at.strftime('%m/%d/%Y') %></td>
+          <td><%= project.user.email %></td>
+          <td class="text-center">
+            <%= link_to 'Show', project_path(project), class: "btn btn-default show-project hidden"%>
+            <%= link_to 'Edit', edit_project_path(project), class: "btn btn-default" %>
+            <%= link_to 'Delete', project_path(project), method: :delete, class: "btn btn-default" %></td>
+        <% end %>
+      </tr>
+      
+    <% end %>
+  </tbody>
+</table>
+
+<script>
+  $(document).ready(function() {
+    $("#projects tbody tr").on("click", function(){
+      $(this).find(".show-project")[0].click();
+    });
+  });
+</script>

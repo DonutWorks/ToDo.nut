@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140804063726) do
+ActiveRecord::Schema.define(version: 20140806075428) do
 
   create_table "comments", force: true do |t|
     t.integer  "user_id"
@@ -52,6 +52,26 @@ ActiveRecord::Schema.define(version: 20140804063726) do
 
   add_index "history_users", ["assigned_history_id"], name: "index_history_users_on_assigned_history_id"
   add_index "history_users", ["assignee_id"], name: "index_history_users_on_assignee_id"
+
+  create_table "project_users", force: true do |t|
+    t.integer  "assigned_project_id"
+    t.integer  "assignee_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "project_users", ["assigned_project_id"], name: "index_project_users_on_assigned_project_id"
+  add_index "project_users", ["assignee_id"], name: "index_project_users_on_assignee_id"
+
+  create_table "projects", force: true do |t|
+    t.string   "title"
+    t.string   "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "user_id"
+  end
+
+  add_index "projects", ["user_id"], name: "index_projects_on_user_id"
 
   create_table "todos", force: true do |t|
     t.string   "title"
