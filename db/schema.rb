@@ -33,6 +33,18 @@ ActiveRecord::Schema.define(version: 20140806124757) do
     t.integer  "user_id"
   end
 
+  create_table "history_images", force: true do |t|
+    t.integer  "history_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+  end
+
+  add_index "history_images", ["history_id"], name: "index_history_images_on_history_id"
+
   create_table "history_todos", force: true do |t|
     t.integer  "history_id"
     t.integer  "todo_id"
