@@ -57,3 +57,5 @@ group :production do
   gem 'pg'
 end
 
+# Attachment support
+gem "paperclip", "~> 4.1"
