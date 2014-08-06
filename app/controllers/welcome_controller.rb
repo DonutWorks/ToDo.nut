@@ -33,13 +33,18 @@ class WelcomeController < ApplicationController
 				total += 5
 			end
 			
+			duetime = ""
+			if t.duedate != nil
+				duetime = t.duedate.strftime('%m/%d')
+			end
+			
 			data.push({
 				"id" => t.id,
 				"articles" => articles,
 				"total" => total,
 				"name" => t.title,
 				"color" => t.color,
-				"duedate" => t.duedate.strftime('%m/%d')
+				"duedate" => duetime
 			})
 
 		end
