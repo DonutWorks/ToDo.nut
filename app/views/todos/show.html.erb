@@ -1,17 +1,35 @@
-<p>
-  Title:
-  <%= @todo.title %>
-</p>
+<div class="form-container">
+  <div class="row">
+  	<div class="col-md-12">
+	  	<p class="text-align-right">
+	      <strong>Creator</strong><br />
+			  <%= @todo.user.email %>
+			</p>
 
-<p>
-  User:
-  <%= @todo.user.email %>
-</p>
+			<p>
+			  <strong>Title</strong><br />
+			  <%= @todo.title %>
+			</p>
+
+			<p>
+			  <strong>Duedate</strong><br />
+			  <%= @todo.duedate %>
+			</p>
+
+			<div>
+	    	<% @todo.histories.each do |history| %>
+	    		#<%= link_to history.title, history %><br />
+	    	<% end %>
+	   	</div>
+
+	   	<div class="form-buttons">
+				<%= link_to 'Back', root_path, class: "btn btn-default" %>
+				<%= link_to 'Edit', edit_todo_path(@todo), class: "btn btn-default" %>
+			</div>
+		</div>
+  </div>
+</div>
 
 
-<%= link_to 'Back', root_path %>
 
-<h2> Mentioned Histories </h2>
-<% @todo.histories.each do |history| %>
-  <%= link_to history.title, history %><br />
-<% end %>
+

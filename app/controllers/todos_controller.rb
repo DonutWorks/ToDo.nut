@@ -31,7 +31,7 @@ class TodosController < ApplicationController
     @todo = Todo.find(params[:id])
 
     if @todo.update(todo_params)
-      client.notify("투두가 수정되었어용 : #{@todo.title} (#{Rails.application.routes.url_helpers.todo_url(@todo)})")
+      #client.notify("투두가 수정되었어용 : #{@todo.title} (#{Rails.application.routes.url_helpers.todo_url(@todo)})")
 
       redirect_to @todo
     else
@@ -42,6 +42,6 @@ class TodosController < ApplicationController
 
 private 
   def todo_params
-    params.require(:todo).permit(:title, :color)
+    params.require(:todo).permit(:title, :color, :duedate)
   end
 end

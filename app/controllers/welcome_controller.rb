@@ -34,10 +34,12 @@ class WelcomeController < ApplicationController
 			end
 			
 			data.push({
+				"id" => t.id,
 				"articles" => articles,
 				"total" => total,
 				"name" => t.title,
-				"color" => t.color
+				"color" => t.color,
+				"duedate" => t.duedate.strftime('%m/%d')
 			})
 
 		end

@@ -155,10 +155,15 @@
       .attr("y", j*20+25)
       .attr("x",width+20)
       .attr("class","label")
+      .attr("data-duedate", data[j]['duedate'])
+      .attr("data-text", truncate(data[j]['name'],30,"..."))  
       .text(truncate(data[j]['name'],30,"..."))
       .style("fill", data[j]['color'])
       .on("mouseover", mouseover)
-      .on("mouseout", mouseout);
+      .on("mouseout", mouseout)
+      .on("click", function(d, j) {
+        location.href = "/todos/" + data[j]['id'];
+      });
     };
 
   // d3.json("<%= asset_path('test_data.json') %>", function(<%= @data %>) {
@@ -224,16 +229,23 @@ function truncate(str, maxLength, suffix) {
   return str;
 }
 
-function mouseover(p) {
-  var g = d3.select(this).node().parentNode;
+function mouseover() {
+  var n = d3.select(this);
+  var g = n.node().parentNode;
   d3.select(g).selectAll("circle").style("display","none");
   d3.select(g).selectAll("text.value").style("display","block");
+  n.text("Due : " + n.attr("data-duedate"));
+  n.attr("cursor", "pointer");
 }
 
-function mouseout(p) {
-  var g = d3.select(this).node().parentNode;
+function mouseout() {
+  var n = d3.select(this);
+  var g = n.node().parentNode;
   d3.select(g).selectAll("circle").style("display","block");
   d3.select(g).selectAll("text.value").style("display","none");
+  n.text(n.attr("data-text"));
+  n.attr("cursor", "");
 }
+
 });
 </script>
