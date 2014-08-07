@@ -53,6 +53,7 @@ gem 'gon'
 gem 'rabl-rails'
 
 gem 'omniauth-facebook'
+gem 'omniauth-google-oauth2'
 
 group :production do 
 	gem 'rails_12factor'
