@@ -15,18 +15,16 @@ class HistoriesController < ApplicationController
     @history = History.new(history_params)
     @history.user_id = current_user.id
 
-    begin
-      @history.transaction do
-        associate_history_with_todos!
-        associate_history_with_assignees!
-        associate_history_with_images!
-        @history.save!        
-      end
-      client.notify("히스토리가 추가되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")
-      redirect_to root_path
-    rescue ActiveRecord::RecordInvalid
-      render 'new'
+    @history.transaction do
+      associate_history_with_todos!
+      associate_history_with_assignees!
+      associate_history_with_images!
+      @history.save!
     end
+    client.notify("히스토리가 추가되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")
+    redirect_to root_path
+  rescue ActiveRecord::RecordInvalid
+    render 'new'
   end
 
   def show
@@ -44,18 +42,16 @@ class HistoriesController < ApplicationController
 
     @history = History.find(params[:id])
 
-    begin
-      @history.transaction do
-        associate_history_with_todos!
-        associate_history_with_assignees!
-        associate_history_with_images!
-        @history.update!(history_params)
-      end
-      client.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")
-      redirect_to @history
-    rescue ActiveRecord::RecordInvalid
-      render 'edit'
+    @history.transaction do
+      associate_history_with_todos!
+      associate_history_with_assignees!
+      associate_history_with_images!
+      @history.update!(history_params)
     end
+    client.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")
+    redirect_to @history
+  rescue ActiveRecord::RecordInvalid
+    render 'edit'
   end
 
   def destroy
