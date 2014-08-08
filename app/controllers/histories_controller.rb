@@ -10,6 +10,9 @@ class HistoriesController < ApplicationController
   end
 
   def create
+    #referenced_users = params[:history][:description].scan(/\B@(\w+)\b/).flatten!
+    referenced_histories = params[:history][:description].scan(/\B#(\d+)\b/).flatten!
+
     client = SlackNotify::Client.new("donutworks", "G0QAYXA6uqygRTXjXCZ5Th2g")
 
     @history = History.new(history_params)
@@ -21,7 +24,7 @@ class HistoriesController < ApplicationController
       associate_history_with_images!
       @history.save!
     end
-    client.notify("히스토리가 추가되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")
+    #client.notify("히스토리가 추가되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")
     redirect_to root_path
   rescue ActiveRecord::RecordInvalid
     render 'new'
@@ -82,8 +85,10 @@ class HistoriesController < ApplicationController
 
   # metaprogramming?
   def associate_history_with_todos!
+    referenced_todos = params[:history][:description].scan(/\B\!(\d+)\b/).flatten!
+
     @history.todos.destroy_all
-    params[:history][:todo_ids].select!(&:present?).each do |id|
+    referenced_todos.each do |id|
       @history.history_todos.build(todo_id: id)
     end
   end
