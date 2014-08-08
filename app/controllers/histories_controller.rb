@@ -61,6 +61,20 @@ class HistoriesController < ApplicationController
     redirect_to root_path
   end
 
+  def list
+    histories = []
+    if params[:id] == nil
+      histories = History.first(5)
+    else
+      histories = History.where("id >= ?", params[:id]).take(5)
+    end
+    render json: histories
+  end
+
+  def list_members
+    render json: User.all
+  end
+
   private
   def history_params
     params.require(:history).permit(:title, :description, :evented_at)
