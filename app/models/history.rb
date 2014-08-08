@@ -8,5 +8,11 @@ class History < ActiveRecord::Base
   belongs_to :user
   has_many :comments
 
-  has_many :images, :foreign_key => 'history_id', :class_name => "HistoryImage"
+  has_many :images, :foreign_key => 'history_id', :class_name => 'HistoryImage'
+
+  has_many :history_histories, dependent: :destroy
+  has_many :referencing_histories, through: :history_histories
+
+  has_many :inverse_history_histories, class_name: "HistoryHistory", foreign_key: "referencing_history_id"
+  has_many :referenced_histories, through: :inverse_history_histories, source: :history
 end

@@ -42,9 +42,12 @@
     </p>
 
    <div>
-     <% @history.todos.each do |todo| %>
-     #<%= link_to todo.title, todo %><br />
-     <% end %>
+      <% if @history.referenced_histories.count > 0 %>
+      <strong>Referenced from</strong><br />
+        <% @history.referenced_histories.each do |history| %>
+          <%= link_to "##{history.id}: #{history.title}", history %><br />
+        <% end %>
+      <% end %>
    </div>
  </div>
  <div class="col-md-6">

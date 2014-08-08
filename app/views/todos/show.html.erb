@@ -17,8 +17,9 @@
 			</p>
 
 			<div>
+				<strong>Referenced from</strong><br />
 	    	<% @todo.histories.each do |history| %>
-	    		#<%= link_to history.title, history %><br />
+	    		<%= link_to "##{history.id}: #{history.title}", history %><br />
 	    	<% end %>
 	   	</div>
 
