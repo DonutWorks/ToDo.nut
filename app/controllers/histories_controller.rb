@@ -11,7 +11,7 @@ class HistoriesController < ApplicationController
 
   def create
     #referenced_users = params[:history][:description].scan(/\B@(\w+)\b/).flatten!
-    referenced_histories = params[:history][:description].scan(/\B#(\d+)\b/).flatten!
+    #referenced_histories = params[:history][:description].scan(/\B#(\d+)\b/).flatten!
 
     client = SlackNotify::Client.new("donutworks", "G0QAYXA6uqygRTXjXCZ5Th2g")
 
@@ -24,7 +24,7 @@ class HistoriesController < ApplicationController
       associate_history_with_images!
       @history.save!
     end
-    #client.notify("히스토리가 추가되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")
+    client.notify("히스토리가 추가되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")
     redirect_to root_path
   rescue ActiveRecord::RecordInvalid
     render 'new'
@@ -74,6 +74,7 @@ class HistoriesController < ApplicationController
     render json: histories
   end
 
+  # need move to project#members
   def list_members
     render json: User.all
   end
