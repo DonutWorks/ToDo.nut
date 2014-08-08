@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140806124757) do
+ActiveRecord::Schema.define(version: 20140808082654) do
 
   create_table "comments", force: true do |t|
     t.integer  "user_id"
@@ -32,6 +32,16 @@ ActiveRecord::Schema.define(version: 20140806124757) do
     t.datetime "evented_at"
     t.integer  "user_id"
   end
+
+  create_table "history_histories", force: true do |t|
+    t.integer  "history_id"
+    t.integer  "referencing_history_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "history_histories", ["history_id"], name: "index_history_histories_on_history_id"
+  add_index "history_histories", ["referencing_history_id"], name: "index_history_histories_on_referencing_history_id"
 
   create_table "history_images", force: true do |t|
     t.integer  "history_id"

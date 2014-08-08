@@ -10,12 +10,15 @@ class HistoriesController < ApplicationController
   end
 
   def create
+    #referenced_users = params[:history][:description].scan(/\B@(\w+)\b/).flatten!
+
     client = SlackNotify::Client.new("donutworks", "G0QAYXA6uqygRTXjXCZ5Th2g")
 
     @history = History.new(history_params)
     @history.user_id = current_user.id
 
     @history.transaction do
+      associate_history_with_histories!
       associate_history_with_todos!
       associate_history_with_assignees!
       associate_history_with_images!
@@ -61,17 +64,43 @@ class HistoriesController < ApplicationController
     redirect_to root_path
   end
 
+  def list
+    histories = []
+    if params[:id] == nil
+      histories = History.first(5)
+    else
+      histories = History.where("id >= ?", params[:id]).take(5)
+    end
+    render json: histories
+  end
+
+  # need move to project#members
+  def list_members
+    render json: User.all
+  end
+
   private
   def history_params
     params.require(:history).permit(:title, :description, :evented_at)
   end
 
   # metaprogramming?
+  def associate_history_with_histories!
+    referenced_histories = params[:history][:description].scan(/\B#(\d+)\b/).flatten!
+
+    @history.referencing_histories.destroy_all
+    referenced_histories.each do |id|
+      @history.history_histories.build(referencing_history_id: id)
+    end if referenced_histories != nil
+  end
+
   def associate_history_with_todos!
+    referenced_todos = params[:history][:description].scan(/\B\!(\d+)\b/).flatten!
+
     @history.todos.destroy_all
-    params[:history][:todo_ids].select!(&:present?).each do |id|
+    referenced_todos.each do |id|
       @history.history_todos.build(todo_id: id)
-    end
+    end if referenced_todos != nil
   end
 
   def associate_history_with_assignees!
