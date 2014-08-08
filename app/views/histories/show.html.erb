@@ -53,7 +53,7 @@
   <h4>Attached Images</h4>
   <% @history.images.each do |image| %>
   <%= link_to(image_tag(image.image.url(:thumb)), image.image.url) %>
-  <% end %>
+  <% end if @history.images != nil %>
 </div>
 </div>
 

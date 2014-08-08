@@ -85,6 +85,6 @@ class HistoriesController < ApplicationController
     @history.images.destroy_all
     params[:history][:images].each do |image|
       @history.images.build(image: image)
-    end
+    end if params[:history][:images] != nil
   end
 end
