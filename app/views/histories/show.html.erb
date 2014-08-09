@@ -55,7 +55,7 @@
 <div class="col-md-12">
   <h4>Attached Images</h4>
   <% @history.images.each do |image| %>
-  <%= link_to(image_tag(image.image.url(:thumb)), image.image.url) %>
+  <%= link_to(image_tag(image.image.thumb.url), image.image.url) %>
   <% end if @history.images != nil %>
 </div>
 </div>

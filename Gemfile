@@ -61,4 +61,6 @@ group :production do
 end
 
 # Attachment support
-gem "paperclip", "~> 4.1"
+gem 'carrierwave'
+gem 'mini_magick'
+gem 'cloudinary'
