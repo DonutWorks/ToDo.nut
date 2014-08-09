@@ -20,25 +20,7 @@
 
 
     <p class="word-break">
-      <%
-        @history.description.gsub!(/\B\!(\d+)\b/) { |match| 
-          referenced_todo = @history.todos.find_by_id($1)
-          if referenced_todo
-            link_to match, referenced_todo 
-          else
-            match
-          end
-        }
-        @history.description.gsub!(/\B#(\d+)\b/) { |match|
-          referenced_history = History.find_by_id($1)
-          if referenced_history
-            link_to match, referenced_history
-          else
-            match
-          end
-        }
-      %>
-      <%=raw @history.description %>
+      <%=raw attach_reference_link(@history.description) %>
     </p>
 
    <div>

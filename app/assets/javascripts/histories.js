@@ -35,12 +35,12 @@ $(document).on('ready page:load', function () {
     //     return '@' + member + ' ';
     //   }
     // }, {
-      match: /\B\!(\w*)$/,
+      match: /\B&(\w*)$/,
       search: function (term, callback) {
         $.getJSON('/todos/list/')
         .done(function (res) {
           callback($.map(res, function (todo) {
-            return '!' + todo.id + ': ' + todo.title;
+            return '&' + todo.id + ': ' + todo.title;
           }));
         })
         .fail(function (res) {

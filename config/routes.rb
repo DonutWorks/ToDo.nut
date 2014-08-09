@@ -1,12 +1,17 @@
 Rails.application.routes.draw do
   devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
 
-  match 'todos/list(/:id)' => 'todos#list', :via => :get
-  resources :todos
+  resources :todos do
+    collection do
+      get 'list(/:id)', action: 'list'
+    end
+  end
 
-  match 'histories/list_members' => 'histories#list_members', :via => :get
-  match 'histories/list(/:id)' => 'histories#list', :via => :get
   resources :histories do
+    collection do
+      get 'list_members' # should move to projects#members
+      get 'list(/:id)', action: 'list'
+    end
     resources :comments
   end
 
