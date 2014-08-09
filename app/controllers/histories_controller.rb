@@ -65,12 +65,8 @@ class HistoriesController < ApplicationController
   end
 
   def list
-    histories = []
-    if params[:id] == nil
-      histories = History.first(5)
-    else
-      histories = History.where("id >= ?", params[:id]).take(5)
-    end
+    from_id = params[:id] || 0
+    histories = History.fetch_list_from(from_id, 5)
     render json: histories
   end
 

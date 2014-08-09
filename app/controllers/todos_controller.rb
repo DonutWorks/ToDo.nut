@@ -40,12 +40,8 @@ class TodosController < ApplicationController
   end
 
   def list
-    todos = []
-    if params[:id] == nil
-      todos = Todo.first(5)
-    else
-      todos = Todo.where("id >= ?", params[:id]).take(5)
-    end
+    from_id = params[:id] || 0
+    todos = Todo.fetch_list_from(from_id, 5)
     render json: todos
   end
 
