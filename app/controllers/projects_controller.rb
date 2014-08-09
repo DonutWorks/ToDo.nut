@@ -9,8 +9,6 @@ class ProjectsController < ApplicationController
   end
 
   def create
-    client = SlackNotify::Client.new("donutworks", "G0QAYXA6uqygRTXjXCZ5Th2g")
-
     @project = Project.new(project_params)
     @project.user_id = current_user.id
 
@@ -19,7 +17,7 @@ class ProjectsController < ApplicationController
       #associate_project_with_todos!
       associate_project_with_assignees!
 
-      client.notify("프로젝트 추가되었어용 : #{@project.title} (#{Rails.application.routes.url_helpers.project_url(@project)})")
+      SlackNotifier.instance.notify("프로젝트 추가되었어용 : #{@project.title} (#{Rails.application.routes.url_helpers.project_url(@project)})")
     end
     redirect_to projects_path
   end
@@ -36,15 +34,13 @@ class ProjectsController < ApplicationController
   end
 
   def update
-    client = SlackNotify::Client.new("donutworks", "G0QAYXA6uqygRTXjXCZ5Th2g")
-
     @project = Project.find(params[:id])
 
     if @project.update(project_params)
       #associate_project_with_todos!
       associate_project_with_assignees!
 
-      client.notify("프로젝트가 수정되었어용 : #{@project.title} (#{Rails.application.routes.url_helpers.project_url(@project)})")
+      SlackNotifier.instance.notify("프로젝트가 수정되었어용 : #{@project.title} (#{Rails.application.routes.url_helpers.project_url(@project)})")
       redirect_to @project
     else
       render 'edit'

@@ -12,8 +12,6 @@ class HistoriesController < ApplicationController
   def create
     #referenced_users = params[:history][:description].scan(/\B@(\w+)\b/).flatten!
 
-    client = SlackNotify::Client.new("donutworks", "G0QAYXA6uqygRTXjXCZ5Th2g")
-
     @history = History.new(history_params)
     @history.user_id = current_user.id
 
@@ -24,8 +22,10 @@ class HistoriesController < ApplicationController
       associate_history_with_images!
       @history.save!
     end
-    client.notify("히스토리가 추가되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")
+
+    SlackNotifier.instance.notify("히스토리가 추가되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")
     redirect_to root_path
+
   rescue ActiveRecord::RecordInvalid
     render 'new'
   end
@@ -41,8 +41,6 @@ class HistoriesController < ApplicationController
   end
 
   def update
-    client = SlackNotify::Client.new("donutworks", "G0QAYXA6uqygRTXjXCZ5Th2g")
-
     @history = History.find(params[:id])
 
     @history.transaction do
@@ -51,8 +49,10 @@ class HistoriesController < ApplicationController
       associate_history_with_images!
       @history.update!(history_params)
     end
-    client.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")
+
+    SlackNotifier.instance.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")
     redirect_to @history
+
   rescue ActiveRecord::RecordInvalid
     render 'edit'
   end
