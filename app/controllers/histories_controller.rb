@@ -91,7 +91,7 @@ class HistoriesController < ApplicationController
   end
 
   def associate_history_with_todos!
-    referenced_todos = params[:history][:description].scan(/\B\!(\d+)\b/).flatten!
+    referenced_todos = params[:history][:description].scan(/\B&(\d+)\b/).flatten!
 
     @history.todos.destroy_all
     referenced_todos.each do |id|
