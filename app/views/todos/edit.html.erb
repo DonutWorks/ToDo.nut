@@ -13,11 +13,18 @@
 		}
 
 		$('.color_field').click(function() {
-			$('#select_color').val($(this).attr('data-color'));
-			$('.color_field').removeClass('color_chosen'); 
-			$('.color_field').addClass('color_not_chosen'); 
-			$(this).removeClass('color_not_chosen');
-			$(this).addClass('color_chosen');
+			if($(this).hasClass('color_chosen')) {
+				$('#select_color').val('');
+				$(this).removeClass('color_chosen'); 
+				$(this).addClass('color_not_chosen'); 
+			}
+			else {
+				$('#select_color').val($(this).attr('data-color'));
+				$('.color_field').removeClass('color_chosen'); 
+				$('.color_field').addClass('color_not_chosen'); 
+				$(this).removeClass('color_not_chosen');
+				$(this).addClass('color_chosen');
+			}
 		})
 
 	});
