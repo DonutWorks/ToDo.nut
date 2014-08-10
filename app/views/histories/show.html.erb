@@ -10,7 +10,7 @@
       <strong>Creator</strong><br />
       <%= @history.user.email %>
     </p>
-    
+
     <p class="text-align-right">
       <strong>Assignee</strong><br />
       <% @history.assignees.each do |assignee| %>
@@ -20,7 +20,7 @@
 
 
     <p class="word-break">
-      <%=raw attach_reference_link(@history.description) %>
+      <%= raw attach_reference_link(@history.description) %>
     </p>
 
    <div>

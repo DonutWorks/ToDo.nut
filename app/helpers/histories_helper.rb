@@ -1,6 +1,4 @@
 module HistoriesHelper
-  include ActionView::Helpers::UrlHelper
-
   ReferenceMatchStrategy = Struct.new(:pattern, :model, :find_method)
   REFERENCE_MATCHES_STRATEGIES = [
     ReferenceMatchStrategy.new(/\B&(\d+)\b/, Todo, :find_by_id),
@@ -8,15 +6,15 @@ module HistoriesHelper
   ]
   def attach_reference_link(content)
     REFERENCE_MATCHES_STRATEGIES.each do |strategy|
-      content.gsub!(strategy.pattern) { |match|
+      content.gsub!(strategy.pattern) do |match|
         referenced = strategy.model.send(strategy.find_method, $1)
         if referenced
           link_to match, referenced
         else
           match
         end
-      }
+      end
     end
-      content
+    content
   end
 end
