@@ -17,6 +17,6 @@ class History < ActiveRecord::Base
   has_many :referenced_histories, through: :inverse_history_histories, source: :history
 
   def self.fetch_list_from(id, count)
-    histories = where(arel_table[:id].gteq(id)).take(count)
+    where(arel_table[:id].gteq(id)).take(count)
   end
 end

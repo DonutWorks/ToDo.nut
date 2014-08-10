@@ -4,6 +4,6 @@ class Todo < ActiveRecord::Base
   belongs_to :user
 
   def self.fetch_list_from(id, count)
-    todos = where(arel_table[:id].gteq(id)).take(count)
+    where(arel_table[:id].gteq(id)).take(count)
   end
 end
