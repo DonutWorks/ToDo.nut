@@ -18,6 +18,11 @@
 </div>
 
 <div class="form-group">
+  <%= f.label :project %>
+  <%= f.collection_select :project_id, @projects, :id, :title, {}, {multiple: false} %>
+</div>
+
+<div class="form-group">
   <%= f.label :images %>
   <%= f.file_field :images, :multiple => true %>
 </div>

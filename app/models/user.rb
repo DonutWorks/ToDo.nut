@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
   has_many :assigned_histories, through: :history_users  
   
   has_many :project_users, foreign_key: :assignee_id
-  has_many :assigned_project, through: :project_users
+  has_many :assigned_projects, through: :project_users
 
   belongs_to :user
 

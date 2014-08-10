@@ -7,6 +7,8 @@ class HistoriesController < ApplicationController
     @history = History.new
     @todos = Todo.all
     @users = User.all
+
+    @projects = current_user.assigned_projects;
   end
 
   def create
@@ -63,6 +65,8 @@ class HistoriesController < ApplicationController
     @history = History.find(params[:id])
     @todos = Todo.all
     @users = User.all
+    @projects = current_user.assigned_projects;
+
   end
 
   def update
@@ -102,7 +106,7 @@ class HistoriesController < ApplicationController
 
   private
   def history_params
-    params.require(:history).permit(:title, :description, :evented_at)
+    params.require(:history).permit(:title, :description, :evented_at, :project_id)
   end
 
   # metaprogramming?

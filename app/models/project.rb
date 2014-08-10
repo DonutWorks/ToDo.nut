@@ -3,5 +3,6 @@ class Project < ActiveRecord::Base
   has_many :assignees, through: :project_users
 	
 	belongs_to :user
-
+  has_many :todos
+  has_many :histories
 end
