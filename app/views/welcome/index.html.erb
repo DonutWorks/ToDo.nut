@@ -156,14 +156,13 @@
       .attr("x",width+20)
       .attr("class","label")
       .attr("data-duedate", data[j]['duedate'])
-      .attr("data-text", truncate(data[j]['name'],30,"..."))  
+      .attr("data-text", truncate(data[j]['name'],30,"..."))
+      .attr("data-id", data[j]['id'])    
       .text(truncate(data[j]['name'],30,"..."))
       .style("fill", data[j]['color'])
       .on("mouseover", mouseover)
       .on("mouseout", mouseout)
-      .on("click", function(d, j) {
-        location.href = "/todos/" + data[j]['id'];
-      });
+      .on("click", mouseclick);
     };
 
   // d3.json("<%= asset_path('test_data.json') %>", function(<%= @data %>) {
@@ -245,6 +244,11 @@ function mouseout() {
   d3.select(g).selectAll("text.value").style("display","none");
   n.text(n.attr("data-text"));
   n.attr("cursor", "");
+}
+
+function mouseclick() {
+  var n = d3.select(this);
+  location.href = "/todos/" + n.attr("data-id");
 }
 
 });

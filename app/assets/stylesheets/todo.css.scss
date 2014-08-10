@@ -27,3 +27,32 @@
     display: none;
   }
 }
+
+.color_table {
+	display:inline-block;
+	height: auto;
+	vertical-align: middle;
+}
+
+.color_field {
+	width: 30px;
+	height: 30px;
+	float: left;
+	border-style: solid;
+	
+	margin-right: 2px;
+}
+
+.color_not_chosen {
+	border-width: thin;
+}
+
+.color_not_chosen:hover
+{ 
+	border-width: medium;
+}
+
+.color_chosen {
+	border-width: medium;
+}
+
