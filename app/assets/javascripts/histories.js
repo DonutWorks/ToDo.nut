@@ -37,7 +37,7 @@ $(document).on('ready page:load', function () {
     // }, {
       match: /\B&(\w*)$/,
       search: function (term, callback) {
-        $.getJSON('/todos/list/')
+        $.getJSON('/todos/list/' + term)
         .done(function (res) {
           callback($.map(res, function (todo) {
             return '&' + todo.id + ': ' + todo.title;
