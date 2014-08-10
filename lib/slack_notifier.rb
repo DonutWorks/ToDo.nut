@@ -10,6 +10,6 @@ class SlackNotifier
 
 private
   def client
-    @client || SlackNotify::Client.new("donutworks", "G0QAYXA6uqygRTXjXCZ5Th2g")
+    @client ||= SlackNotify::Client.new("donutworks", "G0QAYXA6uqygRTXjXCZ5Th2g")
   end
 end
