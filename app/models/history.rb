@@ -6,6 +6,8 @@ class History < ActiveRecord::Base
   has_many :assignees, through: :history_users
 
   belongs_to :user
+  belongs_to :project
+  
   has_many :comments
 
   has_many :images, :foreign_key => 'history_id', :class_name => 'HistoryImage'

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140809153636) do
+ActiveRecord::Schema.define(version: 20140810093121) do
 
   create_table "comments", force: true do |t|
     t.integer  "user_id"
@@ -31,7 +31,10 @@ ActiveRecord::Schema.define(version: 20140809153636) do
     t.datetime "updated_at"
     t.datetime "evented_at"
     t.integer  "user_id"
+    t.integer  "project_id"
   end
+
+  add_index "histories", ["project_id"], name: "index_histories_on_project_id"
 
   create_table "history_histories", force: true do |t|
     t.integer  "history_id"
@@ -47,10 +50,6 @@ ActiveRecord::Schema.define(version: 20140809153636) do
     t.integer  "history_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "image_file_name"
-    t.string   "image_content_type"
-    t.integer  "image_file_size"
-    t.datetime "image_updated_at"
     t.string   "image"
   end
 
@@ -103,7 +102,10 @@ ActiveRecord::Schema.define(version: 20140809153636) do
     t.integer  "user_id"
     t.string   "color"
     t.datetime "duedate"
+    t.integer  "project_id"
   end
+
+  add_index "todos", ["project_id"], name: "index_todos_on_project_id"
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false

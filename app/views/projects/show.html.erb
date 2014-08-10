@@ -23,8 +23,12 @@
        <%= @project.description %>
      </p>
 
-
+      <div class="form-buttons">
+        <%= link_to 'Back', projects_path, class: "btn btn-default" %>
+        <%= link_to 'Edit', edit_project_path(@project), class: "btn btn-default" %>
+      </div>
     </div>
+    
   </div>
 
 </div>
