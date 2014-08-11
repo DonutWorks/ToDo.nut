@@ -25,7 +25,7 @@ class HistoriesController < ApplicationController
       @history.save!
     end
 
-    SlackNotifier.instance.notify("히스토리가 추가되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")
+    SlackNotifier.notify("히스토리가 추가되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")
     
     @user = User.find(current_user.id)
 
@@ -79,7 +79,7 @@ class HistoriesController < ApplicationController
       @history.update!(history_params)
     end
 
-    SlackNotifier.instance.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")
+    SlackNotifier.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")
     redirect_to @history
 
   rescue ActiveRecord::RecordInvalid

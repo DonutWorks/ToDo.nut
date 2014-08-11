@@ -8,7 +8,7 @@ class TodosController < ApplicationController
     @todo.user_id = current_user.id
     
     if @todo.save
-      SlackNotifier.instance.notify("투두가 추가되었어용 : #{@todo.title} (#{Rails.application.routes.url_helpers.todo_url(@todo)})")
+      SlackNotifier.notify("투두가 추가되었어용 : #{@todo.title} (#{Rails.application.routes.url_helpers.todo_url(@todo)})")
       redirect_to root_path
     else 
       render 'new'
@@ -27,7 +27,7 @@ class TodosController < ApplicationController
     @todo = Todo.find(params[:id])
 
     if @todo.update(todo_params)
-      SlackNotifier.instance.notify("투두가 수정되었어용 : #{@todo.title} (#{Rails.application.routes.url_helpers.todo_url(@todo)})")
+      SlackNotifier.notify("투두가 수정되었어용 : #{@todo.title} (#{Rails.application.routes.url_helpers.todo_url(@todo)})")
       redirect_to @todo
     else
       render 'edit'
