@@ -20,6 +20,14 @@ class User < ActiveRecord::Base
   validates_presence_of :nickname
   validates_uniqueness_of :nickname
 
+  def to_param
+    nickname
+  end
+
+  def self.find_by_nickname(nickname)
+    where(arel_table[:nickname].matches("#{nickname}")).take(1)
+  end
+
   def self.from_omniauth(auth)
     where(auth.slice(:provider, :uid)).first_or_create do |user|
 
