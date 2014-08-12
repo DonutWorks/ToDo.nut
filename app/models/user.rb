@@ -15,15 +15,19 @@ class User < ActiveRecord::Base
   belongs_to :comment
   devise :database_authenticatable, :registerable,
   :recoverable, :rememberable, :trackable, :validatable,
-  :omniauthable, :omniauth_providers => [:facebook, :google_oauth2, :twitter]
+  :omniauthable, :omniauth_providers => [:google_oauth2]
 
   validates_presence_of :nickname
   validates_uniqueness_of :nickname
 
   def self.from_omniauth(auth)
     where(auth.slice(:provider, :uid)).first_or_create do |user|
+      logger.debug "test fb"
+      logger.debug auth.info.nickname
+
       user.email = auth.info.email
       user.password = Devise.friendly_token[0,20]
+
       # user.name = auth.info.name   # assuming the user model has a name
       # user.image = auth.info.image # assuming the user model has an image
     end
@@ -44,7 +48,9 @@ class User < ActiveRecord::Base
     # Uncomment the section below if you want users to be created if they don't exist
     unless user
       user = User.create(email: data["email"],
-       password: Devise.friendly_token[0,20])
+       password: Devise.friendly_token[0,20],
+       nickname: data["name"]
+       )
     end
     user
   end
