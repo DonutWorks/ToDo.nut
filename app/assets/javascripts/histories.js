@@ -19,23 +19,23 @@ $(document).on('ready page:load', function () {
       },
       index: 1
     }, {
-    //   match: /\B@(\w*)$/,
-    //   search: function (term, callback) {
-    //     $.getJSON('/histories/list_members/')
-    //     .done(function (res) {
-    //       callback($.map(res, function (member) {
-    //         return member.email;
-    //       }));
-    //     })
-    //     .fail(function (res) {
-    //       callback([]);
-    //     })
-    //   },
-    //   index: 1,
-    //   replace: function (member) {
-    //     return '@' + member + ' ';
-    //   }
-    // }, {
+      match: /\B@(\w*)$/,
+      search: function (term, callback) {
+        $.getJSON('/projects/'+gon.project_id+'/histories/list_members/')
+        .done(function (res) {
+          callback($.map(res, function (member) {
+            return member.nickname;
+          }));
+        })
+        .fail(function (res) {
+          callback([]);
+        })
+      },
+      index: 1,
+      replace: function (member) {
+        return '@' + member + ' ';
+      }
+    }, {
       match: /\B&(\w*)$/,
       search: function (term, callback) {
         $.getJSON('/projects/'+gon.project_id+'/todos/list/' + term)

@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
-  devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
+  devise_for :users, :controllers => { 
+    :omniauth_callbacks => "users/omniauth_callbacks",
+    :registrations => "users/registrations"
+  }
+  resources :users, only: [:show]
 
   resources :projects do
 
@@ -19,9 +23,11 @@ Rails.application.routes.draw do
     
     collection do
       get '(/:project_id)/main', action: 'main', as: 'main'
+      
     end
-    
+    get 'members(/:nickname)', action: 'members', as: 'members'
   end
+
   
   root 'projects#index'
 end

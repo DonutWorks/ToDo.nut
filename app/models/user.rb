@@ -3,7 +3,6 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   has_many :histories
   has_many :todos
-  
 
   has_many :history_users, foreign_key: :assignee_id
   has_many :assigned_histories, through: :history_users  
@@ -15,15 +14,26 @@ class User < ActiveRecord::Base
 
   belongs_to :comment
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable,
-         :omniauthable, :omniauth_providers => [:facebook, :google_oauth2]
+  :recoverable, :rememberable, :trackable, :validatable,
+  :omniauthable, :omniauth_providers => [:facebook, :google_oauth2, :twitter]
+
+  validates_presence_of :nickname
+  validates_uniqueness_of :nickname
+
+  def to_param
+    nickname
+  end
+
+  def self.find_by_nickname(nickname)
+    where(arel_table[:nickname].matches("#{nickname}")).take(1)
+  end
 
   def self.from_omniauth(auth)
     where(auth.slice(:provider, :uid)).first_or_create do |user|
+
       user.email = auth.info.email
       user.password = Devise.friendly_token[0,20]
-      # user.name = auth.info.name   # assuming the user model has a name
-      # user.image = auth.info.image # assuming the user model has an image
+      user.nickname = auth.info.name
     end
   end
 
@@ -42,8 +52,25 @@ class User < ActiveRecord::Base
     # Uncomment the section below if you want users to be created if they don't exist
     unless user
       user = User.create(email: data["email"],
-         password: Devise.friendly_token[0,20])
+       password: Devise.friendly_token[0,20],
+       nickname: data["name"]
+       )
     end
+    user
+  end
+
+
+  def self.find_for_twitter_oauth(auth, signed_in_resource=nil)
+    user = User.where(:provider => auth.provider, :uid => auth.uid).first
+   
+    unless user
+      user = User.create(provider:auth.provider,
+        uid:auth.uid,
+        email: auth.extra.raw_info.screen_name + "@todo.nut",
+        nickname: auth.extra.raw_info.screen_name,
+        password:Devise.friendly_token[0,20])
+    end
+    
     user
   end
 end
