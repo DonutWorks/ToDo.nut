@@ -5,7 +5,7 @@ class ProjectsController < ApplicationController
   end
 
   def index
-    @projects = Project.all
+    @projects = current_user.assigned_projects
   end
 
   def create
@@ -25,6 +25,20 @@ class ProjectsController < ApplicationController
   def show
     @project = Project.find(params[:id])
     
+  end
+
+  def main
+    @todo = Todo.new    
+    @todos = Todo.where(project_id: params[:project_id])
+    @histories = History.where(project_id: params[:project_id])
+    @project = Project.find(params[:project_id])
+    gon.deco = decorate
+    #@data = gon.deco
+    # render plain: decorate
+
+    # output = File.open( "../assets/javascripts/test_data.json", w+)
+    # output << decorate
+    # output.close
   end
 
   def edit
@@ -71,4 +85,42 @@ private
     params.require(:project).permit(:title, :description)
   end
 
+private 
+  def decorate
+    data=[];
+
+    @todos.each do |t|
+      articles = [];
+      
+
+      total = 0
+    
+      t.histories.each do |h|
+        articles.push([(h.evented_at.to_date-Time.now.to_date).to_i,5])
+        total += 5
+      end
+      
+      duetime = ""
+      if t.duedate != nil
+        duetime = t.duedate.strftime('%m/%d')
+      end
+      
+      data.push({
+        "id" => t.id,
+        "project_id" => t.project_id,
+        "articles" => articles,
+        "total" => total,
+        "name" => t.title,
+        "color" => t.color,
+        "duedate" => duetime
+      })
+
+    end
+
+    
+
+    return data.to_json
+
+  end
+  
 end

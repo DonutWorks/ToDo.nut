@@ -48,7 +48,7 @@
       <tr>
         <td><%= comment.contents %></td>
         <td><%= comment.user.email %></td>
-        <td><%= link_to 'Delete', [@history, comment], method: :delete, :class => "btn btn-default" %> </td>
+        <td><%= link_to 'Delete', [@project, @history, comment], method: :delete, :class => "btn btn-default" %> </td>
       </tr>
       <% end %>
     </tbody>
@@ -65,4 +65,7 @@
 </div>
 </div>
 
+<div class="form-buttons">
+  <%= link_to 'Back', main_projects_path(@project), :class => 'btn btn-default'%>
+</div>
 </div>

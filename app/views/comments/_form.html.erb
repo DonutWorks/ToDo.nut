@@ -1,4 +1,4 @@
-<%= form_for Comment.new, url:history_comments_path(@history) do |f| %>
+<%= form_for Comment.new, url:project_history_comments_path(@project, @history) do |f| %>
 <p>
 	<%= f.label '댓글달기' %><br>
 	<%= f.text_area :contents, :class => 'form-control' %>

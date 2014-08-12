@@ -1,9 +1,10 @@
+
 $(document).on('ready page:load', function () {
   $('#history_description').textcomplete([
     {
       match: /\B#(\w*)$/,
       search: function (term, callback) {
-        $.getJSON('/histories/list/' + term)
+        $.getJSON('/projects/'+gon.project_id+'/histories/list/' + term)
         .done(function (res) {
           callback($.map(res, function (history) {
             return '#' + history.id + ': ' + history.title;
@@ -37,7 +38,7 @@ $(document).on('ready page:load', function () {
     // }, {
       match: /\B&(\w*)$/,
       search: function (term, callback) {
-        $.getJSON('/todos/list/' + term)
+        $.getJSON('/projects/'+gon.project_id+'/todos/list/' + term)
         .done(function (res) {
           callback($.map(res, function (todo) {
             return '&' + todo.id + ': ' + todo.title;

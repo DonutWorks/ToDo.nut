@@ -9,7 +9,7 @@ class CommentsController < ApplicationController
     @comment.history_id = params[:history_id]
 
     if @comment.save
-      redirect_to @comment.history
+      redirect_to project_history_path(params[:project_id],params[:history_id]) 
     else 
       render 'new'
     end
@@ -24,7 +24,7 @@ class CommentsController < ApplicationController
     @comment = @history.comments.find(params[:id])
     @comment.destroy
 
-    redirect_to @comment.history
+    redirect_to project_history_path(params[:project_id],params[:history_id]) 
 
   end
 

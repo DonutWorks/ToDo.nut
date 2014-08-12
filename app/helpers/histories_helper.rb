@@ -9,7 +9,8 @@ module HistoriesHelper
       content.gsub!(strategy.pattern) do |match|
         referenced = strategy.model.send(strategy.find_method, $1)
         if referenced
-          link_to match, referenced
+          #How to make this line clearer...
+          link_to match, [Project.find(referenced.project_id), referenced]
         else
           match
         end

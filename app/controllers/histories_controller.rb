@@ -1,14 +1,15 @@
 class HistoriesController < ApplicationController
   def index
     @histories = History.all
+    @project = Project.find(params[:project_id])
   end
 
   def new
     @history = History.new
     @todos = Todo.all
     @users = User.all
-
-    @projects = current_user.assigned_projects;
+    @project = Project.find(params[:project_id])
+    gon.project_id = @project.id
   end
 
   def create
@@ -16,6 +17,8 @@ class HistoriesController < ApplicationController
 
     @history = History.new(history_params)
     @history.user_id = current_user.id
+    @project = Project.find(params[:project_id])
+    @history.project_id = @project.id
 
     @history.transaction do
       associate_history_with_histories!
@@ -25,33 +28,34 @@ class HistoriesController < ApplicationController
       @history.save!
     end
 
-    SlackNotifier.notify("히스토리가 추가되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")
-    
+    #url_helper -> project_history(@project, @history) is okay?
+    SlackNotifier.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.project_history_url(@project, @history)})")
+
     @user = User.find(current_user.id)
 
-    Mail.defaults do
-      delivery_method :smtp, :address    => "smtp.gmail.com",
-                             :port       => 587,
-                             :user_name  => 'donutworks.app@gmail.com',
-                             :password   => 'donutwork',
-                             :enable_ssl => true
-    end
+    # Mail.defaults do
+    #   delivery_method :smtp, :address    => "smtp.gmail.com",
+    #                          :port       => 587,
+    #                          :user_name  => 'donutworks.app@gmail.com',
+    #                          :password   => 'donutwork',
+    #                          :enable_ssl => true
+    # end
 
-    mail = Mail.new
+    # mail = Mail.new
 
-    mail.from('donutworks.app@gmail.com')
-    mail.to(@user.email)
-    mail.subject('[Todo.nut] History 에 "' + @history.title + '" 를 등록 했습니다.')
+    # mail.from('donutworks.app@gmail.com')
+    # mail.to(@user.email)
+    # mail.subject('[Todo.nut] History 에 "' + @history.title + '" 를 등록 했습니다.')
 
-    template = ERB.new(File.read('app/views/mail/newhistory.html.erb')).result(binding)
-    mail.html_part  do
-      content_type 'text/html; charset=UTF-8'
-      body template
-    end
+    # template = ERB.new(File.read('app/views/mail/newhistory.html.erb')).result(binding)
+    # mail.html_part  do
+    #   content_type 'text/html; charset=UTF-8'
+    #   body template
+    # end
 
-    mail.deliver!
+    # mail.deliver!
 
-    redirect_to root_path
+    redirect_to main_projects_path(@project)
 
   rescue ActiveRecord::RecordInvalid
     render 'new'
@@ -59,18 +63,21 @@ class HistoriesController < ApplicationController
 
   def show
     @history = History.find(params[:id])
+    @project = Project.find(params[:project_id])
   end
 
   def edit
     @history = History.find(params[:id])
     @todos = Todo.all
     @users = User.all
-    @projects = current_user.assigned_projects;
+    @project = Project.find(params[:project_id])
+    gon.project_id = @project.id
 
   end
 
   def update
     @history = History.find(params[:id])
+    @project = Project.find(params[:project_id])
 
     @history.transaction do
       associate_history_with_todos!
@@ -79,8 +86,9 @@ class HistoriesController < ApplicationController
       @history.update!(history_params)
     end
 
-    SlackNotifier.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.history_url(@history)})")
-    redirect_to @history
+    #url_helper -> project_history(@project, @history) is okay?
+    SlackNotifier.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.project_history_url(@project, @history)})")
+    redirect_to [@project, @history]
 
   rescue ActiveRecord::RecordInvalid
     render 'edit'
@@ -89,13 +97,16 @@ class HistoriesController < ApplicationController
   def destroy
     @history = History.find(params[:id])
     @history.destroy
+    @project = Project.find(params[:project_id])
 
-    redirect_to root_path
+    redirect_to main_projects_path(@project)
   end
 
   def list
     from_id = params[:id] || 0
-    histories = History.fetch_list_from(from_id, 5)
+    
+    histories = History.where(project_id: params[:project_id]).fetch_list_from(from_id, 5)
+
     render json: histories
   end
 
