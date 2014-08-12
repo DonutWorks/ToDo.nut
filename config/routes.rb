@@ -3,6 +3,7 @@ Rails.application.routes.draw do
     :omniauth_callbacks => "users/omniauth_callbacks",
     :registrations => "users/registrations"
   }
+  resources :users, only: [:show]
 
   resources :todos do
     collection do
@@ -18,7 +19,9 @@ Rails.application.routes.draw do
     resources :comments
   end
 
-  resources :projects
+  resources :projects do
+    # get 'members(/:nickname)', action: 'members'
+  end
   
   root 'welcome#index'
 end

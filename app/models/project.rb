@@ -5,4 +5,9 @@ class Project < ActiveRecord::Base
 	belongs_to :user
   has_many :todos
   has_many :histories
+
+  def fetch_members_by_nickname(nickname, count)
+    members = assignees.arel_table
+    assignees.where(members[:nickname].matches("%#{nickname}%")).take(count)
+  end
 end

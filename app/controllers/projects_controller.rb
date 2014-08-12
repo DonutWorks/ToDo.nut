@@ -54,6 +54,16 @@ class ProjectsController < ApplicationController
     redirect_to projects_path
   end
 
+  def members
+    @project = Project.find(params[:project_id])
+    members = @project.fetch_members_by_nickname(params[:nickname], 5)
+    members = members.map do |member|
+      { nickname: member.nickname, email: member.email }
+    end
+
+    render json: members
+  end
+
   def associate_project_with_assignees!
     @project.assignees.destroy_all
     params[:project][:assignee_ids].select!(&:present?).each do |id|
