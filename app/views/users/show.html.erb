@@ -1,0 +1,28 @@
+<div class="form-container">
+  <div class="row">
+
+    <div class="col-md-4">
+      <h3>
+       <%= @user.email %>
+      </h3>
+      
+      <p class="text-align-left">
+        <strong>Your nickname is </strong>
+        <%= @user.nickname %><br />
+      </p>
+
+      <p class="text-align-left">
+        <strong>Joined on </strong>
+        <%= @user.created_at.strftime('%m/%d/%y') %><br />
+      </p>
+    </div>
+
+    <div class="col-md-8">
+      <div class="form-buttons">
+        <%= link_to 'Back', root_path, class: "btn btn-default" %>
+        <%= link_to 'Edit', edit_user_registration_path(@user), class: "btn btn-default" %>
+      </div>
+    </div>
+    
+  </div>
+</div>

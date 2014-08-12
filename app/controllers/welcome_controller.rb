@@ -1,6 +1,4 @@
 class WelcomeController < ApplicationController
-	
-
 	def index
 		
 		@todo = Todo.new		
@@ -14,8 +12,6 @@ class WelcomeController < ApplicationController
 		# output = File.open( "../assets/javascripts/test_data.json", w+)
 		# output << decorate
 		# output.close
-
-
 	end
 
 	private	
