@@ -16,7 +16,6 @@ class ApplicationController < ActionController::Base
   end
 
   def is_nickname_not_empty?
-    return if params[:controller] == 'devise/registrations'
     redirect_to edit_user_registration_path if user_signed_in? and current_user.nickname.empty?
   end
   
