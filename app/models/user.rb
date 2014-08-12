@@ -14,8 +14,8 @@ class User < ActiveRecord::Base
 
   belongs_to :comment
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable,
-         :omniauthable, :omniauth_providers => [:facebook, :google_oauth2]
+  :recoverable, :rememberable, :trackable, :validatable,
+  :omniauthable, :omniauth_providers => [:facebook, :google_oauth2, :twitter]
 
   validates_presence_of :nickname
   validates_uniqueness_of :nickname
@@ -44,8 +44,21 @@ class User < ActiveRecord::Base
     # Uncomment the section below if you want users to be created if they don't exist
     unless user
       user = User.create(email: data["email"],
-         password: Devise.friendly_token[0,20])
+       password: Devise.friendly_token[0,20])
     end
+    user
+  end
+
+  def self.find_for_twitter_oauth(auth, signed_in_resource=nil)
+    user = User.where(:provider => auth.provider, :uid => auth.uid).first
+   
+    unless user
+      user = User.create(provider:auth.provider,
+        uid:auth.uid,
+        email: auth.extra.raw_info.screen_name + "@todo.nut",
+        password:Devise.friendly_token[0,20])
+    end
+    
     user
   end
 end

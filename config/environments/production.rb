@@ -83,3 +83,9 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { :host => 'http://todo-nut.herokuapp.com/' }
   Rails.application.routes.default_url_options[:host] = 'http://todo-nut.herokuapp.com/'
 end
+
+Devise.setup do |config|
+  config.omniauth :facebook, "816749455032257", "a3f8372e7fa51b79577658d1961f7ef7"
+  config.omniauth :google_oauth2, "196270804628-g9e9un9lm7kq36qmsl0c08ei2ncm9j5f.apps.googleusercontent.com", "LgAZfSbq-15BlKgt7nGmyfI8"
+  config.omniauth :twitter, "fpk8sZFPaWCdgOt6N70lcH5MC", "WGvNsGWuKkSer8eteyPStT3EU7RMscfvayz3Llr0tw5LU2aWtT"
+end
