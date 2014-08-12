@@ -3,7 +3,6 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   has_many :histories
   has_many :todos
-  
 
   has_many :history_users, foreign_key: :assignee_id
   has_many :assigned_histories, through: :history_users  
@@ -17,6 +16,9 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
          :omniauthable, :omniauth_providers => [:facebook, :google_oauth2]
+
+  validates_presence_of :nickname
+  validates_uniqueness_of :nickname
 
   def self.from_omniauth(auth)
     where(auth.slice(:provider, :uid)).first_or_create do |user|
