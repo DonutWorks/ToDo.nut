@@ -1,4 +1,4 @@
-<%= form_for @history, :role => 'form' do |f|%>
+<%= form_for [@project, @history], :role => 'form' do |f|%>
 <div class="form-group">
 	<%= f.label :title %>
 	<%= f.text_field :title, :class => 'form-control'%>
@@ -17,10 +17,6 @@
   <%= f.collection_select :assignee_ids, @users, :id, :email, {}, {multiple: true} %>
 </div>
 
-<div class="form-group">
-  <%= f.label :project %>
-  <%= f.collection_select :project_id, @projects, :id, :title, {}, {multiple: false} %>
-</div>
 
 <div class="form-group">
   <%= f.label :images %>
@@ -29,7 +25,7 @@
 
 <div class="form-buttons">
 
-<%= link_to 'Back', root_path, :class => 'btn btn-default'%>
+<%= link_to 'Back', main_projects_path(@project), :class => 'btn btn-default'%>
 <%= f.submit :class => 'btn btn-success'%>
 </div>
 <% end %>

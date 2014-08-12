@@ -10,7 +10,16 @@ module HistoriesHelper
       content.gsub!(strategy.pattern) do |match|
         referenced = strategy.model.send(strategy.find_method, $1)
         if referenced
-          link_to match, referenced
+
+          # link_to match, [Project.find(referenced.project_id), referenced]
+
+          if strategy.find_method == :find_by_id
+          #How to make this line clearer...
+            link_to match, [Project.find(referenced.project_id), referenced]
+          else 
+            link_to match, project_members_path(Project.find(params[:project_id]),referenced)
+          end
+
         else
           match
         end

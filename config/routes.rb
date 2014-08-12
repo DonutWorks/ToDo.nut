@@ -11,23 +11,29 @@ Rails.application.routes.draw do
   }
   resources :users, only: [:show]
 
-  resources :todos do
-    collection do
-      get 'list(/:id)', action: 'list'
-    end
-  end
-
-  resources :histories do
-    collection do
-      get 'list_members' # should move to projects#members
-      get 'list(/:id)', action: 'list'
-    end
-    resources :comments
-  end
-
   resources :projects do
-    # get 'members(/:nickname)', action: 'members'
+
+    resources :todos do
+      collection do
+        get 'list(/:id)', action: 'list'
+      end
+    end
+
+    resources :histories do
+      collection do
+        get 'list_members' # should move to projects#members
+        get 'list(/:id)', action: 'list'
+      end
+      resources :comments
+    end
+    
+    collection do
+      get '(/:project_id)/main', action: 'main', as: 'main'
+      
+    end
+    get 'members(/:nickname)', action: 'members', as: 'members'
   end
+
   
-  root 'welcome#index'
+  root 'projects#index'
 end

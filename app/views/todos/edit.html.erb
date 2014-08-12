@@ -30,7 +30,7 @@
 	});
 </script>
 
-<%= form_for @todo, html: {class: 'form'} do |f| %>
+<%= form_for [@project, @todo], html: {class: 'form'} do |f| %>
 <div class="form-group">
 	<%= f.label :title %>
 	<%= f.text_field :title, :class => 'form-control'%>
