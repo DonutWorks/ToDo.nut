@@ -15,21 +15,17 @@ class User < ActiveRecord::Base
   belongs_to :comment
   devise :database_authenticatable, :registerable,
   :recoverable, :rememberable, :trackable, :validatable,
-  :omniauthable, :omniauth_providers => [:google_oauth2]
+  :omniauthable, :omniauth_providers => [:facebook, :google_oauth2, :twitter]
 
   validates_presence_of :nickname
   validates_uniqueness_of :nickname
 
   def self.from_omniauth(auth)
     where(auth.slice(:provider, :uid)).first_or_create do |user|
-      logger.debug "test fb"
-      logger.debug auth.info.nickname
 
       user.email = auth.info.email
       user.password = Devise.friendly_token[0,20]
-
-      # user.name = auth.info.name   # assuming the user model has a name
-      # user.image = auth.info.image # assuming the user model has an image
+      user.nickname = auth.info.name
     end
   end
 
@@ -55,6 +51,7 @@ class User < ActiveRecord::Base
     user
   end
 
+
   def self.find_for_twitter_oauth(auth, signed_in_resource=nil)
     user = User.where(:provider => auth.provider, :uid => auth.uid).first
    
@@ -62,6 +59,7 @@ class User < ActiveRecord::Base
       user = User.create(provider:auth.provider,
         uid:auth.uid,
         email: auth.extra.raw_info.screen_name + "@todo.nut",
+        nickname: auth.extra.raw_info.screen_name,
         password:Devise.friendly_token[0,20])
     end
     
