@@ -19,7 +19,7 @@ $(document).on('ready page:load', function () {
       },
       index: 1
     }, {
-      match: /\B@(\w*)$/,
+      match: /\B@([^\s]+)$/,
       search: function (term, callback) {
         $.getJSON('/projects/'+gon.project_id+'/histories/list_members/')
         .done(function (res) {
