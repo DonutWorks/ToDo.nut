@@ -30,6 +30,8 @@ Rails.application.routes.draw do
     collection do
       get '(/:project_id)/main', action: 'main', as: 'main'
       
+
+      
     end
     get 'members(/:nickname)', action: 'members', as: 'members'
   end

@@ -1,4 +1,7 @@
 class ProjectsController < ApplicationController
+
+  before_action :is_project_assignee?
+  
   def new
     @project = Project.new
     @users = User.all
