@@ -1,39 +1,32 @@
 class WelcomeController < ApplicationController
 	def index
-		
-		@todo = Todo.new		
+		@todo = Todo.new
 		@todos = Todo.all
 		@histories = History.all
 
 		gon.deco = decorate
-		#@data = gon.deco
-		# render plain: decorate
-
-		# output = File.open( "../assets/javascripts/test_data.json", w+)
-		# output << decorate
-		# output.close
 	end
 
-	private	
+	private
 	def decorate
 		data=[];
 
 		@todos.each do |t|
 			articles = [];
-			
+
 
 			total = 0
-		
+
 			t.histories.each do |h|
 				articles.push([(h.evented_at.to_date-Time.now.to_date).to_i,5])
 				total += 5
 			end
-			
+
 			duetime = ""
 			if t.duedate != nil
 				duetime = t.duedate.strftime('%m/%d')
 			end
-			
+
 			data.push({
 				"id" => t.id,
 				"articles" => articles,
@@ -45,7 +38,7 @@ class WelcomeController < ApplicationController
 
 		end
 
-		
+
 
 		return data.to_json
 
