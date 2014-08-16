@@ -37,9 +37,10 @@ class ApplicationController < ActionController::Base
   end
 
   def is_nickname_not_empty?
-    # nickname.to_s.empty? == nickname == nil or (nickname != nil and nickname.empty?)
     # default value of nickname is nil (#39)
-    redirect_to edit_user_registration_path if user_signed_in? and current_user.nickname.to_s.empty?
+    if user_signed_in? and current_user.nickname.blank?
+      redirect_to edit_user_registration_path
+    end
   end
   
 end
