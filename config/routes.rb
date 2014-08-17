@@ -25,7 +25,6 @@ Rails.application.routes.draw do
 
     resources :histories do
       collection do
-        get 'list_members' # should move to projects#members
         get 'list(/:id)', action: 'list'
       end
       resources :comments

@@ -110,11 +110,6 @@ class HistoriesController < ApplicationController
     render json: histories
   end
 
-  # need move to project#members
-  def list_members
-    render json: User.all
-  end
-
   private
   def history_params
     params.require(:history).permit(:title, :description, :evented_at, :project_id)
