@@ -27,15 +27,13 @@ class ApplicationController < ActionController::Base
       if (current_user.assigned_projects.find_by_id(project_id))==nil
         redirect_to root_path
       end
-    end
-  end
-
-  #routes problem....
-  def is_project_assignee?
-    project_id = params[:id] 
-    if project_id != nil
-      if (current_user.assigned_projects.find_by_id(project_id))==nil
-        redirect_to root_path
+    else
+      current_uri = request.env['PATH_INFO']
+      project_id = params[:id] 
+      if project_id != nil && current_uri.include?("/projects/"+project_id )
+        if (current_user.assigned_projects.find_by_id(project_id))==nil
+          redirect_to root_path
+        end
       end
     end
   end
