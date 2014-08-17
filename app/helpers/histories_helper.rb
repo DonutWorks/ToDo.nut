@@ -27,16 +27,30 @@ module HistoriesHelper
     end
   end
 
-  ReferenceReplaceStrategy = Struct.new(:pattern, :replacer)
+  # ReferenceReplaceStrategy = Struct.new(:pattern, :replacer)
+  # REFERENCE_REPLACE_STRATEGIES = [
+  #   ReferenceReplaceStrategy.new(/\B&(\d+)\b/, instance_method(:replace_todo_reference)),
+  #   ReferenceReplaceStrategy.new(/\B#(\d+)\b/, instance_method(:replace_history_reference)),
+  #   ReferenceReplaceStrategy.new(/\B@([^\s]+)\b/, instance_method(:replace_user_reference))
+  # ]
+  # def attach_reference_link(content)
+  #   REFERENCE_REPLACE_STRATEGIES.each do |strategy|
+  #     content.gsub!(strategy.pattern) do |match|
+  #       strategy.replacer.bind(self).call(match)
+  #     end
+  #   end
+  #   content
+  # end
+
   REFERENCE_REPLACE_STRATEGIES = [
-    ReferenceReplaceStrategy.new(/\B&(\d+)\b/, instance_method(:replace_todo_reference)),
-    ReferenceReplaceStrategy.new(/\B#(\d+)\b/, instance_method(:replace_history_reference)),
-    ReferenceReplaceStrategy.new(/\B@([^\s]+)\b/, instance_method(:replace_user_reference))
+    {pattern: /\B&(\d+)\b/, replacer: :replace_todo_reference},
+    {pattern: /\B#(\d+)\b/, replacer: :replace_history_reference},
+    {pattern: /\B@([^\s]+)\b/, replacer: :replace_user_reference},
   ]
   def attach_reference_link(content)
     REFERENCE_REPLACE_STRATEGIES.each do |strategy|
-      content.gsub!(strategy.pattern) do |match|
-        strategy.replacer.bind(self).call(match)
+      content.gsub!(strategy[:pattern]) do |match|
+        self.send(strategy[:replacer], match)
       end
     end
     content
