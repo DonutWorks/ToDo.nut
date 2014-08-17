@@ -5,13 +5,14 @@ class UsersController < ApplicationController
   end
 
   def merge
-    @my_logger ||= Logger.new("#{Rails.root}/log/my.log")
+    
 
     @user = User.find(params[:id])
+    @provider = params[:provider]
 
     if params[:callback] == 'callback'
-      provider_session = session["devise." + params[:provider]]
-      
+      provider_session = session["devise." + @provider]
+
       @user.merge(params[:id], provider_session["provider"], provider_session["uid"])
       redirect_to root_path 
     end

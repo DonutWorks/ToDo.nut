@@ -29,12 +29,15 @@ class User < ActiveRecord::Base
   end
 
   def self.from_omniauth(auth)
+    @my_logger ||= Logger.new("#{Rails.root}/log/my.log")
     where(auth.slice(:provider, :uid)).first_or_create do |user|
-
+      @my_logger.debug "test facebok"
       user.email = auth.info.email
       user.password = Devise.friendly_token[0,20]
       # user.password = nil
       user.nickname = auth.info.name
+
+      @my_logger.debug user.inspect
     end
   end
 
@@ -64,7 +67,7 @@ class User < ActiveRecord::Base
 
 
   def self.find_for_twitter_oauth(auth, signed_in_resource=nil)
-    user = User.where(:provider => auth.provider, :uid => auth.uid).first
+    user = User.where(:email => auth.extra.raw_info.screen_name + "@todo.nut").first
    
     unless user
       user = User.create(provider:auth.provider,
