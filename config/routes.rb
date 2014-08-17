@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  # get 'users/merge(/:email)'
+
+  get '/users/merge/:id/:provider(/:callback)', to: 'users#merge', as: 'users_merge'
+
   get 'users/show'
 
   get 'users/new'

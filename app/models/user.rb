@@ -33,6 +33,7 @@ class User < ActiveRecord::Base
 
       user.email = auth.info.email
       user.password = Devise.friendly_token[0,20]
+      # user.password = nil
       user.nickname = auth.info.name
     end
   end
@@ -47,14 +48,16 @@ class User < ActiveRecord::Base
 
   def self.find_for_google_oauth2(access_token, signed_in_resource=nil)
     data = access_token.info
+    
     user = User.where(:email => data["email"]).first
 
     # Uncomment the section below if you want users to be created if they don't exist
     unless user
-      user = User.create(email: data["email"],
-       password: Devise.friendly_token[0,20],
-       nickname: data["name"]
-       )
+      user = User.create(provider:access_token.provider,
+        uid:access_token.uid,
+        email: data["email"],
+        password: Devise.friendly_token[0,20],
+        nickname: data["name"])
     end
     user
   end
@@ -73,4 +76,13 @@ class User < ActiveRecord::Base
     
     user
   end
+
+  def merge(id, provider, uid)
+    user = User.where(:id => id).first
+    user.provider = provider
+    user.uid = uid
+    user.save
+  end
+
+
 end
