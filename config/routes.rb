@@ -34,7 +34,7 @@ Rails.application.routes.draw do
       get '(/:project_id)/main', action: 'main', as: 'main'
     end
 
-    get 'members(/:nickname)', action: 'members', as: 'members'
+    get 'members(/:nickname)', action: 'members', as: 'members', defaults: {format: 'json'}
   end
 
   
