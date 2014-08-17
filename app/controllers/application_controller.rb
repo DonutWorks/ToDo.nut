@@ -11,7 +11,14 @@ class ApplicationController < ActionController::Base
   #authentication_project (skip_action)
   before_action :is_assignee?
   
-  
+  protected
+  def find_project
+    project_id = params[:project_id]
+    if project_id != nil
+      @project = Project.find(project_id)
+    end
+
+  end
 
   protected
   def is_assignee?
