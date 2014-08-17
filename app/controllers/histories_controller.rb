@@ -1,7 +1,7 @@
 class HistoriesController < ApplicationController
   
   before_action :find_project
-
+  before_action :is_assignee?
   def index
     @histories = History.all
     

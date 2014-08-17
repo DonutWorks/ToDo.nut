@@ -1,5 +1,6 @@
 class TodosController < ApplicationController
   before_action :find_project
+  before_action :is_assignee?
 
   def new
     @todo = Todo.new

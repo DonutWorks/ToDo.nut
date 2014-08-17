@@ -1,7 +1,9 @@
 class ProjectsController < ApplicationController
+  before_action :is_assignee?, only:[:main, :members]
+  before_action :is_assignee_for_project?
 
-  before_action :is_assignee?
-  
+  skip_before_action :is_assignee_for_project?, only:[:main, :members, :index, :new, :create]
+
   def new
     @project = Project.new
     @users = User.all
@@ -73,6 +75,7 @@ class ProjectsController < ApplicationController
 
   def members
     @project = Project.find(params[:project_id])
+    
     members = @project.fetch_members_by_nickname(params[:nickname], 5)
     members = members.map do |member|
       { nickname: member.nickname, email: member.email }
