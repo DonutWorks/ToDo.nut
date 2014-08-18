@@ -32,12 +32,12 @@ Rails.application.routes.draw do
     end
     
     collection do
-      get '(/:project_id)/main', action: 'main', as: 'main'
-      
-
-      
+      get '(/:id)/detail', action: 'detail', as: 'detail'
     end
-    get 'members(/:nickname)', action: 'members', as: 'members'
+
+    member do
+      get 'members(/:nickname)', action: 'members', as: 'members'
+    end
   end
 
   

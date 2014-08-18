@@ -16,7 +16,7 @@ class TodosController < ApplicationController
     if @todo.save
       #url_helper -> project_todo_url is okay?
       SlackNotifier.notify("투두가 추가되었어용 : #{@todo.title} (#{Rails.application.routes.url_helpers.project_todo_url(@project, @todo)})")
-      redirect_to main_projects_path(@project)
+      redirect_to project_path(@project)
     else 
       render 'new'
     end 
@@ -37,7 +37,7 @@ class TodosController < ApplicationController
     
     if @todo.update(todo_params)
       SlackNotifier.notify("투두가 추가되었어용 : #{@todo.title} (#{Rails.application.routes.url_helpers.project_todo_url(@project, @todo)})")
-      redirect_to main_projects_path(@project)
+      redirect_to project_path(@project)
     else
       render 'edit'
     end

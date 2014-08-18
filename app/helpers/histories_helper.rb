@@ -15,9 +15,10 @@ module HistoriesHelper
 
           if strategy.find_method == :find_by_id
           #How to make this line clearer...
-            link_to match, [Project.find(referenced.project_id), referenced]
+            link_to match, [referenced.project, referenced]
           else 
-            link_to match, project_members_path(Project.find(params[:project_id]),referenced)
+            # Link to user profile page
+            #link_to match, members_project_path(Project.find(params[:id]),referenced)
           end
 
         else

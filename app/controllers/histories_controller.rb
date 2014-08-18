@@ -56,7 +56,7 @@ class HistoriesController < ApplicationController
 
     # mail.deliver!
 
-    redirect_to main_projects_path(@project)
+    redirect_to project_path(@project)
 
   rescue ActiveRecord::RecordInvalid
     render 'new'
@@ -98,7 +98,7 @@ class HistoriesController < ApplicationController
     @history = History.find(params[:id])
     @history.destroy
 
-    redirect_to main_projects_path(@project)
+    redirect_to project_path(@project)
   end
 
   def list

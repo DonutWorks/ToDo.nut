@@ -1,7 +1,7 @@
 class ProjectsController < ApplicationController
-  before_action :find_project, only:[:main, :members]
+  
   before_action :find_project_for_id
-  skip_before_action :find_project_for_id, only:[:main, :members, :index, :new, :create]
+  skip_before_action :find_project_for_id, only:[:index, :new, :create]
 
   def new
     @project = Project.new
@@ -26,16 +26,16 @@ class ProjectsController < ApplicationController
     redirect_to projects_path
   end
   
-  def show
+  def detail
     @project = Project.find(params[:id])
     
   end
 
-  def main
+  def show
     @todo = Todo.new    
-    @todos = Todo.where(project_id: params[:project_id])
-    @histories = History.where(project_id: params[:project_id])
-    @project = Project.find(params[:project_id])
+    @todos = Todo.where(project_id: params[:id])
+    @histories = History.where(project_id: params[:id])
+    
     gon.deco = decorate
     #@data = gon.deco
     # render plain: decorate
@@ -73,7 +73,7 @@ class ProjectsController < ApplicationController
   end
 
   def members
-    @project = Project.find(params[:project_id])
+    @project = Project.find(params[:id])
     
     members = @project.fetch_members_by_nickname(params[:nickname], 5)
     members = members.map do |member|
@@ -141,11 +141,5 @@ private
       #Should make exception handler
   end
 
-  def find_project
-    
-    @project = current_user.assigned_projects.find(params[:project_id])
-      #if project doesn't exist, this will make an exception.
-      #Should make exception handler
-  end
   
 end
