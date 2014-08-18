@@ -132,11 +132,15 @@ private
       })
 
     end
-
-    
-
     return data.to_json
+  end
 
+  def is_assignee_for_project?
+    project_id = params[:id]   
+    (current_user.assigned_projects.find(project_id))
+      #if project doesn't exist, this will make an exception.
+      #Should make exception handler
+    
   end
   
 end

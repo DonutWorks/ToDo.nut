@@ -13,29 +13,19 @@ class ApplicationController < ActionController::Base
   protected
   def find_project
     project_id = params[:project_id]
-    if project_id != nil
-      @project = Project.find(project_id)
-    end
-
+    @project = Project.find(project_id)
   end
 
   protected
   def is_assignee?
     project_id = params[:project_id] 
-    if (current_user.assigned_projects.find(project_id))==nil
+    (current_user.assigned_projects.find(project_id))
       #if project doesn't exist, this will make an exception.
-      #redirect_to root_path
-    end
+      #Should make exception handler
+
   end
   
-  def is_assignee_for_project?
-    project_id = params[:id]   
-    if (current_user.assigned_projects.find(project_id))==nil
-      #if project doesn't exist, this will make an exception.
-      #redirect_to root_path
-    end
-    
-  end
+  
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) << :nickname
