@@ -31,11 +31,10 @@ Rails.application.routes.draw do
       resources :comments
     end
     
-    collection do
-      get '(/:id)/detail', action: 'detail', as: 'detail'
-    end
+    
 
     member do
+      get 'detail'
       get 'members(/:nickname)', action: 'members', as: 'members'
     end
   end

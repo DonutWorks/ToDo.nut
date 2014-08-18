@@ -1,7 +1,7 @@
 class ProjectsController < ApplicationController
   
-  before_action :find_project_for_id
-  skip_before_action :find_project_for_id, only:[:index, :new, :create]
+  before_action :find_project, except:[:index, :new, :create]
+  
 
   def new
     @project = Project.new
@@ -134,7 +134,7 @@ private
     return data.to_json
   end
 
-  def find_project_for_id
+  def find_project
     
     @project = current_user.assigned_projects.find(params[:id] )
       #if project doesn't exist, this will make an exception.

@@ -25,7 +25,7 @@
           <td><%= project.user.email %></td>
           <td class="menu text-center">
             <%= link_to 'Show', project_path(project), class: "btn btn-default show-project hidden"%>
-            <%= link_to 'Detail', detail_projects_path(project), class: "btn btn-default"%>
+            <%= link_to 'Detail', detail_project_path(project), class: "btn btn-default"%>
             <%= link_to 'Edit', edit_project_path(project), class: "btn btn-default" %>
             <%= link_to 'Delete', project_path(project), method: :delete, class: "btn btn-default" ,data: { confirm: "징짜?" }%></td>
         <% end %>
