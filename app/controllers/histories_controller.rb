@@ -1,7 +1,7 @@
 class HistoriesController < ApplicationController
   
   before_action :find_project
-  before_action :is_assignee?
+  
   def index
     @histories = History.all
     
@@ -117,6 +117,10 @@ class HistoriesController < ApplicationController
   private
   def history_params
     params.require(:history).permit(:title, :description, :evented_at, :project_id)
+  end
+
+  def find_project
+    @project = current_user.assigned_projects.find(params[:project_id])
   end
 
   # metaprogramming?

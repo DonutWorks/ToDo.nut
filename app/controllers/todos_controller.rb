@@ -1,6 +1,6 @@
 class TodosController < ApplicationController
   before_action :find_project
-  before_action :is_assignee?
+  
 
   def new
     @todo = Todo.new
@@ -52,5 +52,10 @@ class TodosController < ApplicationController
 private 
   def todo_params
     params.require(:todo).permit(:title, :color, :duedate)
+  end
+
+  def find_project
+    
+    @project = current_user.assigned_projects.find(params[:project_id])
   end
 end

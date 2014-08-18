@@ -1,8 +1,7 @@
 class ProjectsController < ApplicationController
-  before_action :is_assignee?, only:[:main, :members]
-  before_action :is_assignee_for_project?
-
-  skip_before_action :is_assignee_for_project?, only:[:main, :members, :index, :new, :create]
+  before_action :find_project, only:[:main, :members]
+  before_action :find_project_for_id
+  skip_before_action :find_project_for_id, only:[:main, :members, :index, :new, :create]
 
   def new
     @project = Project.new
@@ -135,12 +134,18 @@ private
     return data.to_json
   end
 
-  def is_assignee_for_project?
-    project_id = params[:id]   
-    (current_user.assigned_projects.find(project_id))
+  def find_project_for_id
+    
+    @project = current_user.assigned_projects.find(params[:id] )
       #if project doesn't exist, this will make an exception.
       #Should make exception handler
+  end
+
+  def find_project
     
+    @project = current_user.assigned_projects.find(params[:project_id])
+      #if project doesn't exist, this will make an exception.
+      #Should make exception handler
   end
   
 end

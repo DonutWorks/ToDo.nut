@@ -11,22 +11,6 @@ class ApplicationController < ActionController::Base
   
   
   protected
-  def find_project
-    project_id = params[:project_id]
-    @project = Project.find(project_id)
-  end
-
-  protected
-  def is_assignee?
-    project_id = params[:project_id] 
-    (current_user.assigned_projects.find(project_id))
-      #if project doesn't exist, this will make an exception.
-      #Should make exception handler
-
-  end
-  
-  
-
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) << :nickname
     devise_parameter_sanitizer.for(:account_update) << :nickname
