@@ -3,17 +3,14 @@ Rails.application.routes.draw do
 
   get '/users/merge/:id/:provider(/:callback)', to: 'users#merge', as: 'users_merge'
 
-  get 'users/show'
-
-  get 'users/new'
-
-  get 'user/new'
-
   devise_for :users, :controllers => { 
     :omniauth_callbacks => "users/omniauth_callbacks",
-    :registrations => "users/registrations"
+    :registrations => "users/registrations",
   }
-  resources :users, only: [:show]
+
+  #get '/users/(/:nickname)/edit', to: 'users/registrations#edit', as: 'edit_user'
+  get '/users/(/:nickname)', to: 'users#show', as: 'show_user'
+  #resources :users, only: [:show]
 
   resources :projects do
 
