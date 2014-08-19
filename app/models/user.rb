@@ -25,15 +25,20 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_nickname(nickname)
-    where(arel_table[:nickname].matches("#{nickname}")).take(1)
+    #where(arel_table[:nickname].matches("#{nickname}")).take(1)
+    user = User.where(:nickname => nickname).first
   end
 
   def self.from_omniauth(auth)
+    @my_logger ||= Logger.new("#{Rails.root}/log/my.log")
     where(auth.slice(:provider, :uid)).first_or_create do |user|
-
+      @my_logger.debug "test facebok"
       user.email = auth.info.email
       user.password = Devise.friendly_token[0,20]
+      # user.password = nil
       user.nickname = auth.info.name
+
+      @my_logger.debug user.inspect
     end
   end
 
@@ -47,21 +52,23 @@ class User < ActiveRecord::Base
 
   def self.find_for_google_oauth2(access_token, signed_in_resource=nil)
     data = access_token.info
+    
     user = User.where(:email => data["email"]).first
 
     # Uncomment the section below if you want users to be created if they don't exist
     unless user
-      user = User.create(email: data["email"],
-       password: Devise.friendly_token[0,20],
-       nickname: data["name"]
-       )
+      user = User.create(provider:access_token.provider,
+        uid:access_token.uid,
+        email: data["email"],
+        password: Devise.friendly_token[0,20],
+        nickname: data["name"])
     end
     user
   end
 
 
   def self.find_for_twitter_oauth(auth, signed_in_resource=nil)
-    user = User.where(:provider => auth.provider, :uid => auth.uid).first
+    user = User.where(:email => auth.extra.raw_info.screen_name + "@todo.nut").first
    
     unless user
       user = User.create(provider:auth.provider,
@@ -73,4 +80,13 @@ class User < ActiveRecord::Base
     
     user
   end
+
+  def merge(id, provider, uid)
+    user = User.where(:id => id).first
+    user.provider = provider
+    user.uid = uid
+    user.save
+  end
+
+
 end

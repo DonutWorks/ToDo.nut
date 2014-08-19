@@ -11,6 +11,8 @@ class ApplicationController < ActionController::Base
   #authentication_project (skip_action)
   before_action :is_assignee?
   
+  
+
   protected
   def is_assignee?
     project_id = params[:project_id] 
