@@ -1,6 +1,6 @@
 class ProjectsController < ApplicationController
-
   before_action :is_project_assignee?
+  respond_to :json
   
   def new
     @project = Project.new
@@ -74,11 +74,7 @@ class ProjectsController < ApplicationController
   def members
     @project = Project.find(params[:project_id])
     members = @project.fetch_members_by_nickname(params[:nickname], 5)
-    members = members.map do |member|
-      { nickname: member.nickname, email: member.email }
-    end
-
-    render json: members
+    respond_with members
   end
 
   def associate_project_with_assignees!
