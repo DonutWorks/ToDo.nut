@@ -26,12 +26,13 @@ Rails.application.routes.draw do
       end
       resources :comments
     end
-    
-    collection do
-      get '(/:project_id)/main', action: 'main', as: 'main'
+
+    member do
+      get 'detail'
+      get 'members(/:nickname)', action: 'members', as: 'members', defaults: {format: 'json'}
+
     end
 
-    get 'members(/:nickname)', action: 'members', as: 'members', defaults: {format: 'json'}
   end
 
   

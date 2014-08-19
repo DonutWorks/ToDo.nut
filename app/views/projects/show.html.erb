@@ -1,34 +1,256 @@
-<div class="form-container">
-  <div class="row">
+<div class="todo_title">
+  <h1 class="title"><%= @project.title %></h1>   
+</div>
 
-    <div class="col-md-6">
-      <h3>
-       <%= @project.title %>
-      </h3>
+<%= render 'todos/form' %>
 
-      <p class="text-align-right">
-        <strong>Creator</strong><br />
-        <%= @project.user.email %>
-      </p>
-      
-      <p class="text-align-right">
-        <strong>Assignee</strong><br />
-        <% @project.assignees.each do |assignee| %>
-        <%= assignee.email %><br />
-        <% end %>
-      </p>
+<div id="chart">
+</div>
 
-
-      <p class="word-break">
-       <%= @project.description %>
-     </p>
-
-      <div class="form-buttons">
-        <%= link_to 'Back', projects_path, class: "btn btn-default" %>
-        <%= link_to 'Edit', edit_project_path(@project), class: "btn btn-default" %>
-      </div>
-    </div>
-    
+  <div>
+    <h1>History List</h1>
+    <%= link_to 'New History', new_project_history_path(@project.id), class: "btn btn-default float-right" %>
   </div>
 
-</div>
+  <table id="histories" class="table table-condensed table-hover">
+    <thead>
+      <tr>
+
+        <th>Title</th>
+        <th>Description</th>
+        <th>Date</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @histories.each do |history| %>
+        <tr onmouseover="" style="cursor: pointer;">
+          <%= link_to project_history_path(@project,history) do %>
+            <td><%= history.title %></td>
+            <td><%= history.description %></td>
+            <td><%= history.evented_at.strftime('%m/%d/%Y') %></td>
+            <td class="text-center">
+              <%= link_to 'Show', project_history_path(@project,history), class: "btn btn-default show-history hidden"%>
+              <%= link_to 'Edit', edit_project_history_path(@project,history), class: "btn btn-default" %>
+              <%= link_to 'Delete', project_history_path(@project,history), method: :delete, class: "btn btn-default" %></td>
+          <% end %>
+        </tr>
+        
+      <% end %>
+    </tbody>
+  </table>
+
+  <div>
+    <h1><%= "Assigned history".pluralize(current_user.assigned_histories.where(project_id: @project.id).count) %></h1>
+  </div>
+
+  <table id="histories" class="table table-condensed table-hover">
+    <thead>
+      <tr>
+
+        <th>Title</th>
+        <th>Description</th>
+        <th>Date</th>
+        <th></th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% current_user.assigned_histories.where(project_id: @project.id).each do |history| %>
+        <tr onmouseover="" style="cursor: pointer;">
+          <%= link_to project_history_path(@project,history) do %>
+            <td><%= history.title %></td>
+            <td><%= history.description %></td>
+            <td><%= history.evented_at.strftime('%m/%d/%Y') %></td>
+            <td class="text-center">
+              <%= link_to 'Show', project_history_path(@project,history), class: "btn btn-default show-history hidden"%>
+              <%= link_to 'Edit', edit_project_history_path(@project,history), class: "btn btn-default" %>
+              <%= link_to 'Delete', project_history_path(@project,history), method: :delete, class: "btn btn-default" %></td>
+          <% end %>
+        </tr>
+        
+      <% end %>
+    </tbody>
+  </table>
+
+  <script>
+  $(document).ready(function() {
+    $("#histories tbody tr").on("click", function(){
+      $(this).find(".show-history")[0].click();
+    });
+
+    var margin = {top: 20, right: 100, bottom: 0, left: 20},
+    width = $(".container").width() - (margin.left + margin.right),
+    height = 300;
+
+    var start_year = -10,
+    end_year = 0;
+
+    var c = d3.scale.category20c();
+
+    var x = d3.scale.linear()
+    .range([0, width]);
+
+    var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("top");
+
+    var formatYears = d3.format("0000");
+    xAxis.tickFormat(formatYears);
+
+    var svg = d3.select("div#chart").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .style("margin-left", margin.left + "px")
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    data = JSON.parse(gon.deco);
+    
+    x.domain([start_year, end_year]);
+    var xScale = d3.scale.linear()
+    .domain([start_year, end_year])
+    .range([0, width]);
+
+    svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + 0 + ")")
+    .call(xAxis);
+
+    for (var j = 0; j < data.length; j++) {
+      var g = svg.append("g").attr("class","journal");
+
+      var circles = g.selectAll("circle")
+      .data(data[j]['articles'])
+      .enter()
+      .append("circle");
+
+      var text = g.selectAll("text")
+      .data(data[j]['articles'])
+      .enter()
+      .append("text");
+
+      var rScale = d3.scale.linear()
+      .domain([0, d3.max(data[j]['articles'], function(d) { return d[1]; })])
+      .range([2, 9]);
+
+      circles
+      .attr("cx", function(d, i) { return xScale(d[0]); })
+      .attr("cy", j*20+20)
+      .attr("r", function(d) { return rScale(d[1]); })
+      .style("fill", data[j]['color']);
+
+      text
+      .attr("y", j*20+25)
+      .attr("x",function(d, i) { return xScale(d[0])-5; })
+      .attr("class","value")
+      .text(function(d){ return d[1]; })
+      .style("fill", data[j]['color'])
+      .style("display","none");
+
+      g.append("text")
+      .attr("y", j*20+25)
+      .attr("x",width+20)
+      .attr("class","label")
+      .attr("data-duedate", data[j]['duedate'])
+      .attr("data-text", truncate(data[j]['name'],30,"..."))
+      .attr("data-id", data[j]['id'])    
+      .attr("data-project-id", data[j]['project_id'])    
+      .text(truncate(data[j]['name'],30,"..."))
+      .style("fill", data[j]['color'])
+      .on("mouseover", mouseover)
+      .on("mouseout", mouseout)
+      .on("click", mouseclick);
+    };
+
+  // d3.json("<%= asset_path('test_data.json') %>", function(<%= @data %>) {
+  //   x.domain([start_year, end_year]);
+  //   var xScale = d3.scale.linear()
+  //     .domain([start_year, end_year])
+  //     .range([0, width]);
+
+  //   svg.append("g")
+  //     .attr("class", "x axis")
+  //     .attr("transform", "translate(0," + 0 + ")")
+  //     .call(xAxis);
+
+  //   for (var j = 0; j < data.length; j++) {
+  //     var g = svg.append("g").attr("class","journal");
+
+  //     var circles = g.selectAll("circle")
+  //       .data(data[j]['articles'])
+  //       .enter()
+  //       .append("circle");
+
+  //     var text = g.selectAll("text")
+  //       .data(data[j]['articles'])
+  //       .enter()
+  //       .append("text");
+
+  //     var rScale = d3.scale.linear()
+  //       .domain([0, d3.max(data[j]['articles'], function(d) { return d[1]; })])
+  //       .range([2, 9]);
+
+  //     circles
+  //       .attr("cx", function(d, i) { return xScale(d[0]); })
+  //       .attr("cy", j*20+20)
+  //       .attr("r", function(d) { return rScale(d[1]); })
+  //       .style("fill", function(d) { return c(j); });
+
+  //     text
+  //       .attr("y", j*20+25)
+  //       .attr("x",function(d, i) { return xScale(d[0])-5; })
+  //       .attr("class","value")
+  //       .text(function(d){ return d[1]; })
+  //       .style("fill", function(d) { return c(j); })
+  //       .style("display","none");
+
+  //     g.append("text")
+  //       .attr("y", j*20+25)
+  //       .attr("x",width+20)
+  //       .attr("class","label")
+  //       .text(truncate(data[j]['name'],30,"..."))
+  //       .style("fill", function(d) { return c(j); })
+  //       .on("mouseover", mouseover)
+  //       .on("mouseout", mouseout);
+  //   };
+
+  // });
+
+function truncate(str, maxLength, suffix) {
+  if(str.length > maxLength) {
+    str = str.substring(0, maxLength + 1); 
+    str = str.substring(0, Math.min(str.length, str.lastIndexOf(" ")));
+    str = str + suffix;
+  }
+  return str;
+}
+
+function mouseover() {
+  var n = d3.select(this);
+  var g = n.node().parentNode;
+  d3.select(g).selectAll("circle").style("display","none");
+  d3.select(g).selectAll("text.value").style("display","block");
+  n.text("Due : " + n.attr("data-duedate"));
+  n.attr("cursor", "pointer");
+}
+
+function mouseout() {
+  var n = d3.select(this);
+  var g = n.node().parentNode;
+  d3.select(g).selectAll("circle").style("display","block");
+  d3.select(g).selectAll("text.value").style("display","none");
+  n.text(n.attr("data-text"));
+  n.attr("cursor", "");
+}
+
+function mouseclick() {
+  var n = d3.select(this);
+  location.href = "/projects/"+n.attr("data-project-id")+"/todos/" + n.attr("data-id");
+}
+
+});
+</script>

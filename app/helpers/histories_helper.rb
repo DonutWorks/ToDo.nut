@@ -27,6 +27,7 @@ module HistoriesHelper
     end
   end
 
+
   REFERENCE_REPLACE_STRATEGIES = [
     {pattern: /\B&(\d+)\b/, replacer: :replace_todo_reference},
     {pattern: /\B#(\d+)\b/, replacer: :replace_history_reference},

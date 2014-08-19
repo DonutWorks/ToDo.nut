@@ -8,6 +8,7 @@ class Project < ActiveRecord::Base
 
   def fetch_members_by_nickname(nickname, count)
     members = assignees.arel_table
+    
     assignees.where(members[:nickname].matches("%#{nickname}%")).take(count)
   end
 end
