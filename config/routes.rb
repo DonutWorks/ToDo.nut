@@ -21,7 +21,6 @@ Rails.application.routes.draw do
 
     resources :histories do
       collection do
-        get 'list_members', defaults: {format: 'json'} # should move to projects#members
         get 'list(/:id)', action: 'list', defaults: {format: 'json'}
       end
       resources :comments

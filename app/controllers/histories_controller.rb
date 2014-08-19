@@ -110,11 +110,6 @@ class HistoriesController < ApplicationController
     respond_with histories
   end
 
-  # need move to project#members
-  def list_members
-    respond_with User.all
-  end
-
   private
   def history_params
     params.require(:history).permit(:title, :description, :evented_at, :project_id)
