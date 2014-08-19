@@ -19,9 +19,11 @@ $(document).on('ready page:load', function () {
       },
       index: 1
     }, {
-      match: /\B@([^\s]+)$/,
+      match: /\B@([^\s]*)$/,
       search: function (term, callback) {
-        $.getJSON('/projects/'+gon.project_id+'/members/'+term)
+
+        $.getJSON('/projects/'+gon.project_id+'/members/' + term)
+
         .done(function (res) {
           callback($.map(res, function (member) {
             return member.nickname;

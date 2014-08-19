@@ -1,6 +1,8 @@
 class TodosController < ApplicationController
+
   before_action :find_project
-  
+  respond_to :json
+
 
   def new
     @todo = Todo.new
@@ -46,7 +48,7 @@ class TodosController < ApplicationController
   def list
     from_id = params[:id] || 0
     todos = Todo.where(project_id: params[:project_id]).fetch_list_from(from_id, 5)
-    render json: todos
+    respond_with todos
   end
 
 private 

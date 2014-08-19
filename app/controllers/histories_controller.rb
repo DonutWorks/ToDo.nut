@@ -1,6 +1,7 @@
 class HistoriesController < ApplicationController
   
   before_action :find_project
+  respond_to :json
   
   def index
     @histories = History.all
@@ -103,15 +104,8 @@ class HistoriesController < ApplicationController
 
   def list
     from_id = params[:id] || 0
-    
     histories = History.where(project_id: params[:project_id]).fetch_list_from(from_id, 5)
-
-    render json: histories
-  end
-
-  # need move to project#members
-  def list_members
-    render json: User.all
+    respond_with histories
   end
 
   private
