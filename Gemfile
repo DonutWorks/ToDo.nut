@@ -66,3 +66,6 @@ end
 gem 'carrierwave'
 gem 'mini_magick'
 gem 'cloudinary'
+
+# ActiveModel::Serializers extension
+gem "active_model_serializers"

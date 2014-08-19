@@ -13,28 +13,25 @@ Rails.application.routes.draw do
   #resources :users, only: [:show]
 
   resources :projects do
-
     resources :todos do
       collection do
-        get 'list(/:id)', action: 'list'
+        get 'list(/:id)', action: 'list', defaults: {format: 'json'}
       end
     end
 
     resources :histories do
       collection do
-        get 'list_members' # should move to projects#members
-        get 'list(/:id)', action: 'list'
+        get 'list_members', defaults: {format: 'json'} # should move to projects#members
+        get 'list(/:id)', action: 'list', defaults: {format: 'json'}
       end
       resources :comments
     end
     
     collection do
       get '(/:project_id)/main', action: 'main', as: 'main'
-      
-
-      
     end
-    get 'members(/:nickname)', action: 'members', as: 'members'
+
+    get 'members(/:nickname)', action: 'members', as: 'members', defaults: {format: 'json'}
   end
 
   
