@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   devise_for :users, :controllers => { 
     :omniauth_callbacks => "users/omniauth_callbacks",
     :registrations => "users/registrations",
+    :sessions => "users/sessions"
   }
 
   #get '/users/(/:nickname)/edit', to: 'users/registrations#edit', as: 'edit_user'
