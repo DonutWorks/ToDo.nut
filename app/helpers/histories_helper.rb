@@ -1,28 +1,41 @@
 module HistoriesHelper
-  ReferenceMatchStrategy = Struct.new(:pattern, :model, :find_method)
-  REFERENCE_MATCHES_STRATEGIES = [
-    ReferenceMatchStrategy.new(/\B&(\d+)\b/, Todo, :find_by_id),
-    ReferenceMatchStrategy.new(/\B#(\d+)\b/, History, :find_by_id),
-    ReferenceMatchStrategy.new(/\B@([^\s]+)\b/, User, :find_by_nickname)
+  # @project need to replace to current_project?
+  def replace_todo_reference(reference)
+    found = Todo.find_by_id(reference[1..-1])
+    if found
+      link_to "#{found.title}(#{reference})", project_todo_path(@project, found)
+    else
+      reference
+    end
+  end
+
+  def replace_history_reference(reference)
+    found = History.find_by_id(reference[1..-1])
+    if found
+      link_to "#{found.title}(#{reference})", project_history_path(@project, found)
+    else
+      reference
+    end
+  end
+
+  def replace_user_reference(reference)
+    found = User.find_by_nickname(reference[1..-1])
+    if found
+      link_to reference, user_path(found)
+    else
+      reference
+    end
+  end
+
+  REFERENCE_REPLACE_STRATEGIES = [
+    {pattern: /\B&(\d+)\b/, replacer: :replace_todo_reference},
+    {pattern: /\B#(\d+)\b/, replacer: :replace_history_reference},
+    {pattern: /\B@([^\s]+)\b/, replacer: :replace_user_reference},
   ]
   def attach_reference_link(content)
-    REFERENCE_MATCHES_STRATEGIES.each do |strategy|
-      content.gsub!(strategy.pattern) do |match|
-        referenced = strategy.model.send(strategy.find_method, $1)
-        if referenced
-
-          # link_to match, [Project.find(referenced.project_id), referenced]
-
-          if strategy.find_method == :find_by_id
-          #How to make this line clearer...
-            link_to match, [Project.find(referenced.project_id), referenced]
-          else 
-            link_to match, project_members_path(Project.find(params[:project_id]),referenced)
-          end
-
-        else
-          match
-        end
+    REFERENCE_REPLACE_STRATEGIES.each do |strategy|
+      content.gsub!(strategy[:pattern]) do |match|
+        self.send(strategy[:replacer], match)
       end
     end
     content
