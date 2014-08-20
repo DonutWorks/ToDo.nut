@@ -51,11 +51,11 @@ class User < ActiveRecord::Base
     user = User.where(:email => data["email"]).first
 
     unless user
-      user = User.create(provider:access_token.provider,
+      user = User.create!(provider:access_token.provider,
         uid:access_token.uid,
         email: data["email"],
         password: Devise.friendly_token[0,20],
-        nickname: data["name"])!
+        nickname: data["name"])
     end
     user
   end
@@ -65,11 +65,11 @@ class User < ActiveRecord::Base
     user = User.where(:uid => auth.uid, :provider => auth.provider).first
 
     unless user
-      user = User.create(provider:auth.provider,
+      user = User.create!(provider:auth.provider,
         uid:auth.uid,
         email: "temp." + Devise.friendly_token[0,7] + "@todo.nut",
         nickname: auth.extra.raw_info.screen_name,
-        password:Devise.friendly_token[0,20])!
+        password:Devise.friendly_token[0,20])
     end
     user
   end
