@@ -1,6 +1,4 @@
 class User < ActiveRecord::Base
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
   has_many :histories
   has_many :todos
 
@@ -20,12 +18,13 @@ class User < ActiveRecord::Base
   validates_presence_of :nickname
   validates_uniqueness_of :nickname
 
+
+
   def to_param
     nickname
   end
 
   def self.find_by_nickname(nickname)
-    #where(arel_table[:nickname].matches("#{nickname}")).take(1)
     user = User.where(:nickname => nickname).first
   end
 
@@ -34,7 +33,6 @@ class User < ActiveRecord::Base
     where(auth.slice(:provider, :uid)).first_or_create do |user|
       user.email = auth.info.email
       user.password = Devise.friendly_token[0,20]
-      # user.password = nil
       user.nickname = auth.info.name
     end
   end
@@ -47,35 +45,32 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.find_for_oauth2(access_token, signed_in_resource=nil)
+  def self.find_for_oauth2(access_token)
     data = access_token.info
 
     user = User.where(:email => data["email"]).first
 
-    # Uncomment the section below if you want users to be created if they don't exist
     unless user
       user = User.create(provider:access_token.provider,
         uid:access_token.uid,
         email: data["email"],
         password: Devise.friendly_token[0,20],
-        nickname: data["name"])
+        nickname: data["name"])!
     end
     user
   end
 
 
-  def self.find_for_twitter_oauth(auth, signed_in_resource=nil)
+  def self.find_for_twitter_oauth(auth)
     user = User.where(:uid => auth.uid, :provider => auth.provider).first
 
     unless user
       user = User.create(provider:auth.provider,
         uid:auth.uid,
-        # email: auth.extra.raw_info.screen_name + auth.uid[1..5] + "@todo.nut",
         email: "temp." + Devise.friendly_token[0,7] + "@todo.nut",
         nickname: auth.extra.raw_info.screen_name,
-        password:Devise.friendly_token[0,20])
+        password:Devise.friendly_token[0,20])!
     end
-
     user
   end
 
@@ -83,13 +78,13 @@ class User < ActiveRecord::Base
     user = User.where(:id => id).first
     user.provider = provider
     user.uid = uid
-    user.save
+    user.save!
   end
 
   def update_from_twitter(id, email)
     user = User.where(:id => id).first
     user.email = email
-    user.save
+    user.save!
   end
 
 
