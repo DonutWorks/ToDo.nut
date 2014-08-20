@@ -9,10 +9,10 @@ Rails.application.routes.draw do
   }
   
   devise_scope :user do
-    get '/users/(/:nickname)/edit', to: 'users/registrations#edit', as: 'edit_user'
+    get '/users/(/:nickname)/edit', to: 'users/registrations#edit', as: 'edit_user', :constraints => { :nickname => /[^\/]+/ }
   end
 
-  get '/users/(/:nickname)', to: 'users#show', as: 'show_user'
+  get '/users/(/:nickname)', to: 'users#show', as: 'show_user', :constraints => { :nickname => /[^\/]+/ }
   #resources :users, only: [:show]
 
   resources :projects do
