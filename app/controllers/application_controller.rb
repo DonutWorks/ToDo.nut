@@ -8,8 +8,8 @@ class ApplicationController < ActionController::Base
   # migration for new field nickname which is required field.
   before_action :is_nickname_not_empty?
 
-  
-  
+  @my_logger ||= Logger.new("#{Rails.root}/log/my.log")
+
   protected
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) << :nickname
@@ -22,5 +22,5 @@ class ApplicationController < ActionController::Base
       redirect_to edit_user_registration_path
     end
   end
-  
+
 end
