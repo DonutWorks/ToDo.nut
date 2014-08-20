@@ -5,7 +5,7 @@ class UsersController < ApplicationController
   end
 
   def merge
-    
+
 
     @user = User.find(params[:id])
     @provider = params[:provider]
@@ -14,8 +14,21 @@ class UsersController < ApplicationController
       provider_session = session["devise." + @provider]
 
       @user.merge(params[:id], provider_session["provider"], provider_session["uid"])
-      redirect_to root_path 
+      redirect_to root_path
     end
 
+  end
+
+  def sign_up_from_twitter
+    # render :text => session["devise.twitter_data"]
+
+    @user = User.find(params[:id])
+
+    # if params[:callback] == 'callback'
+    #   provider_session = session["devise.twitter_data"]
+
+    #   @user.merge(params[:id], provider_session["provider"], provider_session["uid"])
+    #   redirect_to root_path
+    # end
   end
 end

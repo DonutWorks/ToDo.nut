@@ -5,8 +5,8 @@ class User < ActiveRecord::Base
   has_many :todos
 
   has_many :history_users, foreign_key: :assignee_id
-  has_many :assigned_histories, through: :history_users  
-  
+  has_many :assigned_histories, through: :history_users
+
   has_many :project_users, foreign_key: :assignee_id
   has_many :assigned_projects, through: :project_users
 
@@ -52,7 +52,7 @@ class User < ActiveRecord::Base
 
   def self.find_for_google_oauth2(access_token, signed_in_resource=nil)
     data = access_token.info
-    
+
     user = User.where(:email => data["email"]).first
 
     # Uncomment the section below if you want users to be created if they don't exist
@@ -68,16 +68,16 @@ class User < ActiveRecord::Base
 
 
   def self.find_for_twitter_oauth(auth, signed_in_resource=nil)
-    user = User.where(:email => auth.extra.raw_info.screen_name + "@todo.nut").first
-   
+    user = User.where(:uid => auth.uid, :provider => auth.provider).first
+
     unless user
       user = User.create(provider:auth.provider,
         uid:auth.uid,
-        email: auth.extra.raw_info.screen_name + "@todo.nut",
+        email: "temp@todo.nut",
         nickname: auth.extra.raw_info.screen_name,
         password:Devise.friendly_token[0,20])
     end
-    
+
     user
   end
 
@@ -87,6 +87,7 @@ class User < ActiveRecord::Base
     user.uid = uid
     user.save
   end
+
 
 
 end
