@@ -28,6 +28,7 @@ class HistoriesController < ApplicationController
       associate_history_with_assignees!
       associate_history_with_images!
       @history.save!
+      send_notifications
     end
 
     #url_helper -> project_history(@project, @history) is okay?
@@ -85,6 +86,7 @@ class HistoriesController < ApplicationController
       associate_history_with_assignees!
       associate_history_with_images!
       @history.update!(history_params)
+      send_notifications
     end
 
     #url_helper -> project_history(@project, @history) is okay?
@@ -115,6 +117,16 @@ class HistoriesController < ApplicationController
 
   def find_project
     @project = current_user.assigned_projects.find(params[:project_id])
+  end
+
+  def send_notifications
+    mentioned_users = @history.description.scan(/\B@([^\s]+)\b/).flatten!
+    mentioned_users.map! { |nickname| User.find_by_nickname(nickname) }
+    mentioned_users.each do |user|
+      notification = user.notifications.build
+      notification.subject = @history
+      notification.mention!
+    end
   end
 
   # metaprogramming?
