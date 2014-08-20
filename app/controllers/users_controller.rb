@@ -24,6 +24,13 @@ class UsersController < ApplicationController
 
     @user = User.find(params[:id])
 
+    if request.post?
+      params = request.params[:user]
+      @user.update_from_twitter(@user.id, params[:email])
+
+      redirect_to root_path
+    end
+
     # if params[:callback] == 'callback'
     #   provider_session = session["devise.twitter_data"]
 

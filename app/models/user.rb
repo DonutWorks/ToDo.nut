@@ -88,6 +88,12 @@ class User < ActiveRecord::Base
     user.save
   end
 
+  def update_from_twitter(id, email)
+    user = User.where(:id => id).first
+    user.email = email
+    user.save
+  end
+
 
 
 end
