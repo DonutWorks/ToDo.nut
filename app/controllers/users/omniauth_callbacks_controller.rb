@@ -53,21 +53,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     end
   end
 
-  # def twitter
-  #   @user = User.find_for_twitter_oauth(request.env["omniauth.auth"], current_user)
-
-  #   if @user.persisted? and @user.uid != nil
-  #     sign_in_and_redirect @user, :event => :authentication #this will throw if @user is not activated
-  #     set_flash_message(:notice, :success, :kind => "Twitter") if is_navigational_format?
-  #   elsif @user.persisted? and @user.uid == nil
-  #     session["devise.twitter_data"] = request.env["omniauth.auth"]
-  #     redirect_to users_merge_path(@user.id, 'twitter_data')
-  #   else
-  #     session["devise.twitter_data"] = request.env["omniauth.auth"]
-  #     redirect_to new_user_registration_url
-  #   end
-  # end
-
     def twitter
     @user = User.find_for_twitter_oauth(request.env["omniauth.auth"], current_user)
 
@@ -77,9 +62,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       set_flash_message(:notice, :success, :kind => "Twitter") if is_navigational_format?
     # 계정이 없다 = 새로운 이메일을 입력받아서 회원가입 시킨다
     elsif @user.email == "temp@todo.nut"
-      # session["devise.twitter_data"] = request.env["omniauth.auth"]
-      # render :text => @user.inspect
-
       redirect_to sign_up_from_twitter_path(@user.id)
     end
   end

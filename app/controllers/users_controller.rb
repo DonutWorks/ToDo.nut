@@ -20,8 +20,6 @@ class UsersController < ApplicationController
   end
 
   def sign_up_from_twitter
-    # render :text => session["devise.twitter_data"]
-
     @user = User.find(params[:id])
 
     if request.post?
@@ -30,12 +28,5 @@ class UsersController < ApplicationController
 
       redirect_to root_path
     end
-
-    # if params[:callback] == 'callback'
-    #   provider_session = session["devise.twitter_data"]
-
-    #   @user.merge(params[:id], provider_session["provider"], provider_session["uid"])
-    #   redirect_to root_path
-    # end
   end
 end
