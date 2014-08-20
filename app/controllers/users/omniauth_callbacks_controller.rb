@@ -57,11 +57,11 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     @user = User.find_for_twitter_oauth(request.env["omniauth.auth"], current_user)
 
     # 계정이 있다 = 성공
-    if @user.persisted? and @user.email != "temp@todo.nut"
+    if @user.persisted? and @user.email[0..3] != "temp"
       sign_in_and_redirect @user, :event => :authentication #this will throw if @user is not activated
       set_flash_message(:notice, :success, :kind => "Twitter") if is_navigational_format?
     # 계정이 없다 = 새로운 이메일을 입력받아서 회원가입 시킨다
-    elsif @user.email == "temp@todo.nut"
+    else
       redirect_to sign_up_from_twitter_path(@user.id)
     end
   end
