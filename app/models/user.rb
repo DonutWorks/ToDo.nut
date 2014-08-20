@@ -20,6 +20,8 @@ class User < ActiveRecord::Base
   validates_presence_of :nickname
   validates_uniqueness_of :nickname
 
+  has_many :notifications
+
   def to_param
     nickname
   end
