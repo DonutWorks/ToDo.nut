@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get 'notifications', to: 'notifications#show'
+  get 'notifications/all', to: 'notifications#all'
 
   # get 'users/merge(/:email)'
 

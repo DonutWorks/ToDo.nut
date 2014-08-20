@@ -1,16 +1,22 @@
 <h1>Notifications</h1>
 
-<div class="panel panel-info">
-  <% @notifications.each do |project, notis| %>
-  <div class="panel-heading"><%= link_to project.title, project %></div>
-  <ul class="list-group">
-    <% # type dispatching, partial_view required. %>
-    <% notis.each do |noti| %>
-      <%= link_to [project, noti.subject], class: "list-group-item" do %>
-        <%= noti.subject.title %>
-        <span class="pull-right"><%= time_ago_in_words(noti.updated_at) %> ago</span>
-      <% end %>
-    <% end %>
+<div class="row">
+  <ul class="nav nav-pills nav-stacked col-md-3 pull-left">
+    <%= nav_link_to "Unread", notifications_path %>
+    <%= nav_link_to "All Notifications", notifications_all_path %>
   </ul>
-<% end %>
+  <div class="panel panel-info col-md-9 pull-left no-padding">
+    <% @notifications.each do |project, notis| %>
+    <div class="panel-heading"><%= link_to project.title, project %></div>
+    <ul class="list-group">
+      <% # type dispatching, partial_view required. %>
+      <% notis.each do |noti| %>
+        <%= link_to [project, noti.subject], class: "list-group-item" do %>
+          <%= noti.subject.title %>
+          <span class="pull-right"><%= time_ago_in_words(noti.updated_at) %> ago</span>
+        <% end %>
+      <% end %>
+    </ul>
+  <% end %>
+  </div>
 </div>
