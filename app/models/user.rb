@@ -24,11 +24,6 @@ class User < ActiveRecord::Base
     nickname
   end
 
-  def self.find_by_nickname(nickname)
-    #where(arel_table[:nickname].matches("#{nickname}")).take(1)
-    user = User.where(:nickname => nickname).first
-  end
-
   def self.from_omniauth(auth)
     @my_logger ||= Logger.new("#{Rails.root}/log/my.log")
     where(auth.slice(:provider, :uid)).first_or_create do |user|
