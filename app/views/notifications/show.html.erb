@@ -6,7 +6,10 @@
   <ul class="list-group">
     <% # type dispatching, partial_view required. %>
     <% notis.each do |noti| %>
-      <%= link_to noti.subject.title, [project, noti.subject], class: "list-group-item" %>
+      <%= link_to [project, noti.subject], class: "list-group-item" do %>
+        <%= noti.subject.title %>
+        <span class="pull-right"><%= time_ago_in_words(noti.updated_at) %> ago</span>
+      <% end %>
     <% end %>
   </ul>
 <% end %>
