@@ -21,6 +21,7 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :nickname
 
   has_many :notifications
+  acts_as_reader
 
   def to_param
     nickname

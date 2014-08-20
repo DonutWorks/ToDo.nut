@@ -69,3 +69,6 @@ gem 'cloudinary'
 
 # ActiveModel::Serializers extension
 gem "active_model_serializers"
+
+# Message unread/read support
+gem 'unread'

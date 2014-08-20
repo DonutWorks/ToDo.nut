@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140820105244) do
+ActiveRecord::Schema.define(version: 20140820164833) do
 
   create_table "comments", force: true do |t|
     t.integer  "user_id"
@@ -109,6 +109,15 @@ ActiveRecord::Schema.define(version: 20140820105244) do
   end
 
   add_index "projects", ["user_id"], name: "index_projects_on_user_id"
+
+  create_table "read_marks", force: true do |t|
+    t.integer  "readable_id"
+    t.integer  "user_id",                  null: false
+    t.string   "readable_type", limit: 20, null: false
+    t.datetime "timestamp"
+  end
+
+  add_index "read_marks", ["user_id", "readable_type", "readable_id"], name: "index_read_marks_on_user_id_and_readable_type_and_readable_id"
 
   create_table "todos", force: true do |t|
     t.string   "title"
