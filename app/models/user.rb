@@ -30,15 +30,12 @@ class User < ActiveRecord::Base
   end
 
   def self.from_omniauth(auth)
-    @my_logger ||= Logger.new("#{Rails.root}/log/my.log")
+
     where(auth.slice(:provider, :uid)).first_or_create do |user|
-      @my_logger.debug "test facebok"
       user.email = auth.info.email
       user.password = Devise.friendly_token[0,20]
       # user.password = nil
       user.nickname = auth.info.name
-
-      @my_logger.debug user.inspect
     end
   end
 
@@ -50,7 +47,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.find_for_google_oauth2(access_token, signed_in_resource=nil)
+  def self.find_for_oauth2(access_token, signed_in_resource=nil)
     data = access_token.info
 
     user = User.where(:email => data["email"]).first
@@ -73,7 +70,8 @@ class User < ActiveRecord::Base
     unless user
       user = User.create(provider:auth.provider,
         uid:auth.uid,
-        email: "temp@todo.nut",
+        # email: auth.extra.raw_info.screen_name + auth.uid[1..5] + "@todo.nut",
+        email: Devise.friendly_token[0,10] + "@todo.nut",
         nickname: auth.extra.raw_info.screen_name,
         password:Devise.friendly_token[0,20])
     end
