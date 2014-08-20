@@ -1,0 +1,13 @@
+<h1>Notifications</h1>
+
+<div class="panel panel-info">
+  <% @notifications.each do |project, notis| %>
+  <div class="panel-heading"><%= link_to project.title, project %></div>
+  <ul class="list-group">
+    <% # type dispatching, partial_view required. %>
+    <% notis.each do |noti| %>
+      <%= link_to noti.subject.title, [project, noti.subject], class: "list-group-item" %>
+    <% end %>
+  </ul>
+<% end %>
+</div>
