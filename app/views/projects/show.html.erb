@@ -108,7 +108,8 @@
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    data = JSON.parse(gon.deco);
+
+    data = JSON.parse('<%= raw decorate(@todos) %>');
     
     x.domain([start_year, end_year]);
     var xScale = d3.scale.linear()
@@ -121,33 +122,33 @@
     .call(xAxis);
 
     for (var j = 0; j < data.length; j++) {
-      var g = svg.append("g").attr("class","journal");
+      var g = svg.append("g").attr("class","todo");
 
       var circles = g.selectAll("circle")
-      .data(data[j]['articles'])
+      .data(data[j]['histories'])
       .enter()
       .append("circle");
 
       var text = g.selectAll("text")
-      .data(data[j]['articles'])
+      .data(data[j]['histories'])
       .enter()
       .append("text");
 
       var rScale = d3.scale.linear()
-      .domain([0, d3.max(data[j]['articles'], function(d) { return d[1]; })])
+      .domain([0, d3.max(data[j]['histories'], function(d) { return d['weight']; })])
       .range([2, 9]);
 
       circles
-      .attr("cx", function(d, i) { return xScale(d[0]); })
+      .attr("cx", function(d, i) { return xScale(d['when']); })
       .attr("cy", j*20+20)
-      .attr("r", function(d) { return rScale(d[1]); })
+      .attr("r", function(d) { return rScale(d['weight']); })
       .style("fill", data[j]['color']);
 
       text
       .attr("y", j*20+25)
-      .attr("x",function(d, i) { return xScale(d[0])-5; })
+      .attr("x",function(d, i) { return xScale(d['when'])-5; })
       .attr("class","value")
-      .text(function(d){ return d[1]; })
+      .text(function(d){ return d['weight']; })
       .style("fill", data[j]['color'])
       .style("display","none");
 
@@ -156,69 +157,16 @@
       .attr("x",width+20)
       .attr("class","label")
       .attr("data-duedate", data[j]['duedate'])
-      .attr("data-text", truncate(data[j]['name'],30,"..."))
+      .attr("data-text", truncate(data[j]['title'],30,"..."))
       .attr("data-id", data[j]['id'])    
       .attr("data-project-id", data[j]['project_id'])    
-      .text(truncate(data[j]['name'],30,"..."))
+      .text(truncate(data[j]['title'],30,"..."))
       .style("fill", data[j]['color'])
       .on("mouseover", mouseover)
       .on("mouseout", mouseout)
       .on("click", mouseclick);
     };
 
-  // d3.json("<%= asset_path('test_data.json') %>", function(<%= @data %>) {
-  //   x.domain([start_year, end_year]);
-  //   var xScale = d3.scale.linear()
-  //     .domain([start_year, end_year])
-  //     .range([0, width]);
-
-  //   svg.append("g")
-  //     .attr("class", "x axis")
-  //     .attr("transform", "translate(0," + 0 + ")")
-  //     .call(xAxis);
-
-  //   for (var j = 0; j < data.length; j++) {
-  //     var g = svg.append("g").attr("class","journal");
-
-  //     var circles = g.selectAll("circle")
-  //       .data(data[j]['articles'])
-  //       .enter()
-  //       .append("circle");
-
-  //     var text = g.selectAll("text")
-  //       .data(data[j]['articles'])
-  //       .enter()
-  //       .append("text");
-
-  //     var rScale = d3.scale.linear()
-  //       .domain([0, d3.max(data[j]['articles'], function(d) { return d[1]; })])
-  //       .range([2, 9]);
-
-  //     circles
-  //       .attr("cx", function(d, i) { return xScale(d[0]); })
-  //       .attr("cy", j*20+20)
-  //       .attr("r", function(d) { return rScale(d[1]); })
-  //       .style("fill", function(d) { return c(j); });
-
-  //     text
-  //       .attr("y", j*20+25)
-  //       .attr("x",function(d, i) { return xScale(d[0])-5; })
-  //       .attr("class","value")
-  //       .text(function(d){ return d[1]; })
-  //       .style("fill", function(d) { return c(j); })
-  //       .style("display","none");
-
-  //     g.append("text")
-  //       .attr("y", j*20+25)
-  //       .attr("x",width+20)
-  //       .attr("class","label")
-  //       .text(truncate(data[j]['name'],30,"..."))
-  //       .style("fill", function(d) { return c(j); })
-  //       .on("mouseover", mouseover)
-  //       .on("mouseout", mouseout);
-  //   };
-
-  // });
 
 function truncate(str, maxLength, suffix) {
   if(str.length > maxLength) {
