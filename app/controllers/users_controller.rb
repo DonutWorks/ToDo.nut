@@ -4,8 +4,6 @@ class UsersController < ApplicationController
   def show
   	@user = User.find_by_nickname(params[:nickname])
 
-    #@projects = Project.find_by_assigned_user_id(@user.id)
-    #@histories = History.find_by_assigned_user_id(@user.id)
     @projects = @user.assigned_projects
     @histories = @user.assigned_histories
 

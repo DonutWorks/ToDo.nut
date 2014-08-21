@@ -22,11 +22,4 @@ class History < ActiveRecord::Base
     where(arel_table[:id].gteq(id)).take(count)
   end
 
-  def self.find_by_assigned_user_id(user_id)
-    ids = []
-    HistoryUser.where(assignee_id: user_id).find_each do |h_user|
-      ids.push(h_user.assigned_history_id)
-    end
-    History.find(ids)
-  end
 end
