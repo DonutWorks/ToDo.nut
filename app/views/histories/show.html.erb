@@ -19,7 +19,7 @@
     <p class="text-align-right">
       <strong>Assignee</strong><br />
       <% @history.assignees.each do |assignee| %>
-      <%= assignee.email %><br />
+      <%= assignee.decorate.email %><br />
       <% end %>
     </p>
 
