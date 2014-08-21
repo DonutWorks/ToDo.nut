@@ -1,7 +1,9 @@
 class ProjectsController < ApplicationController
 
-  before_action :is_project_assignee?
+  respond_to :json
+  before_action :find_project, except:[:index, :new, :create]
   
+
   def new
     @project = Project.new
     @users = User.all
@@ -25,16 +27,16 @@ class ProjectsController < ApplicationController
     redirect_to projects_path
   end
   
-  def show
+  def detail
     @project = Project.find(params[:id])
     
   end
 
-  def main
+  def show
     @todo = Todo.new    
-    @todos = Todo.where(project_id: params[:project_id])
-    @histories = History.where(project_id: params[:project_id])
-    @project = Project.find(params[:project_id])
+    @todos = Todo.where(project_id: params[:id])
+    @histories = History.where(project_id: params[:id])
+    
     gon.deco = decorate
     #@data = gon.deco
     # render plain: decorate
@@ -72,13 +74,10 @@ class ProjectsController < ApplicationController
   end
 
   def members
-    @project = Project.find(params[:project_id])
+    @project = Project.find(params[:id])
+    
     members = @project.fetch_members_by_nickname(params[:nickname], 5)
-    members = members.map do |member|
-      { nickname: member.nickname, email: member.email }
-    end
-
-    render json: members
+    respond_with members
   end
 
   def associate_project_with_assignees!
@@ -129,11 +128,15 @@ private
       })
 
     end
-
-    
-
     return data.to_json
-
   end
+
+  def find_project
+    
+    @project = current_user.assigned_projects.find(params[:id] )
+      #if project doesn't exist, this will make an exception.
+      #Should make exception handler
+  end
+
   
 end

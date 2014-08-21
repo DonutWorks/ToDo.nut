@@ -9,7 +9,7 @@
 
   <div>
     <h1>History List</h1>
-    <%= link_to 'New History', new_project_history_path, class: "btn btn-default float-right" %>
+    <%= link_to 'New History', new_project_history_path(@project.id), class: "btn btn-default float-right" %>
   </div>
 
   <table id="histories" class="table table-condensed table-hover">
@@ -240,7 +240,7 @@ function mouseover() {
 
 function mouseout() {
   var n = d3.select(this);
-  var g = n.node().parentNode;
+  var g= n.node().parentNode;
   d3.select(g).selectAll("circle").style("display","block");
   d3.select(g).selectAll("text.value").style("display","none");
   n.text(n.attr("data-text"));

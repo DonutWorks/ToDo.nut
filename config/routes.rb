@@ -5,7 +5,8 @@ Rails.application.routes.draw do
   
   devise_for :users, :controllers => { 
     :omniauth_callbacks => "users/omniauth_callbacks",
-    :registrations => "users/registrations"
+    :registrations => "users/registrations",
+    :sessions => "users/sessions"
   }
   
   devise_scope :user do
@@ -16,28 +17,25 @@ Rails.application.routes.draw do
   #resources :users, only: [:show]
 
   resources :projects do
-
     resources :todos do
       collection do
-        get 'list(/:id)', action: 'list'
+        get 'list(/:id)', action: 'list', defaults: {format: 'json'}
       end
     end
 
     resources :histories do
       collection do
-        get 'list_members' # should move to projects#members
-        get 'list(/:id)', action: 'list'
+        get 'list(/:id)', action: 'list', defaults: {format: 'json'}
       end
       resources :comments
     end
-    
-    collection do
-      get '(/:project_id)/main', action: 'main', as: 'main'
-      
 
-      
+    member do
+      get 'detail'
+      get 'members(/:nickname)', action: 'members', as: 'members', defaults: {format: 'json'}
+
     end
-    get 'members(/:nickname)', action: 'members', as: 'members'
+
   end
 
   

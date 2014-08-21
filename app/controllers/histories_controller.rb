@@ -1,14 +1,17 @@
 class HistoriesController < ApplicationController
+  
+  before_action :find_project
+  respond_to :json
+  
   def index
     @histories = History.all
-    @project = Project.find(params[:project_id])
+    
   end
 
   def new
     @history = History.new
     @todos = Todo.all
     @users = User.all
-    @project = Project.find(params[:project_id])
     gon.project_id = @project.id
   end
 
@@ -17,7 +20,6 @@ class HistoriesController < ApplicationController
 
     @history = History.new(history_params)
     @history.user_id = current_user.id
-    @project = Project.find(params[:project_id])
     @history.project_id = @project.id
 
     @history.transaction do
@@ -55,7 +57,7 @@ class HistoriesController < ApplicationController
 
     # mail.deliver!
 
-    redirect_to main_projects_path(@project)
+    redirect_to project_path(@project)
 
   rescue ActiveRecord::RecordInvalid
     render 'new'
@@ -63,21 +65,20 @@ class HistoriesController < ApplicationController
 
   def show
     @history = History.find(params[:id])
-    @project = Project.find(params[:project_id])
+
   end
 
   def edit
     @history = History.find(params[:id])
     @todos = Todo.all
     @users = User.all
-    @project = Project.find(params[:project_id])
     gon.project_id = @project.id
 
   end
 
   def update
     @history = History.find(params[:id])
-    @project = Project.find(params[:project_id])
+    
 
     @history.transaction do
       associate_history_with_todos!
@@ -97,27 +98,23 @@ class HistoriesController < ApplicationController
   def destroy
     @history = History.find(params[:id])
     @history.destroy
-    @project = Project.find(params[:project_id])
 
-    redirect_to main_projects_path(@project)
+    redirect_to project_path(@project)
   end
 
   def list
     from_id = params[:id] || 0
-    
     histories = History.where(project_id: params[:project_id]).fetch_list_from(from_id, 5)
-
-    render json: histories
-  end
-
-  # need move to project#members
-  def list_members
-    render json: User.all
+    respond_with histories
   end
 
   private
   def history_params
     params.require(:history).permit(:title, :description, :evented_at, :project_id)
+  end
+
+  def find_project
+    @project = current_user.assigned_projects.find(params[:project_id])
   end
 
   # metaprogramming?
