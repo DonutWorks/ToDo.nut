@@ -1,12 +1,10 @@
 class User < ActiveRecord::Base
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
   has_many :histories
   has_many :todos
 
   has_many :history_users, foreign_key: :assignee_id
-  has_many :assigned_histories, through: :history_users  
-  
+  has_many :assigned_histories, through: :history_users
+
   has_many :project_users, foreign_key: :assignee_id
   has_many :assigned_projects, through: :project_users
 
@@ -20,25 +18,22 @@ class User < ActiveRecord::Base
   validates_presence_of :nickname
   validates_uniqueness_of :nickname
 
+
+
   def to_param
     nickname
   end
 
   def self.find_by_nickname(nickname)
-    #where(arel_table[:nickname].matches("#{nickname}")).take(1)
     user = User.where(:nickname => nickname).first
   end
 
   def self.from_omniauth(auth)
-    @my_logger ||= Logger.new("#{Rails.root}/log/my.log")
+
     where(auth.slice(:provider, :uid)).first_or_create do |user|
-      @my_logger.debug "test facebok"
       user.email = auth.info.email
       user.password = Devise.friendly_token[0,20]
-      # user.password = nil
       user.nickname = auth.info.name
-
-      @my_logger.debug user.inspect
     end
   end
 
@@ -50,14 +45,13 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.find_for_google_oauth2(access_token, signed_in_resource=nil)
+  def self.find_for_oauth2(access_token)
     data = access_token.info
-    
+
     user = User.where(:email => data["email"]).first
 
-    # Uncomment the section below if you want users to be created if they don't exist
     unless user
-      user = User.create(provider:access_token.provider,
+      user = User.create!(provider:access_token.provider,
         uid:access_token.uid,
         email: data["email"],
         password: Devise.friendly_token[0,20],
@@ -67,17 +61,16 @@ class User < ActiveRecord::Base
   end
 
 
-  def self.find_for_twitter_oauth(auth, signed_in_resource=nil)
-    user = User.where(:email => auth.extra.raw_info.screen_name + "@todo.nut").first
-   
+  def self.find_for_twitter_oauth(auth)
+    user = User.where(:uid => auth.uid, :provider => auth.provider).first
+
     unless user
-      user = User.create(provider:auth.provider,
+      user = User.create!(provider:auth.provider,
         uid:auth.uid,
-        email: auth.extra.raw_info.screen_name + "@todo.nut",
+        email: "temp." + Devise.friendly_token[0,7] + "@todo.nut",
         nickname: auth.extra.raw_info.screen_name,
         password:Devise.friendly_token[0,20])
     end
-    
     user
   end
 
@@ -85,8 +78,15 @@ class User < ActiveRecord::Base
     user = User.where(:id => id).first
     user.provider = provider
     user.uid = uid
-    user.save
+    user.save!
   end
+
+  def update_from_twitter(id, email)
+    user = User.where(:id => id).first
+    user.email = email
+    user.save!
+  end
+
 
 
 end

@@ -1,17 +1,16 @@
 Rails.application.routes.draw do
-  # get 'users/merge(/:email)'
+  get 'users/sign_up_from_twitter/:id', to: 'users#sign_up_from_twitter', as: 'sign_up_from_twitter'
+  post 'users/sign_up_from_twitter/:id', to: 'users#sign_up_from_twitter', as: 'sign_up_from_twitter_update'
 
   get '/users/merge/:id/:provider(/:callback)', to: 'users#merge', as: 'users_merge'
 
-  devise_for :users, :controllers => { 
+  devise_for :users, :controllers => {
     :omniauth_callbacks => "users/omniauth_callbacks",
     :registrations => "users/registrations",
     :sessions => "users/sessions"
   }
 
-  #get '/users/(/:nickname)/edit', to: 'users/registrations#edit', as: 'edit_user'
   get '/users/(/:nickname)', to: 'users#show', as: 'show_user'
-  #resources :users, only: [:show]
 
   resources :projects do
     resources :todos do
@@ -35,6 +34,6 @@ Rails.application.routes.draw do
 
   end
 
-  
+
   root 'projects#index'
 end
