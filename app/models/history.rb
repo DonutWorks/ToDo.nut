@@ -23,10 +23,10 @@ class History < ActiveRecord::Base
   end
 
   def self.find_by_assigned_user_id(user_id)
-    histories = []
+    ids = []
     HistoryUser.where(assignee_id: user_id).find_each do |h_user|
-      histories.push(History.where(id: h_user.assigned_history_id).take(1))
+      ids.push(h_user.assigned_history_id)
     end
-    histories
+    History.find(ids)
   end
 end
