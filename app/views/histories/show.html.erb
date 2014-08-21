@@ -47,7 +47,7 @@
       <% @history.comments.each do |comment| %>
       <tr>
         <td><%= comment.contents %></td>
-        <td><%= comment.user.email %></td>
+        <td><%= comment.user.decorate.email %></td>
         <td><%= link_to 'Delete', [@project, @history, comment], method: :delete, :class => "btn btn-default" %> </td>
       </tr>
       <% end %>
