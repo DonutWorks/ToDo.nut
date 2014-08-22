@@ -2,7 +2,7 @@ module ProjectsHelper
 
   def decorate(todos)
 
-    return ActiveModel::ArraySerializer.new(todos, each_serializer: TodovisSerializer).to_json
+    return ActiveModel::ArraySerializer.new(todos, each_serializer: TodoVisualizationSerializer).to_json
 
   end
 
