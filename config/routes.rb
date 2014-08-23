@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  get 'users/sign_up_from_twitter/:id', to: 'users#sign_up_from_twitter', as: 'sign_up_from_twitter'
-  post 'users/sign_up_from_twitter/:id', to: 'users#sign_up_from_twitter', as: 'sign_up_from_twitter_update'
+  get 'users/sign_up_from_twitter', to: 'users#sign_up_from_twitter', as: 'sign_up_from_twitter'
+  post 'users/sign_up_from_twitter_callback', to: 'users#sign_up_from_twitter_callback', as: 'sign_up_from_twitter_callback'
 
   get '/users/merge/:id/:provider(/:callback)', to: 'users#merge', as: 'users_merge'
 

@@ -63,15 +63,6 @@ class User < ActiveRecord::Base
 
   def self.find_for_twitter_oauth(auth)
     user = User.where(:uid => auth.uid, :provider => auth.provider).first
-
-    unless user
-      user = User.create!(provider:auth.provider,
-        uid:auth.uid,
-        email: "temp." + Devise.friendly_token[0,7] + "@todo.nut",
-        nickname: auth.extra.raw_info.screen_name,
-        password:Devise.friendly_token[0,20])
-    end
-    user
   end
 
   def merge(id, provider, uid)

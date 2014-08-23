@@ -1,6 +1,7 @@
 <h1>새 이메일을 입력하세요 - Twitter</h1>
+
 <div class="form-container">
-  <%= form_for @user, url: {action: "sign_up_from_twitter"},  method: "post", :role => 'form' do |f|%>
+  <%= form_for @user, url: {action: "sign_up_from_twitter_callback", controller: "/users"},  method: "post", :role => 'form' do |f|%>
 
 
   <div class="form-group">

@@ -5,8 +5,6 @@ class UsersController < ApplicationController
   end
 
   def merge
-
-
     @user = User.find(params[:id])
     @provider = params[:provider]
 
@@ -20,13 +18,19 @@ class UsersController < ApplicationController
   end
 
   def sign_up_from_twitter
-    @user = User.find(params[:id])
+  end
 
-    if request.post?
-      params = request.params[:user]
-      @user.update_from_twitter(@user.id, params[:email])
+  def sign_up_from_twitter_callback
+    auth = session["devise.twitter_data"]
 
-      redirect_to root_path
-    end
+    @user = User.new(provider:auth["provider"],
+        uid:auth["uid"],
+        nickname: auth["extra"]["raw_info"]["screen_name"],
+        password: Devise.friendly_token[0,20])
+
+    @user.email = params[:user]["email"]
+
+    @user.save!
+    sign_in_and_redirect @user, :event => :authentication
   end
 end
