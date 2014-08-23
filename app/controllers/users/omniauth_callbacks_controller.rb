@@ -2,22 +2,22 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def facebook
     @user = User.find_for_oauth2(request.env["omniauth.auth"])
 
-    if @user.persisted? and @user.uid != nil
-      sign_in_and_redirect @user, :event => :authentication
-    elsif @user.persisted? and @user.uid == nil
+    if @user.nil?
       session["devise.facebook_data"] = request.env["omniauth.auth"]
-      redirect_to users_merge_path(@user.id, 'facebook_data')
+      redirect_to users_merge_path('facebook')
+    else
+      sign_in_and_redirect @user, :event => :authentication
     end
   end
 
   def google_oauth2
     @user = User.find_for_oauth2(request.env["omniauth.auth"])
 
-    if @user.persisted? and @user.uid != nil
+    if @user.nil?
+      session["devise.facebook_data"] = request.env["omniauth.auth"]
+      redirect_to users_merge_path('facebook')
+    else
       sign_in_and_redirect @user, :event => :authentication
-    elsif @user.persisted? and @user.uid == nil
-      session["devise.google_data"] = request.env["omniauth.auth"]
-      redirect_to users_merge_path(@user.id, 'google_data')
     end
   end
 

@@ -47,15 +47,18 @@ class User < ActiveRecord::Base
 
   def self.find_for_oauth2(access_token)
     data = access_token.info
-
-    user = User.where(:email => data["email"]).first
+    user = User.where(provider: access_token.provider, uid: access_token.uid).first
 
     unless user
-      user = User.create!(provider:access_token.provider,
-        uid:access_token.uid,
-        email: data["email"],
-        password: Devise.friendly_token[0,20],
-        nickname: data["name"])
+      if User.where(email: data["email"]).first
+        nil
+      else
+        user = User.create!(provider:access_token.provider,
+          uid:access_token.uid,
+          email: data["email"],
+          password: Devise.friendly_token[0,20],
+          nickname: data["name"])
+      end
     end
     user
   end
