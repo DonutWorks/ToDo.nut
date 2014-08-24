@@ -18,8 +18,8 @@ module ReferenceCheck
 
   module ReferenceChecker
     def self.extended(base)
-      base.define_singleton_method(:replace) do |content, &block|
-        content.gsub(pattern) do |match|
+      base.define_singleton_method(:replace!) do |content, &block|
+        content.gsub!(pattern) do |match|
           found = find_method($1)
           if found
             block.call(found, match)
@@ -27,6 +27,10 @@ module ReferenceCheck
             match
           end
         end
+      end
+
+      base.define_singleton_method(:replace) do |content, &block|
+        replace!(content.dup, &block)
       end
 
       base.define_singleton_method(:references) do |content|
