@@ -16,59 +16,65 @@ module ReferenceCheck
   # ReferenceCheck::ForUser.find_method
   # => return predicate method for finding referee.
 
-  module ReferenceChecker
-    def self.extended(base)
-      base.define_singleton_method(:replace!) do |content, &block|
-        content.gsub!(pattern) do |match|
-          found = find_method($1)
-          if found
-            block.call(found, match)
-          else
-            match
-          end
+  class ReferenceChecker
+    def self.replace! (content)
+      content.gsub!(pattern) do |match|
+        found = find_method($1)
+        if found
+          yield found, match
+        else
+          match
         end
       end
-
-      base.define_singleton_method(:replace) do |content, &block|
-        replace!(content.dup, &block)
-      end
-
-      base.define_singleton_method(:references) do |content|
-        referenced = content.scan(pattern)
-        referenced.flatten!.map! do |term|
-          find_method(term)
-        end if !referenced.empty?
-      end
     end
 
-    def pattern(pattern)
-      self.define_singleton_method(:pattern) do
-        pattern
-      end
+    def self.replace (content, &block)
+      replace!(content.dup, &block)
     end
 
-    def find_method(method)
-      self.define_singleton_method(:find_method) do |term|
-        method.call(term)
-      end
+    def self.references
+      referenced = content.scan(pattern)
+      referenced.flatten!.map! do |term|
+        find_method(term)
+      end if !referenced.empty?
+    end
+
+    def self.pattern(pattern)
+      raise 'This method should be overriden and return the pattern.'
+    end
+
+    def self.find_method(method)
+      raise 'This method should be overriden and return the find method.'
     end
   end
 
-  class ForUser
-    extend ReferenceChecker
-    pattern /\B@([^\s]+)\b/
-    find_method lambda { |term| User.find_by_nickname(term) }
+  class ForUser < ReferenceChecker
+    def self.pattern
+      /\B@([^\s]+)\b/
+    end
+
+    def self.find_method(term)
+      User.find_by_nickname(term)
+    end
   end
 
-  class ForHistory
-    extend ReferenceChecker
-    pattern /\B#(\d+)\b/
-    find_method lambda { |term| History.find_by_id(term) }
+  class ForHistory < ReferenceChecker
+    def self.pattern
+      /\B#(\d+)\b/
+    end
+
+    def self.find_method(term)
+      History.find_by_id(term)
+    end
   end
 
-  class ForTodo
-    extend ReferenceChecker
-    pattern /\B&(\d+)\b/
-    find_method lambda { |term| Todo.find_by_id(term) }
+  class ForTodo < ReferenceChecker
+    def self.pattern
+      /\B&(\d+)\b/
+    end
+
+    def self.find_method(term)
+      Todo.find_by_id(term)
+    end
   end
 end
