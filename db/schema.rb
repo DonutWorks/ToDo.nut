@@ -12,7 +12,6 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 20140816105520) do
-
   create_table "comments", force: true do |t|
     t.integer  "user_id"
     t.integer  "history_id"
