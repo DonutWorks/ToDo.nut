@@ -68,7 +68,7 @@ module ReferenceCheck
 
   class ForTodo
     extend ReferenceChecker
-    pattern /\B@([^\s]+)\b/
+    pattern /\B&(\d+)\b/
     find_method lambda { |term| Todo.find_by_id(term) }
   end
 end
