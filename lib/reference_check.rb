@@ -21,7 +21,11 @@ module ReferenceCheck
       base.define_singleton_method(:replace) do |content, &block|
         content.gsub(pattern) do |match|
           found = find_method($1)
-          block.call(found)
+          if found
+            block.call(found)
+          else
+            match
+          end
         end
       end
 
