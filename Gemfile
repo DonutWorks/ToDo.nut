@@ -72,3 +72,6 @@ gem "active_model_serializers"
 
 # Message unread/read support
 gem 'unread'
+
+# Activity tracking
+gem 'public_activity'

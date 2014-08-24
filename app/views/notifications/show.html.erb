@@ -9,14 +9,8 @@
     <% @notifications.each do |project, notis| %>
     <div class="panel-heading"><%= link_to project.title, project %></div>
     <ul class="list-group">
-      <% # type dispatching, partial_view required. %>
-      <% notis.each do |noti| %>
-        <%= link_to [project, noti.subject], class: "list-group-item", data: { noti_id: noti.id } do %>
-          <%= noti.subject.title %>
-          <span class="pull-right"><%= time_ago_in_words(noti.updated_at) %> ago</span>
-        <% end %>
-      <% end %>
+      <%= render_activities(notis) %>
     </ul>
-  <% end %>
+    <% end %>
   </div>
 </div>

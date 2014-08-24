@@ -120,12 +120,10 @@ class HistoriesController < ApplicationController
   end
 
   def send_notifications!
-    mentioned_users = @history.description.scan(/\B@([^\s]+)\b/).flatten!
+    mentioned_users = @history.description.scan(/\B@([^\s]+)\b/).flatten!.to_a
     mentioned_users.map! { |nickname| User.find_by_nickname(nickname) }
     mentioned_users.each do |user|
-      notification = user.notifications.build
-      notification.subject = @history
-      notification.mention!
+      @history.create_activity(action: 'mention', recipient: user, owner: current_user)
     end
   end
 

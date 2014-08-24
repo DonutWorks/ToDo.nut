@@ -1,19 +1,19 @@
 class NotificationsController < ApplicationController
   def show
-    unread_notis = Notification.unread_by(current_user)
-    @notifications = unread_notis.group_by { |noti| noti.subject.project }
+    unread_activities = PublicActivity::Activity.unread_by(current_user)
+    @notifications = unread_activities.group_by { |activity| activity.trackable.project }
     render
   end
 
   def all
-    notis = current_user.notifications
-    @notifications = notis.group_by { |noti| noti.subject.project }
+    activities = PublicActivity::Activity.with_read_marks_for(current_user)
+    @notifications = activities.group_by { |activity| activity.trackable.project }
     render 'show'
   end
 
   def mark
-    noti = Notification.find(params[:id])
-    noti.mark_as_read!(for: current_user)
+    activity = PublicActivity::Activity.find(params[:id])
+    activity.mark_as_read!(for: current_user)
     head :ok
   end
 end
