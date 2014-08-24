@@ -1,15 +1,17 @@
 Rails.application.routes.draw do
-  get 'users/sign_up_from_twitter', to: 'users#sign_up_from_twitter', as: 'sign_up_from_twitter'
-  post 'users/sign_up_from_twitter_callback', to: 'users#sign_up_from_twitter_callback', as: 'sign_up_from_twitter_callback'
-
-  get '/users/merge/:provider', to: 'users#merge', as: 'users_merge'
-  get '/users/merge/:provider/callback', to: 'users#merge_callback', as: 'users_merge_callback'
-
   devise_for :users, :controllers => {
     :omniauth_callbacks => "users/omniauth_callbacks",
     :registrations => "users/registrations",
     :sessions => "users/sessions"
   }
+
+  controller :users do
+    get 'users/sign_up_from_twitter', action: 'sign_up_from_twitter', as: 'sign_up_from_twitter'
+    post 'users/sign_up_from_twitter_callback', action: 'sign_up_from_twitter_callback', as: 'sign_up_from_twitter_callback'
+
+    get 'users/merge/:provider', action: 'merge', as: 'users_merge'
+    get 'users/merge/:provider/callback', action: 'merge_callback', as: 'users_merge_callback'
+  end
 
   get '/users/(/:nickname)', to: 'users#show', as: 'show_user'
 
