@@ -22,7 +22,7 @@ module ReferenceCheck
         content.gsub(pattern) do |match|
           found = find_method($1)
           if found
-            block.call(found)
+            block.call(found, match)
           else
             match
           end
