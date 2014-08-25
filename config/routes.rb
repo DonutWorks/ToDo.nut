@@ -9,8 +9,8 @@ Rails.application.routes.draw do
     get 'users/sign_up_from_twitter', action: 'sign_up_from_twitter', as: 'sign_up_from_twitter'
     post 'users/sign_up_from_twitter_callback', action: 'sign_up_from_twitter_callback', as: 'sign_up_from_twitter_callback'
 
-    get 'users/merge/:provider', action: 'merge', as: 'users_merge'
-    get 'users/merge/:provider/callback', action: 'merge_callback', as: 'users_merge_callback'
+    get 'users/merge', action: 'merge', as: 'users_merge'
+    get 'users/merge/callback', action: 'merge_callback', as: 'users_merge_callback'
   end
 
   get '/users/(/:nickname)', to: 'users#show', as: 'show_user'

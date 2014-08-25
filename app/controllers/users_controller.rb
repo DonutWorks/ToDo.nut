@@ -5,18 +5,15 @@ class UsersController < ApplicationController
   end
 
   def merge
-    @provider = params[:provider]
-    @user = User.where(email: session["devise." + @provider + "_data"]["info"]["email"]).first
-
+    @user = User.where(email: session["omniauth"]["info"]["email"]).first
   end
 
   def merge_callback
-    @provider = params[:provider]
-    provider_session = session["devise." + @provider + "_data"]
-    @user = User.where(email: provider_session["info"]["email"]).first
+    auth = session["omniauth"]
+    @user = User.where(email: auth["info"]["email"]).first
     
     if @user.valid_password?(params[:password])
-      @user.merge(@user.id, provider_session["provider"], provider_session["uid"])
+      @user.merge(@user.id, auth["provider"], auth["uid"])
       sign_in_and_redirect @user, :event => :authentication
     else
       redirect_to root_path
@@ -31,7 +28,7 @@ class UsersController < ApplicationController
       @user = User.new
       render sign_up_from_twitter_path
     else
-      auth = session["devise.twitter_data"]
+      auth = session["omniauth"]
 
       @user = User.new(provider:auth["provider"],
           uid:auth["uid"],

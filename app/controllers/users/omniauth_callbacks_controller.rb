@@ -3,8 +3,8 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     @user = User.find_for_oauth2(request.env["omniauth.auth"])
 
     if @user.nil?
-      session["devise.facebook_data"] = request.env["omniauth.auth"]
-      redirect_to users_merge_path('facebook')
+      session["omniauth"] = request.env["omniauth.auth"]
+      redirect_to users_merge_path
     else
       sign_in_and_redirect @user, :event => :authentication
     end
@@ -14,8 +14,8 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     @user = User.find_for_oauth2(request.env["omniauth.auth"])
 
     if @user.nil?
-      session["devise.facebook_data"] = request.env["omniauth.auth"]
-      redirect_to users_merge_path('facebook')
+      session["omniauth"] = request.env["omniauth.auth"]
+      redirect_to users_merge_path
     else
       sign_in_and_redirect @user, :event => :authentication
     end
@@ -26,7 +26,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     if @user.nil?
       @user = User.new
-      session["devise.twitter_data"] = request.env["omniauth.auth"]
+      session["omniauth"] = request.env["omniauth.auth"]
       render sign_up_from_twitter_path
     else
       sign_in_and_redirect @user, :event => :authentication      
