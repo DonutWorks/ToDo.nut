@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140824180928) do
+ActiveRecord::Schema.define(version: 20140825153819) do
 
   create_table "comments", force: true do |t|
     t.integer  "user_id"
@@ -92,6 +92,8 @@ ActiveRecord::Schema.define(version: 20140824180928) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+    t.integer  "history_counter", default: 0
+    t.integer  "todo_counter",    default: 0
   end
 
   add_index "projects", ["user_id"], name: "index_projects_on_user_id"
