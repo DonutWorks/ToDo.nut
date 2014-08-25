@@ -20,6 +20,20 @@ class UsersController < ApplicationController
     end        
   end
 
+  def nickname_new
+  end
+
+  def nickname_new_callback
+    auth = session["omniauth"]
+
+    @user = User.create!(provider:auth["provider"],
+      uid: auth["uid"],
+      email: auth["info"]["email"],
+      password: Devise.friendly_token[0,20],
+      nickname: params[:nickname])
+    sign_in_and_redirect @user, :event => :authentication
+  end
+
   def sign_up_from_twitter
   end
 

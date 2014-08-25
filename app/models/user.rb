@@ -51,13 +51,9 @@ class User < ActiveRecord::Base
 
     unless user
       if User.where(email: data["email"]).first
-        nil
+        "dup"
       else
-        user = User.create!(provider:access_token.provider,
-          uid:access_token.uid,
-          email: data["email"],
-          password: Devise.friendly_token[0,20],
-          nickname: data["name"])
+        nil
       end
     end
     user

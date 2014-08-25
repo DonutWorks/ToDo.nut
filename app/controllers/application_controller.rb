@@ -5,10 +5,6 @@ class ApplicationController < ActionController::Base
 
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :authenticate_user!
-  # migration for new field nickname which is required field.
-  before_action :is_nickname_not_empty?
-
-  @my_logger ||= Logger.new("#{Rails.root}/log/my.log")
 
   protected
   def configure_permitted_parameters

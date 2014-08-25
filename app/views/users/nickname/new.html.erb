@@ -1,0 +1,8 @@
+
+<%= form_tag({controller: "/users", action: "nickname_new_callback"}, method: "post") do %>
+	
+<p>처음이십니다. 새로운 닉네임을 입력하세요</p>
+<%= text_field_tag(:nickname) %>
+ 	<%= submit_tag("Submit", class: "btn btn-primary") %>
+<% end %>
+

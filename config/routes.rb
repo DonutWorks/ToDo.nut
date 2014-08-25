@@ -11,6 +11,9 @@ Rails.application.routes.draw do
 
     get 'users/merge', action: 'merge', as: 'users_merge'
     get 'users/merge/callback', action: 'merge_callback', as: 'users_merge_callback'
+
+    get 'users/nickname/new', action: 'nickname_new'
+    post 'users/nickname/new/callback', action: 'nickname_new_callback'
   end
 
   get '/users/(/:nickname)', to: 'users#show', as: 'show_user'

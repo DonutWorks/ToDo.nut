@@ -13,9 +13,12 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def google_oauth2
     @user = User.find_for_oauth2(request.env["omniauth.auth"])
 
+    session["omniauth"] = request.env["omniauth.auth"]
+    
     if @user.nil?
-      session["omniauth"] = request.env["omniauth.auth"]
-      redirect_to users_merge_path
+      render users_nickname_new_path
+    elsif @user == "dup"
+      redirect_to users_merge_path   
     else
       sign_in_and_redirect @user, :event => :authentication
     end
