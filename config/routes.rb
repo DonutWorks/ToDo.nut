@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'notifications', to: 'notifications#show'
+  get 'notifications/all', to: 'notifications#all'
+  post 'notifications/mark', to: 'notifications#mark'
+
   # get 'users/merge(/:email)'
 
   get '/users/merge/:id/:provider(/:callback)', to: 'users#merge', as: 'users_merge'
@@ -38,6 +42,5 @@ Rails.application.routes.draw do
 
   end
 
-  
   root 'projects#index'
 end
