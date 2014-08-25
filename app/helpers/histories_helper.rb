@@ -21,7 +21,7 @@ module HistoriesHelper
   def replace_user_reference(reference)
     found = User.find_by_nickname(reference[1..-1])
     if found
-      link_to reference, user_path(found)
+      link_to reference, show_user_path(found)
     else
       reference
     end
