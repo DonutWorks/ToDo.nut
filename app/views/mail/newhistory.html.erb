@@ -8,9 +8,8 @@
     <p>"<%= @history.title %>" 라는 제목을 가지는 히스토리를 등록 하셨습니다.</p>
     <p>내용은 "<%= @history.description %>" 입니다. </p>
 
-    <h4>Attached Images</h4>
     <% @history.images.each do |image| %>
-    <%= link_to(image_tag(image.image.thumb.url), image.image.url) %>
+      <a class="navbar-brand" href="<%= root_url + image.image.url%>">첨부 사진보기</a>
     <% end if @history.images != nil %>
 
   </body>
