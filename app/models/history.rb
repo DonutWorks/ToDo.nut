@@ -25,4 +25,5 @@ class History < ActiveRecord::Base
   def self.fetch_list_from(id, count)
     where(arel_table[:id].gteq(id)).take(count)
   end
+
 end
