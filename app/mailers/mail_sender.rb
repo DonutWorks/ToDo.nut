@@ -11,17 +11,19 @@ class MailSender
     mail.to(email)
     mail.subject('[Todo.nut] ' + where + '에 "' + title + '" 를 등록 했습니다.')
 
-    if where == 'Project'
+    case where 
+    when 'Project'
       project =  msg_instance
       template = ERB.new(File.read('app/views/mail/new_project.html.erb')).result(binding)
-    elsif where == 'History'
+    when 'History'
       history =  msg_instance
-      template = ERB.new(File.read('app/views/mail/new_history.html.erb')).result(binding)   
-    elsif where == 'Todo'
+      template = ERB.new(File.read('app/views/mail/new_history.html.erb')).result(binding)  
+    when 'Todo'
       todo =  msg_instance
       template = ERB.new(File.read('app/views/mail/new_todo.html.erb')).result(binding)
     end
-      mail.html_part  do
+    
+    mail.html_part  do
       content_type 'text/html; charset=UTF-8'
       body template
     end
