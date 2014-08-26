@@ -51,7 +51,7 @@ class User < ActiveRecord::Base
 
     unless user
       if User.where(email: data["email"]).first
-        user = "duplicated"
+        user = User.new(email: data["email"])
       else
         user = nil
       end
@@ -81,6 +81,10 @@ class User < ActiveRecord::Base
     if provider.nil?
       super
     end    
+  end
+
+  def duplicated?
+    User.where(email: email, id: nil)
   end
 
 end

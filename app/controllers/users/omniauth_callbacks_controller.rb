@@ -6,7 +6,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     
     if @user.nil?
       render nickname_new_users_path
-    elsif @user == "duplicated"
+    elsif @user.duplicated?
       redirect_to merge_users_path   
     else
       sign_in_and_redirect @user, :event => :authentication
@@ -20,7 +20,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     if @user.nil?
       render nickname_new_users_path
-    elsif @user == "duplicated"
+    elsif @user.duplicated?
       redirect_to merge_users_path   
     else
       sign_in_and_redirect @user, :event => :authentication
