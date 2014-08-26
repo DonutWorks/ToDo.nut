@@ -5,12 +5,12 @@ class UsersController < ApplicationController
   end
 
   def merge
-    @user = User.where(email: session["omniauth"]["info"]["email"]).first
+    @user = User.where(email: session["omniauth"]["email"]).first
   end
 
   def merge_callback
     auth = session["omniauth"]
-    @user = User.where(email: auth["info"]["email"]).first
+    @user = User.where(email: auth["email"]).first
     
     if @user.valid_password?(params[:password])
       @user.merge(@user.id, auth["provider"], auth["uid"])
@@ -28,7 +28,7 @@ class UsersController < ApplicationController
 
     @user = User.create!(provider:auth["provider"],
       uid: auth["uid"],
-      email: auth["info"]["email"],
+      email: auth["email"],
       nickname: params[:nickname])
     sign_in_and_redirect @user, :event => :authentication
   end
@@ -45,7 +45,7 @@ class UsersController < ApplicationController
 
       @user = User.new(provider:auth["provider"],
           uid:auth["uid"],
-          nickname: auth["extra"]["raw_info"]["screen_name"])
+          nickname: auth["nickname"])
 
       @user.email = params[:user]["email"]
 
