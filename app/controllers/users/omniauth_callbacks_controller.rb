@@ -2,9 +2,12 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def facebook
     @user = User.find_for_oauth2(request.env["omniauth.auth"])
 
+    session["omniauth"] = request.env["omniauth.auth"]
+    
     if @user.nil?
-      session["omniauth"] = request.env["omniauth.auth"]
-      redirect_to users_merge_path
+      render users_nickname_new_path
+    elsif @user == "duplicated"
+      redirect_to users_merge_path   
     else
       sign_in_and_redirect @user, :event => :authentication
     end
@@ -14,10 +17,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     @user = User.find_for_oauth2(request.env["omniauth.auth"])
 
     session["omniauth"] = request.env["omniauth.auth"]
-    
+
     if @user.nil?
       render users_nickname_new_path
-    elsif @user == "dup"
+    elsif @user == "duplicated"
       redirect_to users_merge_path   
     else
       sign_in_and_redirect @user, :event => :authentication

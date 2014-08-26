@@ -51,9 +51,9 @@ class User < ActiveRecord::Base
 
     unless user
       if User.where(email: data["email"]).first
-        "dup"
+        user = "duplicated"
       else
-        nil
+        user = nil
       end
     end
     user
@@ -77,6 +77,10 @@ class User < ActiveRecord::Base
     user.save!
   end
 
-
+  def password_required?
+    if provider.nil?
+      super
+    end    
+  end
 
 end

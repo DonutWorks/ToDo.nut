@@ -29,7 +29,6 @@ class UsersController < ApplicationController
     @user = User.create!(provider:auth["provider"],
       uid: auth["uid"],
       email: auth["info"]["email"],
-      password: Devise.friendly_token[0,20],
       nickname: params[:nickname])
     sign_in_and_redirect @user, :event => :authentication
   end
@@ -46,8 +45,7 @@ class UsersController < ApplicationController
 
       @user = User.new(provider:auth["provider"],
           uid:auth["uid"],
-          nickname: auth["extra"]["raw_info"]["screen_name"],
-          password: Devise.friendly_token[0,20])
+          nickname: auth["extra"]["raw_info"]["screen_name"])
 
       @user.email = params[:user]["email"]
 
