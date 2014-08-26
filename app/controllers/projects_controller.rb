@@ -23,6 +23,7 @@ class ProjectsController < ApplicationController
       associate_project_with_assignees!
 
       SlackNotifier.notify("프로젝트 추가되었어용 : #{@project.title} (#{Rails.application.routes.url_helpers.project_url(@project)})")
+      MailSender.send_email_when_create(current_user.email, @project)
     end
     redirect_to projects_path
   end
