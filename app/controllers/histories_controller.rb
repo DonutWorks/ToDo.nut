@@ -32,22 +32,7 @@ class HistoriesController < ApplicationController
 
     #url_helper -> project_history(@project, @history) is okay?
     SlackNotifier.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.project_history_url(@project, @history)})")
-
-    @user = User.find(current_user.id)
-
-    mail = Mail.new
-
-    mail.from('donutworks.app@gmail.com')
-    mail.to(@user.email)
-    mail.subject('[Todo.nut] History 에 "' + @history.title + '" 를 등록 했습니다.')
-
-    template = ERB.new(File.read('app/views/mail/newhistory.html.erb')).result(binding)
-    mail.html_part  do
-      content_type 'text/html; charset=UTF-8'
-      body template
-    end
-
-    mail.deliver!
+    MailSender.send_email_when_create(current_user.email, @history)
 
     redirect_to project_path(@project)
 
