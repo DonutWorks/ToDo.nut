@@ -107,7 +107,7 @@ class HistoriesController < ApplicationController
 
   def list
     from_id = params[:id] || 0
-    histories = History.where(project_id: params[:project_id]).fetch_list_from(from_id, 5)
+    histories = @project.histories.fetch_list_from(from_id, 5)
     respond_with histories
   end
 
@@ -126,7 +126,8 @@ class HistoriesController < ApplicationController
 
     @history.referencing_histories.destroy_all
     referenced_histories.each do |id|
-      @history.history_histories.build(referencing_history_id: id)
+      referenced_history_id = @project.histories.where(:phistory_id=>id).first.id
+      @history.history_histories.build(referencing_history_id: referenced_history_id)
     end if referenced_histories != nil
   end
 
@@ -135,7 +136,8 @@ class HistoriesController < ApplicationController
 
     @history.todos.destroy_all
     referenced_todos.each do |id|
-      @history.history_todos.build(todo_id: id)
+      referenced_todo_id = @project.todos.where(:ptodo_id=>id).first.id
+      @history.history_todos.build(todo_id: referenced_todo_id)
     end if referenced_todos != nil
   end
 

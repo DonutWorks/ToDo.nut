@@ -1,5 +1,5 @@
 class AddTodoCounterToProject < ActiveRecord::Migration
-  def change
+  def up
     add_column :projects, :todo_counter, :inteager, :default => 0
 
     #initialize
@@ -9,5 +9,8 @@ class AddTodoCounterToProject < ActiveRecord::Migration
       p.update(:todo_counter => p.todos.count)
     
     end
+  end
+  def down
+    remove_column :projects, :todo_counter, :inteager, :default => 0
   end
 end
