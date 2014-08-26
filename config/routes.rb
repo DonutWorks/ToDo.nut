@@ -5,15 +5,17 @@ Rails.application.routes.draw do
     :sessions => "users/sessions"
   }
 
-  controller :users do
-    get 'users/sign_up_from_twitter', action: 'sign_up_from_twitter', as: 'sign_up_from_twitter'
-    post 'users/sign_up_from_twitter_callback', action: 'sign_up_from_twitter_callback', as: 'sign_up_from_twitter_callback'
+  resources :users, only: :index do
+    collection do
+      get 'sign_up_from_twitter'
+      post 'sign_up_from_twitter_callback'
 
-    get 'users/merge', action: 'merge', as: 'users_merge'
-    get 'users/merge/callback', action: 'merge_callback', as: 'users_merge_callback'
+      get 'merge'
+      post 'merge_callback'
 
-    get 'users/nickname/new', action: 'nickname_new'
-    post 'users/nickname/new/callback', action: 'nickname_new_callback'
+      get 'nickname_new'
+      post 'nickname_new_callback'
+    end
   end
 
   get '/users/(/:nickname)', to: 'users#show', as: 'show_user'

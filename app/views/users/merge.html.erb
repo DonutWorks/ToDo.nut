@@ -3,7 +3,7 @@
 
 <p>이 아이디와 통합하려면 기존 계정의 패스워드를 입력하세요</p>
 
-<%= form_tag({controller: "users", action: "merge_callback"}, method: "get") do %>
+<%= form_tag({controller: "users", action: "merge_callback"}, method: "post") do %>
 	<%= password_field_tag(:password) %>
  	<%= submit_tag("Submit", class: "btn btn-primary") %>
 

@@ -39,7 +39,7 @@ class UsersController < ApplicationController
   def sign_up_from_twitter_callback
     if User.where(email: params[:user]["email"]).first
       @user = User.new
-      render sign_up_from_twitter_path
+      render sign_up_from_twitter_users_path
     else
       auth = session["omniauth"]
 

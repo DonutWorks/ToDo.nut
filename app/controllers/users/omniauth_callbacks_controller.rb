@@ -5,9 +5,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     session["omniauth"] = request.env["omniauth.auth"]
     
     if @user.nil?
-      render users_nickname_new_path
+      render nickname_new_users_path
     elsif @user == "duplicated"
-      redirect_to users_merge_path   
+      redirect_to merge_users_path   
     else
       sign_in_and_redirect @user, :event => :authentication
     end
@@ -19,9 +19,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     session["omniauth"] = request.env["omniauth.auth"]
 
     if @user.nil?
-      render users_nickname_new_path
+      render nickname_new_users_path
     elsif @user == "duplicated"
-      redirect_to users_merge_path   
+      redirect_to merge_users_path   
     else
       sign_in_and_redirect @user, :event => :authentication
     end
@@ -33,7 +33,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     if @user.nil?
       @user = User.new
       session["omniauth"] = request.env["omniauth.auth"]
-      render sign_up_from_twitter_path
+      render sign_up_from_twitter_users_path
     else
       sign_in_and_redirect @user, :event => :authentication      
     end
