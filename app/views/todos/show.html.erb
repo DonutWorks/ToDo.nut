@@ -19,7 +19,7 @@
 			<div>
 				<strong>Referenced from</strong><br />
 	    	<% @todo.histories.each do |history| %>
-	    		<%= link_to "##{history.phistory_id}: #{history.title}", [@project, history] %><br />
+	    		<%= history.reference_link %><br />
 	    	<% end %>
 	   	</div>
 

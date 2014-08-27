@@ -26,7 +26,7 @@ class TodosController < ApplicationController
   end
 
   def show
-    @todo = Todo.find(params[:id])
+    @todo = TodoDecorator.find(params[:id])
   
   end
 
