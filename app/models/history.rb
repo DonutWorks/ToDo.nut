@@ -22,6 +22,10 @@ class History < ActiveRecord::Base
   has_many :inverse_history_histories, class_name: "HistoryHistory", foreign_key: "referencing_history_id"
   has_many :referenced_histories, through: :inverse_history_histories, source: :history
 
+  validate :user, presence: true
+  validate :project, presence: true
+  validate :title, presence: true
+
   include PublicActivity::Model
   tracked :except => :destroy
   has_many :activities, as: :trackable, class_name: 'PublicActivity::Activity', dependent: :destroy

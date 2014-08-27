@@ -6,6 +6,10 @@ class Todo < ActiveRecord::Base
   has_many :histories, through: :history_todos
   belongs_to :user
   belongs_to :project
+
+  validates :project, presence: true
+  validates :user, presence: true
+  validates :title, presence: true
   
   def self.fetch_list_from(id, count)
     where(arel_table[:id].gteq(id)).take(count)
