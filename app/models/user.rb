@@ -1,8 +1,10 @@
 class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  has_many :histories
-  has_many :todos
+  has_many :histories, inverse_of: :user
+  has_many :todos, inverse_of: :user
+  has_many :projects, inverse_of: :user
+  has_many :comments, inverse_of: :user
 
   has_many :history_users, foreign_key: :assignee_id
   has_many :assigned_histories, through: :history_users  
@@ -12,13 +14,11 @@ class User < ActiveRecord::Base
 
   belongs_to :user
 
-  belongs_to :comment
   devise :database_authenticatable, :registerable,
   :recoverable, :rememberable, :trackable, :validatable,
   :omniauthable, :omniauth_providers => [:facebook, :google_oauth2, :twitter]
 
-  validates_presence_of :nickname
-  validates_uniqueness_of :nickname
+  validates :nickname, uniqueness: true, presence: true
 
   acts_as_reader
 

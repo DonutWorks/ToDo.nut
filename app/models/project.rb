@@ -3,8 +3,11 @@ class Project < ActiveRecord::Base
   has_many :assignees, through: :project_users
 	
 	belongs_to :user
-  has_many :todos
-  has_many :histories
+  has_many :todos, inverse_of: :project
+  has_many :histories, inverse_of: :project
+
+  validates :user, presence: true
+  validates :title, presence: true, uniqueness: true
 
   def fetch_members_by_nickname(nickname, count)
     members = assignees.arel_table
