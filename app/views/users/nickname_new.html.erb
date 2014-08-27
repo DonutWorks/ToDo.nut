@@ -6,10 +6,9 @@
 	<%= text_field_tag(:nickname) %>
 
 
-    <% auth = session["omniauth"] %>
-	<%= hidden_field_tag(:provider, auth[:provider]) %>
-	<%= hidden_field_tag(:uid, auth[:uid]) %>
-	<%= hidden_field_tag(:email, auth[:email]) %>
+	<%= hidden_field_tag(:provider, @provider) %>
+	<%= hidden_field_tag(:uid, @uid) %>
+	<%= hidden_field_tag(:email, @email) %>
 
 
  	<%= submit_tag("Submit", class: "btn btn-primary") %>

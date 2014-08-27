@@ -1,57 +1,48 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
-  def facebook
-    @user = User.find_for_oauth2(request.env["omniauth.auth"])
+  def self.provides_callback_for(provider)
+    class_eval %Q{
+      def #{provider}
+        @provider = "#{provider}"
+        @uid = request.env["omniauth.auth"].uid
+        result = User.find_for_oauth(@provider, request.env["omniauth.auth"])
 
-    session["omniauth"] = {
-      provider: request.env["omniauth.auth"].provider,
-      uid: request.env["omniauth.auth"].uid,
-      email: request.env["omniauth.auth"]["info"].email
+        case @provider
+        when "twitter"
+          @nickname = request.env["omniauth.auth"]["extra"]["raw_info"].screen_name
+
+          case result[:status] 
+          when :success
+            @user = result[:data]
+            sign_in_and_redirect @user, :event => :authentication 
+
+          when :first_login
+            @user = User.new
+            render sign_up_from_twitter_users_path
+          end
+
+        else
+          @email = request.env["omniauth.auth"]["info"].email
+
+          case result[:status]
+          when :success
+            @user = result[:data]
+            sign_in_and_redirect @user, :event => :authentication
+
+          when :first_login
+            @user = User.new
+            render nickname_new_users_path
+
+          when :duplicated
+            @user = User.find_by_email(@email)
+            render merge_users_path
+           end
+
+        end
+      end
     }
-    
-    if @user.first_login?
-      render nickname_new_users_path
-    elsif @user.duplicated?
-      @user = User.find_by_email(session["omniauth"][:email])
-      render merge_users_path   
-    else
-      sign_in_and_redirect @user, :event => :authentication
-    end
   end
 
-  def google_oauth2
-    @user = User.find_for_oauth2(request.env["omniauth.auth"])
-
-    session["omniauth"] = {
-      provider: request.env["omniauth.auth"].provider,
-      uid: request.env["omniauth.auth"].uid,
-      email: request.env["omniauth.auth"]["info"].email
-    }
-
-    if @user.first_login?
-      render nickname_new_users_path
-    elsif @user.duplicated?
-      @user = User.find_by_email(session["omniauth"][:email])
-      render merge_users_path   
-    else
-      sign_in_and_redirect @user, :event => :authentication
-    end
-  end
-
-  def twitter
-    @user = User.find_for_twitter_oauth(request.env["omniauth.auth"])
-
-    if @user.nil?
-      @user = User.new
-
-      session["omniauth"] = {
-        provider: request.env["omniauth.auth"].provider,
-        uid: request.env["omniauth.auth"].uid,
-        nickname: request.env["omniauth.auth"]["extra"]["raw_info"].screen_name
-      }
-
-      render sign_up_from_twitter_users_path
-    else
-      sign_in_and_redirect @user, :event => :authentication      
-    end
+  [:twitter, :facebook, :google_oauth2].each do |provider|
+    provides_callback_for provider
   end
 end

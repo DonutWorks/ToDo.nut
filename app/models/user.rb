@@ -18,8 +18,6 @@ class User < ActiveRecord::Base
   validates_presence_of :nickname
   validates_uniqueness_of :nickname
 
-
-
   def to_param
     nickname
   end
@@ -28,26 +26,27 @@ class User < ActiveRecord::Base
     user = User.where(nickname: nickname).first
   end
 
-  def self.find_for_oauth2(access_token)
-    data = access_token.info
-    
-    user = User.where(provider: access_token.provider, uid: access_token.uid).first
-
-    unless user
-      user = User.new
-
-      if User.find_by_email(data[:email])
-        user.duplicated!
+  def self.find_for_oauth(provider, access_token)
+    case provider
+    when "twitter"
+      if user = User.where(uid: access_token.uid, provider: access_token.provider).first
+        return {data: user, status: :success}
       else
-        user.first_login!
+        return {data: nil, status: :first_login}
       end
+
+    else
+      email = access_token.info[:email]
+
+      if user = User.where(uid: access_token.uid, provider: access_token.provider).first
+        return {data: user, status: :success}
+      elsif User.find_by_email(email)
+        return {data: nil, status: :duplicated}
+      else
+        return {data: nil, status: :first_login}
+      end  
+
     end
-    user
-  end
-
-
-  def self.find_for_twitter_oauth(auth)
-    user = User.where(:uid => auth.uid, :provider => auth.provider).first
   end
 
   def merge(id, provider, uid)
@@ -68,22 +67,4 @@ class User < ActiveRecord::Base
       super
     end    
   end
-
-  def duplicated!
-    @duplicated = true
-  end
-
-  def duplicated?
-    @duplicated
-  end
-
-  def first_login?
-    @first_login
-  end  
-
-  def first_login!
-    @first_login = true
-  end
-
-
 end

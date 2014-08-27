@@ -8,10 +8,9 @@
 		<%= f.email_field :email, autofocus: true, class: "form-control"  %>
 	</div>
 
-	<% auth = session["omniauth"] %>
-	<%= f.hidden_field :provider, value: auth[:provider] %>
-	<%= f.hidden_field :uid, value: auth[:uid] %>
-	<%= f.hidden_field :nickname, value: auth[:nickname] %>
+	<%= f.hidden_field :provider, value: @provider %>
+	<%= f.hidden_field :uid, value: @uid %>
+	<%= f.hidden_field :nickname, value: @nickname %>
 
 	<%= f.submit :class => 'btn btn-success'%>
 
