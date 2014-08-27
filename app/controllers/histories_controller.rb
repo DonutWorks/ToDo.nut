@@ -65,7 +65,7 @@ class HistoriesController < ApplicationController
 
   def show
     @history = History.find(params[:id])
-
+    gon.project_id = params[:project_id]
   end
 
   def edit

@@ -1,6 +1,6 @@
 
 $(document).on('ready page:load', function () {
-  $('#history_description').textcomplete([
+  $('#history_description, #history_title, #comment_contents').textcomplete([
     {
       match: /\B#(\w*)$/,
       search: function (term, callback) {
