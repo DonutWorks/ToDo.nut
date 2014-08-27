@@ -17,7 +17,7 @@ module ReferenceCheck
   # => return predicate method for finding referee.
 
   class ReferenceChecker
-    def self.replace! (content)
+    def self.replace!(content)
       content.gsub!(pattern) do |match|
         found = find_method($1)
         if found
@@ -28,11 +28,11 @@ module ReferenceCheck
       end
     end
 
-    def self.replace (content, &block)
+    def self.replace(content, &block)
       replace!(content.dup, &block)
     end
 
-    def self.references
+    def self.references(content)
       referenced = content.scan(pattern)
       referenced.flatten!.map! do |term|
         find_method(term)
