@@ -92,8 +92,8 @@ ActiveRecord::Schema.define(version: 20140825161129) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
-    t.integer  "history_counter", default: 0
-    t.integer  "todo_counter",    default: 0
+    t.integer  "phistory_counter", default: 0
+    t.integer  "ptodo_counter",    default: 0
   end
 
   add_index "projects", ["user_id"], name: "index_projects_on_user_id"

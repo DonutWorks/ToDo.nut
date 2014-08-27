@@ -21,9 +21,7 @@ class HistoriesController < ApplicationController
     @history = History.new(history_params)
     @history.user_id = current_user.id
     @history.project_id = @project.id
-    @history.phistory_id = @project.history_counter + 1
-
-    @project.update(:history_counter => @project.history_counter + 1)
+    
 
     @history.transaction do
       associate_history_with_histories!

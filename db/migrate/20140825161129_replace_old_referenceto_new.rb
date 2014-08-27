@@ -1,4 +1,16 @@
 class ReplaceOldReferencetoNew < ActiveRecord::Migration
+  
+  #local class for migration
+  class History < ActiveRecord::Base  
+    belongs_to :project
+  end
+  class Todo < ActiveRecord::Base  
+  end
+  class Project < ActiveRecord::Base  
+    has_many :todos
+    has_many :histories
+  end
+
   def up
     histories = History.all
     histories.each do |h|

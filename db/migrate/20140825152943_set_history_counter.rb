@@ -1,9 +1,15 @@
 class SetHistoryCounter < ActiveRecord::Migration
+  #local class for migration
+  class Project < ActiveRecord::Base  
+    has_many :histories
+  end
+  
+
   def up
     projects = Project.all
     projects.each do |p|
       
-      p.update(:history_counter => p.histories.count)
+      p.update(:phistory_counter => p.histories.count)
     
     end
   end
@@ -11,8 +17,9 @@ class SetHistoryCounter < ActiveRecord::Migration
     projects = Project.all
     projects.each do |p|
       
-      p.update(:history_counter => 0)
+      p.update(:phistory_counter => 0)
     
     end
+    
   end
 end

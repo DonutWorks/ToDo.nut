@@ -1,4 +1,8 @@
 class History < ActiveRecord::Base
+
+
+  before_create :phistory_counter_increment
+  
   has_many :history_todos
   has_many :todos, through: :history_todos
 
@@ -21,4 +25,13 @@ class History < ActiveRecord::Base
   def self.fetch_list_from(id, count)
     where(arel_table[:id].gteq(id)).take(count)
   end
+
+
+  private
+    def phistory_counter_increment
+      self.phistory_id = self.project.phistory_counter + 1
+      self.project.update(:phistory_counter => self.project.phistory_counter + 1)
+      puts 'increment phistory counter'
+    end
+
 end

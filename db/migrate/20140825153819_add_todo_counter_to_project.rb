@@ -1,16 +1,22 @@
 class AddTodoCounterToProject < ActiveRecord::Migration
+  
+  #local class for migration
+  class Project < ActiveRecord::Base  
+    has_many :todos
+  end
+
   def up
-    add_column :projects, :todo_counter, :inteager, :default => 0
+    add_column :projects, :ptodo_counter, :integer, :default => 0
 
     #initialize
     projects = Project.all
     projects.each do |p|
       
-      p.update(:todo_counter => p.todos.count)
+      p.update(:ptodo_counter => p.todos.count)
     
     end
   end
   def down
-    remove_column :projects, :todo_counter, :inteager, :default => 0
+    remove_column :projects, :ptodo_counter, :integer, :default => 0
   end
 end

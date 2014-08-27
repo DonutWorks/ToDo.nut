@@ -12,11 +12,8 @@ class TodosController < ApplicationController
   def create
     @todo = Todo.new(todo_params)
     @todo.user_id = current_user.id
-  
     @todo.project_id = @project.id
-    @todo.ptodo_id = @project.todo_counter + 1
-    
-    @project.update(:todo_counter => @project.todo_counter + 1)
+
     
     if @todo.save
       #url_helper -> project_todo_url is okay?

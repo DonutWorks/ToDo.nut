@@ -1,5 +1,15 @@
 class UpdatePobjectId5 < ActiveRecord::Migration
+  
+  #local class for migration
+  class History < ActiveRecord::Base  
+  end
+  class Todo < ActiveRecord::Base  
+  end
+
   def up
+    
+    
+
     histories = History.all
     histories.each do |h|
       if h.project_id == nil
@@ -22,6 +32,7 @@ class UpdatePobjectId5 < ActiveRecord::Migration
       end
     end
   end
+
   def down
     histories = History.all
     histories.each do |h|
