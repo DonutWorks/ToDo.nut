@@ -29,34 +29,12 @@ class HistoriesController < ApplicationController
       associate_history_with_assignees!
       associate_history_with_images!
       @history.save!
+      send_notifications!
     end
 
     #url_helper -> project_history(@project, @history) is okay?
     SlackNotifier.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.project_history_url(@project, @history)})")
-
-    @user = User.find(current_user.id)
-
-    # Mail.defaults do
-    #   delivery_method :smtp, :address    => "smtp.gmail.com",
-    #                          :port       => 587,
-    #                          :user_name  => 'donutworks.app@gmail.com',
-    #                          :password   => 'donutwork',
-    #                          :enable_ssl => true
-    # end
-
-    # mail = Mail.new
-
-    # mail.from('donutworks.app@gmail.com')
-    # mail.to(@user.email)
-    # mail.subject('[Todo.nut] History 에 "' + @history.title + '" 를 등록 했습니다.')
-
-    # template = ERB.new(File.read('app/views/mail/newhistory.html.erb')).result(binding)
-    # mail.html_part  do
-    #   content_type 'text/html; charset=UTF-8'
-    #   body template
-    # end
-
-    # mail.deliver!
+    MailSender.send_email_when_create(current_user.email, @history)
 
     redirect_to project_path(@project)
 
@@ -86,6 +64,7 @@ class HistoriesController < ApplicationController
       associate_history_with_assignees!
       associate_history_with_images!
       @history.update!(history_params)
+      send_notifications!
     end
 
     #url_helper -> project_history(@project, @history) is okay?
@@ -116,6 +95,14 @@ class HistoriesController < ApplicationController
 
   def find_project
     @project = current_user.assigned_projects.find(params[:project_id])
+  end
+
+  def send_notifications!
+    mentioned_users = @history.description.scan(/\B@([^\s]+)\b/).flatten!.to_a
+    mentioned_users.map! { |nickname| User.find_by_nickname(nickname) }
+    mentioned_users.each do |user|
+      @history.create_activity(action: 'mention', recipient: user, owner: current_user)
+    end
   end
 
   # metaprogramming?

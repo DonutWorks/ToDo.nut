@@ -11,7 +11,5 @@ class Project < ActiveRecord::Base
     
     assignees.where(members[:nickname].matches("%#{nickname}%")).take(count)
   end
-
-
-
+  
 end

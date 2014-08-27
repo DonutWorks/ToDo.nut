@@ -18,6 +18,7 @@ class TodosController < ApplicationController
     if @todo.save
       #url_helper -> project_todo_url is okay?
       SlackNotifier.notify("투두가 추가되었어용 : #{@todo.title} (#{Rails.application.routes.url_helpers.project_todo_url(@project, @todo)})")
+      MailSender.send_email_when_create(@current_user.email, @todo)
       redirect_to project_path(@project)
     else 
       render 'new'
