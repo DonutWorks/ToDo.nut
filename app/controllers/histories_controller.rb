@@ -5,7 +5,6 @@ class HistoriesController < ApplicationController
   
   def index
     @histories = History.all
-    
   end
 
   def new
@@ -44,7 +43,6 @@ class HistoriesController < ApplicationController
 
   def show
     @history = History.find(params[:id])
-
   end
 
   def edit
@@ -52,14 +50,13 @@ class HistoriesController < ApplicationController
     @todos = Todo.all
     @users = User.all
     gon.project_id = @project.id
-
   end
 
   def update
     @history = History.find(params[:id])
-    
 
     @history.transaction do
+      associate_history_with_histories!
       associate_history_with_todos!
       associate_history_with_assignees!
       associate_history_with_images!
@@ -107,22 +104,20 @@ class HistoriesController < ApplicationController
 
   # metaprogramming?
   def associate_history_with_histories!
-    referenced_histories = params[:history][:description].scan(/\B#(\d+)\b/).flatten!
+    referenced_histories = ReferenceCheck::ForHistory.references(params[:history][:description])
 
     @history.referencing_histories.destroy_all
-    referenced_histories.each do |id|
-      referenced_history_id = @project.histories.where(:phistory_id=>id).first.id
-      @history.history_histories.build(referencing_history_id: referenced_history_id)
+    referenced_histories.each do |history|
+      @history.history_histories.build(referencing_history_id: history.id)
     end if referenced_histories != nil
   end
 
   def associate_history_with_todos!
-    referenced_todos = params[:history][:description].scan(/\B&(\d+)\b/).flatten!
+    referenced_todos = ReferenceCheck::ForTodo.references(params[:history][:description])
 
     @history.todos.destroy_all
-    referenced_todos.each do |id|
-      referenced_todo_id = @project.todos.where(:ptodo_id=>id).first.id
-      @history.history_todos.build(todo_id: referenced_todo_id)
+    referenced_todos.each do |todo|
+      @history.history_todos.build(todo_id: todo.id)
     end if referenced_todos != nil
   end
 
