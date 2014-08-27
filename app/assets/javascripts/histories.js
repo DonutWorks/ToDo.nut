@@ -7,7 +7,8 @@ $(document).on('ready page:load', function () {
         $.getJSON('/projects/'+gon.project_id+'/histories/list/' + term)
         .done(function (res) {
           callback($.map(res, function (history) {
-            return '#' + history.id + ': ' + history.title;
+            // return '#' + history.id + ': ' + history.title;
+            return '#' + history.phistory_id + ': ' + history.title;
           }));
         })
         .fail(function (res) {
@@ -43,7 +44,8 @@ $(document).on('ready page:load', function () {
         $.getJSON('/projects/'+gon.project_id+'/todos/list/' + term)
         .done(function (res) {
           callback($.map(res, function (todo) {
-            return '&' + todo.id + ': ' + todo.title;
+            // return '&' + todo.id + ': ' + todo.title;
+            return '&' + todo.ptodo_id + ': ' + todo.title;
           }));
         })
         .fail(function (res) {

@@ -23,6 +23,7 @@ class ProjectsController < ApplicationController
       associate_project_with_assignees!
 
       SlackNotifier.notify("프로젝트 추가되었어용 : #{@project.title} (#{Rails.application.routes.url_helpers.project_url(@project)})")
+      MailSender.send_email_when_create(current_user.email, @project)
     end
     redirect_to projects_path
   end
@@ -37,13 +38,6 @@ class ProjectsController < ApplicationController
     @todos = Todo.where(project_id: params[:id])
     @histories = History.where(project_id: params[:id])
     
-    gon.deco = decorate
-    #@data = gon.deco
-    # render plain: decorate
-
-    # output = File.open( "../assets/javascripts/test_data.json", w+)
-    # output << decorate
-    # output.close
   end
 
   def edit
@@ -95,40 +89,6 @@ class ProjectsController < ApplicationController
 private 
   def project_params
     params.require(:project).permit(:title, :description)
-  end
-
-private 
-  def decorate
-    data=[];
-
-    @todos.each do |t|
-      articles = [];
-      
-
-      total = 0
-    
-      t.histories.each do |h|
-        articles.push([(h.evented_at.to_date-Time.now.to_date).to_i,5])
-        total += 5
-      end
-      
-      duetime = ""
-      if t.duedate != nil
-        duetime = t.duedate.strftime('%m/%d')
-      end
-      
-      data.push({
-        "id" => t.id,
-        "project_id" => t.project_id,
-        "articles" => articles,
-        "total" => total,
-        "name" => t.title,
-        "color" => t.color,
-        "duedate" => duetime
-      })
-
-    end
-    return data.to_json
   end
 
   def find_project

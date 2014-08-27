@@ -8,7 +8,13 @@ class ApplicationController < ActionController::Base
   # migration for new field nickname which is required field.
   before_action :is_nickname_not_empty?
 
-  
+  Mail.defaults do
+    delivery_method :smtp, :address    => "smtp.gmail.com",
+                           :port       => 587,
+                           :user_name  => 'donutworks.app@gmail.com',
+                           :password   => 'donutwork',
+                           :enable_ssl => true
+  end
   
   protected
   def configure_permitted_parameters
