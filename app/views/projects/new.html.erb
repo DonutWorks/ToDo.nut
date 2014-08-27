@@ -1,6 +1,6 @@
 <div class="form-container">
-
-  <%= render 'form' %>
-
+  <%= form_for @project, url: projects_path(current_user.nickname), :role => 'form' do |f|%>
+  <%= render partial: 'form', locals: {f: f} %>
+  <% end %>
 
 </div>

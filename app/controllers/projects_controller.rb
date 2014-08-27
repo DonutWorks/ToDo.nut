@@ -6,6 +6,7 @@ class ProjectsController < ApplicationController
 
   def new
     @project = Project.new
+    @project.user = current_user
     @users = User.all
   end
 
@@ -22,52 +23,50 @@ class ProjectsController < ApplicationController
       #associate_project_with_todos!
       associate_project_with_assignees!
 
-      SlackNotifier.notify("프로젝트 추가되었어용 : #{@project.title} (#{Rails.application.routes.url_helpers.project_url(@project)})")
+      SlackNotifier.notify("프로젝트 추가되었어용 : #{@project.title} (#{Rails.application.routes.url_helpers.project_url(@project.user.nickname, @project.title)})")
     end
     redirect_to projects_path
   end
   
   def detail
-    @project = Project.find(params[:id])
+    
     
   end
 
   def show
     @todo = Todo.new    
-    @todos = Todo.where(project_id: params[:id])
-    @histories = History.where(project_id: params[:id])
+    @todos = @project.todos
+    @histories = @project.histories
     
   end
 
   def edit
-    @project = Project.find(params[:id])
-    #@todos = Todo.all
+    
     @users = User.all
   end
 
   def update
-    @project = Project.find(params[:id])
+    
 
     if @project.update(project_params)
       #associate_project_with_todos!
       associate_project_with_assignees!
 
-      SlackNotifier.notify("프로젝트가 수정되었어용 : #{@project.title} (#{Rails.application.routes.url_helpers.project_url(@project)})")
-      redirect_to @project
+      SlackNotifier.notify("프로젝트가 수정되었어용 : #{@project.title} (#{Rails.application.routes.url_helpers.project_url(@project.user.nickname, @project.title)})")
+      redirect_to detail_project_path(@project.user.nickname, @project.title)
     else
       render 'edit'
     end
   end
   
   def destroy
-    @project = Project.find(params[:id])
+    
     @project.destroy
 
     redirect_to projects_path
   end
 
   def members
-    @project = Project.find(params[:id])
     
     members = @project.fetch_members_by_nickname(params[:nickname], 5)
     respond_with members
@@ -92,7 +91,8 @@ private
 
   def find_project
     
-    @project = current_user.assigned_projects.find(params[:id] )
+    @project = current_user.assigned_projects.where(title: params[:title]).first
+    
       #if project doesn't exist, this will make an exception.
       #Should make exception handler
   end

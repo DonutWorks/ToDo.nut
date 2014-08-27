@@ -4,7 +4,7 @@ module HistoriesHelper
     
     found = @project.todos.find_by_ptodo_id(reference[1..-1])
     if found
-      link_to "#{found.title}(#{reference})", project_todo_path(@project, found.ptodo_id)
+      link_to "#{found.title}(#{reference})", project_todo_path(@project.user.nickname, @project.title, found.ptodo_id)
     else
       reference
     end
@@ -14,7 +14,7 @@ module HistoriesHelper
     
     found = @project.histories.find_by_phistory_id(reference[1..-1])
     if found
-      link_to "#{found.title}(#{reference})", project_history_path(@project, found.phistory_id)
+      link_to "#{found.title}(#{reference})", project_history_path(@project.user.nickname, @project.title, found.phistory_id)
     else
       reference
     end

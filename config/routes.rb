@@ -16,7 +16,10 @@ Rails.application.routes.draw do
   get '/users/(/:nickname)', to: 'users#show', as: 'show_user', :constraints => { :nickname => /[^\/]+/ }
   #resources :users, only: [:show]
 
-  resources :projects do
+  get 'projects/new', to: 'projects#new', as: 'new_project'
+  
+  
+  resources :projects, :path =>'/:creator', param: :title do
     resources :todos, param: :ptodo_id do
       collection do
         get 'list(/:id)', action: 'list', defaults: {format: 'json'}
@@ -33,7 +36,6 @@ Rails.application.routes.draw do
     member do
       get 'detail'
       get 'members(/:nickname)', action: 'members', as: 'members', defaults: {format: 'json'}
-
     end
 
   end
