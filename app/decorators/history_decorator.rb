@@ -1,4 +1,8 @@
 class HistoryDecorator < BaseDecorator
+  decorates_association :user
+  decorates_association :comments
+  decorates_association :assignees
+  decorates_association :referenced_histories
 
   def description
     attach_reference_link(object.description, object.project)

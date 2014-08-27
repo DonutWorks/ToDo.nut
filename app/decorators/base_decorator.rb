@@ -1,5 +1,7 @@
 class BaseDecorator < Draper::Decorator
-
+  decorates_finders
+  delegate_all
+  
 	include Rails.application.routes.url_helpers
 
   def attach_reference_link(content, project)

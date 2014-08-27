@@ -3,7 +3,7 @@
 
     <div class="col-md-6">
       <h3>
-       <%= raw @history.decorate.title %>
+       <%= raw @history.title %>
       </h3>
     
     <p class="text-align-right">
@@ -13,25 +13,25 @@
 
     <p class="text-align-right">
       <strong>Creator</strong><br />
-      <%= @history.user.decorate.email %>
+      <%= @history.user.email %>
     </p>
 
     <p class="text-align-right">
       <strong>Assignee</strong><br />
       <% @history.assignees.each do |assignee| %>
-      <%= assignee.decorate.email %><br />
+      <%= assignee.email %><br />
       <% end %>
     </p>
     
     <p class="word-break markdown">
-      <%= raw @history.decorate.description %>
+      <%= raw @history.description %>
     </p>
 
    <div>
       <% if @history.referenced_histories.count > 0 %>
       <strong>Referenced from</strong><br />
         <% @history.referenced_histories.each do |history| %>
-          <%= history.decorate.reference_link %><br />
+          <%= history.reference_link %><br />
         <% end %>
       <% end %>
    </div>
@@ -45,8 +45,8 @@
     <tbody>
       <% @history.comments.each do |comment| %>
       <tr>
-        <td><%= raw comment.decorate.contents %></td>
-        <td><%= comment.user.decorate.email %></td>
+        <td><%= raw comment.contents %></td>
+        <td><%= comment.user.email %></td>
         <td><%= link_to 'Delete', [@project, @history, comment], method: :delete, :class => "btn btn-default" %> </td>
       </tr>
       <% end %>
