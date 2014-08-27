@@ -1,8 +1,17 @@
 
-<%= form_tag({controller: "/users", action: "nickname_new_callback"}, method: "post") do %>
+<%= form_tag(nickname_new_callback_users_path, method: "post") do %>
 	
-<p>처음이십니다. 새로운 닉네임을 입력하세요</p>
-<%= text_field_tag(:nickname) %>
+	<p>처음이십니다. 새로운 닉네임을 입력하세요</p>
+
+	<%= text_field_tag(:nickname) %>
+
+
+    <% auth = session["omniauth"] %>
+	<%= hidden_field_tag(:provider, auth[:provider]) %>
+	<%= hidden_field_tag(:uid, auth[:uid]) %>
+	<%= hidden_field_tag(:email, auth[:email]) %>
+
+
  	<%= submit_tag("Submit", class: "btn btn-primary") %>
 <% end %>
 

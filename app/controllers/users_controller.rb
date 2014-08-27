@@ -5,15 +5,14 @@ class UsersController < ApplicationController
   end
 
   def merge
-    @user = User.where(email: session["omniauth"]["email"]).first
   end
 
   def merge_callback
-    auth = session["omniauth"]
-    @user = User.where(email: auth["email"]).first
+    @user = User.find_by_email(params[:email])
     
     if @user.valid_password?(params[:password])
-      @user.merge(@user.id, auth["provider"], auth["uid"])
+      @user.merge(@user.id, params[:provider], params[:uid])
+
       sign_in_and_redirect @user, :event => :authentication
     else
       redirect_to root_path
@@ -24,12 +23,13 @@ class UsersController < ApplicationController
   end
 
   def nickname_new_callback
-    auth = session["omniauth"]
+    @user = User.create!(
+      provider: params[:provider],
+      uid: params[:uid],
+      email: params[:email],
+      nickname: params[:nickname]
+    )
 
-    @user = User.create!(provider:auth["provider"],
-      uid: auth["uid"],
-      email: auth["email"],
-      nickname: params[:nickname])
     sign_in_and_redirect @user, :event => :authentication
   end
 
@@ -37,17 +37,17 @@ class UsersController < ApplicationController
   end
 
   def sign_up_from_twitter_callback
-    if User.where(email: params[:user]["email"]).first
+    if User.find_by_email(params[:user][:email])
       @user = User.new
       render sign_up_from_twitter_users_path
     else
-      auth = session["omniauth"]
+      @user = User.new(
+          provider: params[:user][:provider],
+          uid: params[:user][:uid],
+          nickname: params[:user][:nickname]
+        )
 
-      @user = User.new(provider:auth["provider"],
-          uid:auth["uid"],
-          nickname: auth["nickname"])
-
-      @user.email = params[:user]["email"]
+      @user.email = params[:user][:email]
 
       @user.save!
       sign_in_and_redirect @user, :event => :authentication

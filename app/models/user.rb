@@ -25,35 +25,21 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_nickname(nickname)
-    user = User.where(:nickname => nickname).first
-  end
-
-  def self.from_omniauth(auth)
-
-    where(auth.slice(:provider, :uid)).first_or_create do |user|
-      user.email = auth.info.email
-      user.password = Devise.friendly_token[0,20]
-      user.nickname = auth.info.name
-    end
-  end
-
-  def self.new_with_session(params, session)
-    super.tap do |user|
-      if data = session["omniauth"] && session["omniauth"]["extra"]["raw_info"]
-        user.email = data["email"] if user.email.blank?
-      end
-    end
+    user = User.where(nickname: nickname).first
   end
 
   def self.find_for_oauth2(access_token)
     data = access_token.info
+    
     user = User.where(provider: access_token.provider, uid: access_token.uid).first
 
     unless user
-      if User.where(email: data["email"]).first
-        user = User.new(email: data["email"])
+      user = User.new
+
+      if User.find_by_email(data[:email])
+        user.duplicated!
       else
-        user = nil
+        user.first_login!
       end
     end
     user
@@ -65,14 +51,14 @@ class User < ActiveRecord::Base
   end
 
   def merge(id, provider, uid)
-    user = User.where(:id => id).first
+    user = User.find(id)
     user.provider = provider
     user.uid = uid
     user.save!
   end
 
   def update_from_twitter(id, email)
-    user = User.where(:id => id).first
+    user = User.find(id)
     user.email = email
     user.save!
   end
@@ -83,8 +69,21 @@ class User < ActiveRecord::Base
     end    
   end
 
-  def duplicated?
-    User.where(email: email, id: nil)
+  def duplicated!
+    @duplicated = true
   end
+
+  def duplicated?
+    @duplicated
+  end
+
+  def first_login?
+    @first_login
+  end  
+
+  def first_login!
+    @first_login = true
+  end
+
 
 end

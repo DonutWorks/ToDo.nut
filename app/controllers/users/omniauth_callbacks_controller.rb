@@ -8,10 +8,11 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       email: request.env["omniauth.auth"]["info"].email
     }
     
-    if @user.nil?
+    if @user.first_login?
       render nickname_new_users_path
     elsif @user.duplicated?
-      redirect_to merge_users_path   
+      @user = User.find_by_email(session["omniauth"][:email])
+      render merge_users_path   
     else
       sign_in_and_redirect @user, :event => :authentication
     end
@@ -26,10 +27,11 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       email: request.env["omniauth.auth"]["info"].email
     }
 
-    if @user.nil?
+    if @user.first_login?
       render nickname_new_users_path
     elsif @user.duplicated?
-      redirect_to merge_users_path   
+      @user = User.find_by_email(session["omniauth"][:email])
+      render merge_users_path   
     else
       sign_in_and_redirect @user, :event => :authentication
     end
