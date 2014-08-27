@@ -12,8 +12,8 @@ class TodosController < ApplicationController
   def create
     @todo = Todo.new(todo_params)
     @todo.user_id = current_user.id
-  
     @todo.project_id = @project.id
+
     
     if @todo.save
       #url_helper -> project_todo_url is okay?
@@ -48,7 +48,7 @@ class TodosController < ApplicationController
 
   def list
     from_id = params[:id] || 0
-    todos = Todo.where(project_id: params[:project_id]).fetch_list_from(from_id, 5)
+    todos = @project.todos.fetch_list_from(from_id, 5)
     respond_with todos
   end
 

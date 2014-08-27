@@ -1,4 +1,4 @@
 class HistorySerializer < ActiveModel::Serializer
-  attributes :id, :title
+  attributes :phistory_id, :title
 end
 

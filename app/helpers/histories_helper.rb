@@ -1,7 +1,8 @@
 module HistoriesHelper
   # @project need to replace to current_project?
   def replace_todo_reference(reference)
-    found = Todo.find_by_id(reference[1..-1])
+    
+    found = @project.todos.find_by_ptodo_id(reference[1..-1])
     if found
       link_to "#{found.title}(#{reference})", project_todo_path(@project, found)
     else
@@ -10,7 +11,8 @@ module HistoriesHelper
   end
 
   def replace_history_reference(reference)
-    found = History.find_by_id(reference[1..-1])
+    
+    found = @project.histories.find_by_phistory_id(reference[1..-1])
     if found
       link_to "#{found.title}(#{reference})", project_history_path(@project, found)
     else
