@@ -11,7 +11,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140816105520) do
+ActiveRecord::Schema.define(version: 20140825161129) do
+
+  create_table "activities", force: true do |t|
+    t.integer  "trackable_id"
+    t.string   "trackable_type"
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.string   "key"
+    t.text     "parameters"
+    t.integer  "recipient_id"
+    t.string   "recipient_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "activities", ["owner_id", "owner_type"], name: "index_activities_on_owner_id_and_owner_type"
+  add_index "activities", ["recipient_id", "recipient_type"], name: "index_activities_on_recipient_id_and_recipient_type"
+  add_index "activities", ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type"
+
   create_table "comments", force: true do |t|
     t.integer  "user_id"
     t.integer  "history_id"
@@ -31,6 +49,7 @@ ActiveRecord::Schema.define(version: 20140816105520) do
     t.datetime "evented_at"
     t.integer  "user_id"
     t.integer  "project_id"
+    t.integer  "phistory_id"
   end
 
   add_index "histories", ["project_id"], name: "index_histories_on_project_id"
@@ -49,10 +68,6 @@ ActiveRecord::Schema.define(version: 20140816105520) do
     t.integer  "history_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "image_file_name"
-    t.string   "image_content_type"
-    t.integer  "image_file_size"
-    t.datetime "image_updated_at"
     t.string   "image"
   end
 
@@ -94,9 +109,20 @@ ActiveRecord::Schema.define(version: 20140816105520) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+    t.integer  "phistory_counter", default: 0
+    t.integer  "ptodo_counter",    default: 0
   end
 
   add_index "projects", ["user_id"], name: "index_projects_on_user_id"
+
+  create_table "read_marks", force: true do |t|
+    t.integer  "readable_id"
+    t.integer  "user_id",                  null: false
+    t.string   "readable_type", limit: 20, null: false
+    t.datetime "timestamp"
+  end
+
+  add_index "read_marks", ["user_id", "readable_type", "readable_id"], name: "index_read_marks_on_user_id_and_readable_type_and_readable_id"
 
   create_table "todos", force: true do |t|
     t.string   "title"
@@ -106,13 +132,14 @@ ActiveRecord::Schema.define(version: 20140816105520) do
     t.string   "color"
     t.datetime "duedate"
     t.integer  "project_id"
+    t.integer  "ptodo_id"
   end
 
   add_index "todos", ["project_id"], name: "index_todos_on_project_id"
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: ""
+    t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"

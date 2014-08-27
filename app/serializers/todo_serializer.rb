@@ -1,3 +1,4 @@
 class TodoSerializer < ActiveModel::Serializer
-  attributes :id, :title
+  attributes :ptodo_id, :title
 end
+

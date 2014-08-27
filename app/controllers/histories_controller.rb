@@ -5,7 +5,6 @@ class HistoriesController < ApplicationController
   
   def index
     @histories = History.all
-    
   end
 
   def new
@@ -21,6 +20,7 @@ class HistoriesController < ApplicationController
     @history = History.new(history_params)
     @history.user_id = current_user.id
     @history.project_id = @project.id
+    
 
     @history.transaction do
       associate_history_with_histories!
@@ -28,34 +28,12 @@ class HistoriesController < ApplicationController
       associate_history_with_assignees!
       associate_history_with_images!
       @history.save!
+      send_notifications!
     end
 
     #url_helper -> project_history(@project, @history) is okay?
     SlackNotifier.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.project_history_url(@project, @history)})")
-
-    @user = User.find(current_user.id)
-
-    # Mail.defaults do
-    #   delivery_method :smtp, :address    => "smtp.gmail.com",
-    #                          :port       => 587,
-    #                          :user_name  => 'donutworks.app@gmail.com',
-    #                          :password   => 'donutwork',
-    #                          :enable_ssl => true
-    # end
-
-    # mail = Mail.new
-
-    # mail.from('donutworks.app@gmail.com')
-    # mail.to(@user.email)
-    # mail.subject('[Todo.nut] History 에 "' + @history.title + '" 를 등록 했습니다.')
-
-    # template = ERB.new(File.read('app/views/mail/newhistory.html.erb')).result(binding)
-    # mail.html_part  do
-    #   content_type 'text/html; charset=UTF-8'
-    #   body template
-    # end
-
-    # mail.deliver!
+    MailSender.send_email_when_create(current_user.email, @history)
 
     redirect_to project_path(@project)
 
@@ -73,18 +51,18 @@ class HistoriesController < ApplicationController
     @todos = Todo.all
     @users = User.all
     gon.project_id = @project.id
-
   end
 
   def update
     @history = History.find(params[:id])
-    
 
     @history.transaction do
+      associate_history_with_histories!
       associate_history_with_todos!
       associate_history_with_assignees!
       associate_history_with_images!
       @history.update!(history_params)
+      send_notifications!
     end
 
     #url_helper -> project_history(@project, @history) is okay?
@@ -104,7 +82,7 @@ class HistoriesController < ApplicationController
 
   def list
     from_id = params[:id] || 0
-    histories = History.where(project_id: params[:project_id]).fetch_list_from(from_id, 5)
+    histories = @project.histories.fetch_list_from(from_id, 5)
     respond_with histories
   end
 
@@ -117,22 +95,30 @@ class HistoriesController < ApplicationController
     @project = current_user.assigned_projects.find(params[:project_id])
   end
 
+  def send_notifications!
+    mentioned_users = @history.description.scan(/\B@([^\s]+)\b/).flatten!.to_a
+    mentioned_users.map! { |nickname| User.find_by_nickname(nickname) }
+    mentioned_users.each do |user|
+      @history.create_activity(action: 'mention', recipient: user, owner: current_user)
+    end
+  end
+
   # metaprogramming?
   def associate_history_with_histories!
-    referenced_histories = params[:history][:description].scan(/\B#(\d+)\b/).flatten!
+    referenced_histories = ReferenceCheck::ForHistory.references(params[:history][:description])
 
     @history.referencing_histories.destroy_all
-    referenced_histories.each do |id|
-      @history.history_histories.build(referencing_history_id: id)
+    referenced_histories.each do |history|
+      @history.history_histories.build(referencing_history_id: history.id)
     end if referenced_histories != nil
   end
 
   def associate_history_with_todos!
-    referenced_todos = params[:history][:description].scan(/\B&(\d+)\b/).flatten!
+    referenced_todos = ReferenceCheck::ForTodo.references(params[:history][:description])
 
     @history.todos.destroy_all
-    referenced_todos.each do |id|
-      @history.history_todos.build(todo_id: id)
+    referenced_todos.each do |todo|
+      @history.history_todos.build(todo_id: todo.id)
     end if referenced_todos != nil
   end
 

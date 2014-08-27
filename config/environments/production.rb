@@ -89,3 +89,11 @@ Devise.setup do |config|
   config.omniauth :google_oauth2, "196270804628-g9e9un9lm7kq36qmsl0c08ei2ncm9j5f.apps.googleusercontent.com", "LgAZfSbq-15BlKgt7nGmyfI8"
   config.omniauth :twitter, "fpk8sZFPaWCdgOt6N70lcH5MC", "WGvNsGWuKkSer8eteyPStT3EU7RMscfvayz3Llr0tw5LU2aWtT"
 end
+
+Mail.defaults do
+  delivery_method :smtp, :address    => "smtp.gmail.com",
+                         :port       => 587,
+                         :user_name  => 'donutworks.app@gmail.com',
+                         :password   => 'donutwork',
+                         :enable_ssl => true
+end

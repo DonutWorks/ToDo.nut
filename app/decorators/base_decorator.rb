@@ -2,17 +2,15 @@ class BaseDecorator < Draper::Decorator
 
 	include Rails.application.routes.url_helpers
 
-  REFERENCE_REPLACE_STRATEGIES = [
-    {pattern: /\B&(\d+)\b/, replacer: :replace_todo_reference},
-    {pattern: /\B#(\d+)\b/, replacer: :replace_history_reference},
-    {pattern: /\B@([^\s]+)\b/, replacer: :replace_user_reference},
-  ]
-
-  def attach_reference_link(content)
-    REFERENCE_REPLACE_STRATEGIES.each do |strategy|
-      content.gsub!(strategy[:pattern]) do |match|
-        self.send(strategy[:replacer], match)
-      end
+  def attach_reference_link(content, project)
+    ReferenceCheck::ForUser.replace!(content) do |user, match|
+      h.link_to match, show_user_path(user)
+    end
+    ReferenceCheck::ForHistory.replace!(content) do |history, match|
+      h.link_to "#{history.title}(#{match})", project_history_path(project, history)
+    end
+    ReferenceCheck::ForTodo.replace!(content) do |todo, match|
+      h.link_to "#{todo.title}(#{match})", project_todo_path(project, todo)
     end
     content
   end
