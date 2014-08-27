@@ -15,3 +15,9 @@
 //= require jquery-ui
 //= require turbolinks
 //= require_tree .
+
+$(document).on('ready page:load', function () {
+  $('.markdown').each(function () {
+    $(this).html(markdown.toHTML($(this).html().trim()), null, { escape: true });
+  });
+});
