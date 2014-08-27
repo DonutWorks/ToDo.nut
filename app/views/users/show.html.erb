@@ -1,7 +1,6 @@
 <div class="form-container">
   <div class="row">
-
-    <div class="col-md-4">
+    <div class="col-md-6">
       <h3>
        <%= @user.email %>
       </h3>
@@ -17,8 +16,19 @@
       </p>
     </div>
 
-    <div class="col-md-8">
-      
+    <div class="col-md-6">
+      <h3>Assigned Projects</h3>
+      <div>
+      <% @projects.each do |project| %>
+        <p><%= link_to project.title, project_path(project) %></p>
+      <% end %>
+      </div>
+      <h3>Assigned Histories</h3>
+      <div>
+      <% @histories.each do |history| %>
+        <p><%= link_to history.project.title + "/" + history.title, project_history_path(history.project, history) %></p>
+      <% end %>
+      </div>
     </div>
   </div>
   <div class="form-buttons">

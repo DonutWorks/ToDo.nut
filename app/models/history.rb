@@ -1,4 +1,8 @@
 class History < ActiveRecord::Base
+
+
+  before_create :phistory_counter_increment
+  
   has_many :history_todos
   has_many :todos, through: :history_todos
 
@@ -18,7 +22,19 @@ class History < ActiveRecord::Base
   has_many :inverse_history_histories, class_name: "HistoryHistory", foreign_key: "referencing_history_id"
   has_many :referenced_histories, through: :inverse_history_histories, source: :history
 
+  include PublicActivity::Model
+  tracked :except => :destroy
+  has_many :activities, as: :trackable, class_name: 'PublicActivity::Activity', dependent: :destroy
+
   def self.fetch_list_from(id, count)
     where(arel_table[:id].gteq(id)).take(count)
   end
+
+  private
+    def phistory_counter_increment
+      self.phistory_id = self.project.phistory_counter + 1
+      self.project.update(:phistory_counter => self.project.phistory_counter + 1)
+      puts 'increment phistory counter'
+    end
+
 end
