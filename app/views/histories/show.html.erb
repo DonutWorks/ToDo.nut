@@ -32,7 +32,7 @@
       <% if @history.referenced_histories.count > 0 %>
       <strong>Referenced from</strong><br />
         <% @history.referenced_histories.each do |history| %>
-          <%= link_to "##{history.phistory_id}: #{history.title}", project_history_path(@project.user.nickname, @project.title, history.phistory_id) %><br />
+          <%= link_to "##{history.phistory_id}: #{history.title}", project_history_path(@project.project_owner, @project.title, history.phistory_id) %><br />
         <% end %>
       <% end %>
    </div>
@@ -48,7 +48,7 @@
       <tr>
         <td><%= comment.contents %></td>
         <td><%= comment.user.email %></td>
-        <td><%= link_to 'Delete', project_history_comment_path(@project.user.nickname, @project.title, @history.phistory_id, comment.id), method: :delete, :class => "btn btn-default" %> </td>
+        <td><%= link_to 'Delete', project_history_comment_path(@project.project_owner, @project.title, @history.phistory_id, comment.id), method: :delete, :class => "btn btn-default" %> </td>
       </tr>
       <% end %>
     </tbody>
@@ -66,6 +66,6 @@
 </div>
 
 <div class="form-buttons">
-  <%= link_to 'Back', project_path(@project.user.nickname, @project.title), :class => 'btn btn-default'%>
+  <%= link_to 'Back', project_path(@project.project_owner, @project.title), :class => 'btn btn-default'%>
 </div>
 </div>

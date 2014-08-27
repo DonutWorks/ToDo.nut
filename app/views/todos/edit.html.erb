@@ -30,7 +30,7 @@
 	});
 </script>
 
-<%= form_for [@project, @todo], :url => project_todo_path(@project.user.nickname, @project.title, @todo.ptodo_id), html: {class: 'form'} do |f| %>
+<%= form_for [@project, @todo], :url => project_todo_path(@project.project_owner, @project.title, @todo.ptodo_id), html: {class: 'form'} do |f| %>
 <div class="form-group">
 	<%= f.label :title %>
 	<%= f.text_field :title, :class => 'form-control'%>
@@ -57,7 +57,7 @@
 
 <div class="form-buttons">
 
-<%= link_to 'Back', project_todo_path(@project.user.nickname, @project.title,@todo.ptodo_id), :class => 'btn btn-default'%>
+<%= link_to 'Back', project_todo_path(@project.project_owner, @project.title,@todo.ptodo_id), :class => 'btn btn-default'%>
 <%= f.submit :class => 'btn btn-success'%>
 </div>
 <% end %>

@@ -18,7 +18,7 @@
 	});
 </script>
 
-<%= form_for :todo, url: project_todos_path(@project.user.nickname,@project.title), html: {class: 'todo-form form-inline'} do |f| %>
+<%= form_for :todo, url: project_todos_path(@project.project_owner,@project.title), html: {class: 'todo-form form-inline'} do |f| %>
 	<div class="form-group">
 		<%= f.label :title %>
 		<%= f.text_field :title, class: "form-control" %>

@@ -11,7 +11,7 @@ class CommentsController < ApplicationController
     @comment.history_id = @history.id
 
     if @comment.save
-      redirect_to project_history_path(@project.user.nickname, @project.title,params[:history_phistory_id]) 
+      redirect_to project_history_path(@project.project_owner, @project.title,params[:history_phistory_id]) 
     else 
       render 'new'
     end
@@ -26,7 +26,7 @@ class CommentsController < ApplicationController
     @comment = @history.comments.find(params[:id])
     @comment.destroy
 
-    redirect_to project_history_path(@project.user.nickname, @project.title,params[:history_phistory_id]) 
+    redirect_to project_history_path(@project.project_owner, @project.title,params[:history_phistory_id]) 
 
   end
 

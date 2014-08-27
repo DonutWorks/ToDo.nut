@@ -8,7 +8,7 @@ class TodoVisualizationSerializer < ActiveModel::Serializer
     object.project.title
   end
   def project_creator_nickname
-    object.project.user.nickname
+    object.project.project_owner
   end
   
   def histories

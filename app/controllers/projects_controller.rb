@@ -23,7 +23,7 @@ class ProjectsController < ApplicationController
       #associate_project_with_todos!
       associate_project_with_assignees!
 
-      SlackNotifier.notify("프로젝트 추가되었어용 : #{@project.title} (#{Rails.application.routes.url_helpers.project_url(@project.user.nickname, @project.title)})")
+      SlackNotifier.notify("프로젝트 추가되었어용 : #{@project.title} (#{Rails.application.routes.url_helpers.project_url(@project.project_owner, @project.title)})")
     end
     redirect_to projects_path
   end
@@ -52,8 +52,8 @@ class ProjectsController < ApplicationController
       #associate_project_with_todos!
       associate_project_with_assignees!
 
-      SlackNotifier.notify("프로젝트가 수정되었어용 : #{@project.title} (#{Rails.application.routes.url_helpers.project_url(@project.user.nickname, @project.title)})")
-      redirect_to detail_project_path(@project.user.nickname, @project.title)
+      SlackNotifier.notify("프로젝트가 수정되었어용 : #{@project.title} (#{Rails.application.routes.url_helpers.project_url(@project.project_owner, @project.title)})")
+      redirect_to detail_project_path(@project.project_owner, @project.title)
     else
       render 'edit'
     end

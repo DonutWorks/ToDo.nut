@@ -12,7 +12,7 @@ class HistoriesController < ApplicationController
     @history = History.new
     @todos = @project.todos
     @users = @project.assignees
-    gon.project_creator = @project.user.nickname
+    gon.project_creator = @project.project_owner
     gon.project_title = @project.title
     
   end
@@ -34,7 +34,7 @@ class HistoriesController < ApplicationController
     end
 
     #url_helper -> project_history(@project, @history) is okay?
-    SlackNotifier.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.project_history_url(@project.user.nickname, @project.title, @history)})")
+    SlackNotifier.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.project_history_url(@project.project_owner, @project.title, @history)})")
 
     @user = User.find(current_user.id)
 
@@ -60,7 +60,7 @@ class HistoriesController < ApplicationController
 
     # mail.deliver!
 
-    redirect_to project_path(@project.user.nickname, @project.title)
+    redirect_to project_path(@project.project_owner, @project.title)
 
   rescue ActiveRecord::RecordInvalid
     render 'new'
@@ -75,7 +75,7 @@ class HistoriesController < ApplicationController
     @history = @project.histories.find_by_phistory_id(params[:phistory_id])
     @todos = @project.todos
     @users = @project.assignees
-    gon.project_creator = @project.user.nickname
+    gon.project_creator = @project.project_owner
     gon.project_title = @project.title
 
   end
@@ -92,8 +92,8 @@ class HistoriesController < ApplicationController
     end
 
     #url_helper -> project_history(@project, @history) is okay?
-    SlackNotifier.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.project_history_url(@project.user.nickname, @project.title, @history)})")
-    redirect_to project_history_path(@project.user.nickname, @project.title, @history.phistory_id)
+    SlackNotifier.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.project_history_url(@project.project_owner, @project.title, @history)})")
+    redirect_to project_history_path(@project.project_owner, @project.title, @history.phistory_id)
 
   rescue ActiveRecord::RecordInvalid
     render 'edit'
@@ -103,7 +103,7 @@ class HistoriesController < ApplicationController
     @history = @project.histories.find_by_phistory_id(params[:phistory_id])
     @history.destroy
 
-    redirect_to project_path(@project.user.nickname, @project.title)
+    redirect_to project_path(@project.project_owner, @project.title)
   end
 
   def list

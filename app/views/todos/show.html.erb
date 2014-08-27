@@ -19,13 +19,13 @@
 			<div>
 				<strong>Referenced from</strong><br />
 	    	<% @todo.histories.each do |history| %>
-	    		<%= link_to "##{history.phistory_id}: #{history.title}", project_history_path(@project.user.nickname, @project.title, history.phistory_id) %><br />
+	    		<%= link_to "##{history.phistory_id}: #{history.title}", project_history_path(@project.project_owner, @project.title, history.phistory_id) %><br />
 	    	<% end %>
 	   	</div>
 
 	   	<div class="form-buttons">
-				<%= link_to 'Back', project_path(@project.user.nickname, @project.title), class: "btn btn-default" %>
-				<%= link_to 'Edit', edit_project_todo_path(@project.user.nickname, @project.title, @todo.ptodo_id), class: "btn btn-default" %>
+				<%= link_to 'Back', project_path(@project.project_owner, @project.title), class: "btn btn-default" %>
+				<%= link_to 'Edit', edit_project_todo_path(@project.project_owner, @project.title, @todo.ptodo_id), class: "btn btn-default" %>
 			</div>
 		</div>
   </div>
