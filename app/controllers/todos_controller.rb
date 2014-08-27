@@ -25,17 +25,17 @@ class TodosController < ApplicationController
   end
 
   def show
-    @todo = Todo.find(params[:id])
+    @todo = @project.todos.find_by_ptodo_id(params[:ptodo_id])
   
   end
 
   def edit
     
-    @todo = Todo.find(params[:id])
+    @todo = @project.todos.find_by_ptodo_id(params[:ptodo_id])
   end
 
   def update 
-    @todo = Todo.find(params[:id])
+    @todo = @project.todos.find_by_ptodo_id(params[:ptodo_id])
     
     if @todo.update(todo_params)
       SlackNotifier.notify("투두가 추가되었어용 : #{@todo.title} (#{Rails.application.routes.url_helpers.project_todo_url(@project, @todo)})")
@@ -46,7 +46,7 @@ class TodosController < ApplicationController
   end
 
   def list
-    from_id = params[:id] || 0
+    from_id = params[:ptodo_id] || 0
     todos = @project.todos.fetch_list_from(from_id, 5)
     respond_with todos
   end

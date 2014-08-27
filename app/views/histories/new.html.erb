@@ -1,5 +1,7 @@
 <div class="form-container">
+  <%= form_for [@project, @history], :role => 'form' do |f|%>
+  
+    <%= render :partial => 'form', :locals => {:f =>f } %>
 
-<%= render 'form' %>
-
+  <% end %>
 </div>

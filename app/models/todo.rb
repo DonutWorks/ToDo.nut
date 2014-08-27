@@ -7,8 +7,8 @@ class Todo < ActiveRecord::Base
   belongs_to :user
   belongs_to :project
   
-  def self.fetch_list_from(id, count)
-    where(arel_table[:id].gteq(id)).take(count)
+  def self.fetch_list_from(ptodo_id, count)
+    where(arel_table[:ptodo_id].gteq(ptodo_id)).take(count)
   end
 
   private

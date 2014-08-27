@@ -1,6 +1,6 @@
 class TodoVisualizationSerializer < ActiveModel::Serializer
 
-  attributes :project_id, :title, :color, :duedate, :id, :total
+  attributes :project_id, :title, :color, :duedate, :ptodo_id, :total
   has_many :histories, serializer: HistoryVisualizationSerializer
 
   

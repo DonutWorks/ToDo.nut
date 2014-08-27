@@ -7,7 +7,6 @@ $(document).on('ready page:load', function () {
         $.getJSON('/projects/'+gon.project_id+'/histories/list/' + term)
         .done(function (res) {
           callback($.map(res, function (history) {
-            // return '#' + history.id + ': ' + history.title;
             return '#' + history.phistory_id + ': ' + history.title;
           }));
         })

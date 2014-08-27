@@ -65,12 +65,12 @@ class HistoriesController < ApplicationController
   end
 
   def show
-    @history = History.find(params[:id])
+    @history = @project.histories.find_by_phistory_id(params[:phistory_id])
 
   end
 
   def edit
-    @history = History.find(params[:id])
+    @history = @project.histories.find_by_phistory_id(params[:phistory_id])
     @todos = Todo.all
     @users = User.all
     gon.project_id = @project.id
@@ -78,7 +78,7 @@ class HistoriesController < ApplicationController
   end
 
   def update
-    @history = History.find(params[:id])
+    @history = @project.histories.find_by_phistory_id(params[:phistory_id])
     
 
     @history.transaction do
@@ -90,21 +90,21 @@ class HistoriesController < ApplicationController
 
     #url_helper -> project_history(@project, @history) is okay?
     SlackNotifier.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.project_history_url(@project, @history)})")
-    redirect_to [@project, @history]
+    redirect_to project_history_path(@project.id, @history.phistory_id)
 
   rescue ActiveRecord::RecordInvalid
     render 'edit'
   end
 
   def destroy
-    @history = History.find(params[:id])
+    @history = @project.histories.find_by_phistory_id(params[:phistory_id])
     @history.destroy
 
     redirect_to project_path(@project)
   end
 
   def list
-    from_id = params[:id] || 0
+    from_id = params[:phistory_id] || 0
     histories = @project.histories.fetch_list_from(from_id, 5)
     respond_with histories
   end

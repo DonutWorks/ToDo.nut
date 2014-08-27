@@ -17,15 +17,15 @@ Rails.application.routes.draw do
   #resources :users, only: [:show]
 
   resources :projects do
-    resources :todos do
+    resources :todos, param: :ptodo_id do
       collection do
         get 'list(/:id)', action: 'list', defaults: {format: 'json'}
       end
     end
 
-    resources :histories do
+    resources :histories, param: :phistory_id do
       collection do
-        get 'list(/:id)', action: 'list', defaults: {format: 'json'}
+        get 'list(/:phistory_id)', action: 'list', defaults: {format: 'json'}
       end
       resources :comments
     end

@@ -22,8 +22,8 @@ class History < ActiveRecord::Base
   has_many :inverse_history_histories, class_name: "HistoryHistory", foreign_key: "referencing_history_id"
   has_many :referenced_histories, through: :inverse_history_histories, source: :history
 
-  def self.fetch_list_from(id, count)
-    where(arel_table[:id].gteq(id)).take(count)
+  def self.fetch_list_from(phistory_id, count)
+    where(arel_table[:phistory_id].gteq(phistory_id)).take(count)
   end
 
 

@@ -1,6 +1,5 @@
-class ReplaceOldReferencetoNew < ActiveRecord::Migration
-  
-  #local class for migration
+class ReplaceOldReferencesInHistories < ActiveRecord::Migration
+#local class for migration
   class History < ActiveRecord::Base  
     belongs_to :project
   end
