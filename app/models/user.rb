@@ -20,6 +20,8 @@ class User < ActiveRecord::Base
   validates_presence_of :nickname
   validates_uniqueness_of :nickname
 
+  validates :nickname, format: { without: /\s/ }
+
   acts_as_reader
 
   def to_param
