@@ -9,17 +9,20 @@ class HistoriesController < ApplicationController
 
   def new
     @history = History.new
-    @todos = Todo.all
-    @users = User.all
-    gon.project_id = @project.id
+    @todos = @project.todos
+    @users = @project.assignees
+    gon.project_creator = @project.project_owner
+    gon.project_title = @project.title
+    
   end
 
   def create
     #referenced_users = params[:history][:description].scan(/\B@(\w+)\b/).flatten!
 
     @history = History.new(history_params)
+    @history.project = @project
     @history.user_id = current_user.id
-    @history.project_id = @project.id
+    
     
 
     @history.transaction do
@@ -32,29 +35,42 @@ class HistoriesController < ApplicationController
     end
 
     #url_helper -> project_history(@project, @history) is okay?
-    SlackNotifier.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.project_history_url(@project, @history)})")
-    MailSender.send_email_when_create(current_user.email, @history)
 
-    redirect_to project_path(@project)
+    SlackNotifier.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.project_history_url(@project.project_owner, @project.title, @history)})")
+    MailSender.send_email_when_create(current_user.email, @history)
+    @user = User.find(current_user.id)
+
+    redirect_to project_path(@project.project_owner, @project.title)
 
   rescue ActiveRecord::RecordInvalid
     render 'new'
   end
 
   def show
-    @history = HistoryDecorator.find(params[:id])
-    gon.project_id = params[:project_id]
+
+    
+    @history = @project.histories.find_by_phistory_id(params[:phistory_id])
+    @history = HistoryDecorator.find(@history.id)
+
+    gon.project_id = @project.id
+    gon.project_creator = @project.project_owner
+    gon.project_title = @project.title
+    
+
   end
 
   def edit
-    @history = History.find(params[:id])
-    @todos = Todo.all
-    @users = User.all
-    gon.project_id = @project.id
+    @history = @project.histories.find_by_phistory_id(params[:phistory_id])
+    @todos = @project.todos
+    @users = @project.assignees
+    gon.project_creator = @project.project_owner
+    gon.project_title = @project.title
+
   end
 
   def update
-    @history = History.find(params[:id])
+    @history = @project.histories.find_by_phistory_id(params[:phistory_id])
+    
 
     @history.transaction do
       associate_history_with_histories!
@@ -66,22 +82,22 @@ class HistoriesController < ApplicationController
     end
 
     #url_helper -> project_history(@project, @history) is okay?
-    SlackNotifier.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.project_history_url(@project, @history)})")
-    redirect_to [@project, @history]
+    SlackNotifier.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.project_history_url(@project.project_owner, @project.title, @history)})")
+    redirect_to project_history_path(@project.project_owner, @project.title, @history.phistory_id)
 
   rescue ActiveRecord::RecordInvalid
     render 'edit'
   end
 
   def destroy
-    @history = History.find(params[:id])
+    @history = @project.histories.find_by_phistory_id(params[:phistory_id])
     @history.destroy
 
-    redirect_to project_path(@project)
+    redirect_to project_path(@project.project_owner, @project.title)
   end
 
   def list
-    from_id = params[:id] || 0
+    from_id = params[:phistory_id] || 0
     histories = @project.histories.fetch_list_from(from_id, 5)
     respond_with histories
   end
@@ -92,7 +108,7 @@ class HistoriesController < ApplicationController
   end
 
   def find_project
-    @project = current_user.assigned_projects.find(params[:project_id])
+    @project = current_user.assigned_projects.find_by_title(params[:project_title])
   end
 
   def send_notifications!
@@ -105,7 +121,7 @@ class HistoriesController < ApplicationController
 
   # metaprogramming?
   def associate_history_with_histories!
-    referenced_histories = ReferenceCheck::ForHistory.references(params[:history][:description])
+    referenced_histories = ReferenceCheck::ForHistory.references(@project, params[:history][:description])
 
     @history.referencing_histories.destroy_all
     referenced_histories.each do |history|
@@ -114,7 +130,7 @@ class HistoriesController < ApplicationController
   end
 
   def associate_history_with_todos!
-    referenced_todos = ReferenceCheck::ForTodo.references(params[:history][:description])
+    referenced_todos = ReferenceCheck::ForTodo.references(@project, params[:history][:description])
 
     @history.todos.destroy_all
     referenced_todos.each do |todo|

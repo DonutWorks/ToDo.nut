@@ -17,9 +17,10 @@ module ReferenceCheck
   # => return predicate method for finding referee.
 
   class ReferenceChecker
-    def self.replace!(content)
+    def self.replace!(project, content)
       content.gsub!(pattern) do |match|
-        found = find_method($1)
+
+        found = find_method(project, $1)
         if found
           yield found, match
         else
@@ -28,14 +29,14 @@ module ReferenceCheck
       end
     end
 
-    def self.replace(content, &block)
-      replace!(content.dup, &block)
+    def self.replace(project, content, &block)
+      replace!(project, content.dup, &block)
     end
 
-    def self.references(content)
+    def self.references(project, content)
       referenced = content.scan(pattern)
       referenced.flatten!.map! do |term|
-        find_method(term)
+        find_method(project, term)
       end if !referenced.empty?
     end
 
@@ -53,8 +54,8 @@ module ReferenceCheck
       /\B@([^\s]+)\b/
     end
 
-    def self.find_method(term)
-      User.find_by_nickname(term)
+    def self.find_method(project,term)
+      project.assignees.find_by_nickname(term)
     end
   end
 
@@ -63,8 +64,9 @@ module ReferenceCheck
       /\B#(\d+)\b/
     end
 
-    def self.find_method(term)
-      History.find_by_id(term)
+    def self.find_method(project, term)
+      
+      project.histories.find_by_phistory_id(term)
     end
   end
 
@@ -73,8 +75,8 @@ module ReferenceCheck
       /\B&(\d+)\b/
     end
 
-    def self.find_method(term)
-      Todo.find_by_id(term)
+    def self.find_method(project,term)
+      project.todos.find_by_ptodo_id(term)
     end
   end
 end

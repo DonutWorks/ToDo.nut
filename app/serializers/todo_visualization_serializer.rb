@@ -1,10 +1,15 @@
 class TodoVisualizationSerializer < ActiveModel::Serializer
 
-  attributes :project_id, :title, :color, :duedate, :id, :total
+  attributes :project_creator_nickname, :project_title, :title, :color, :duedate, :ptodo_id, :total
   has_many :histories, serializer: HistoryVisualizationSerializer
 
   
-  
+  def project_title
+    object.project.title
+  end
+  def project_creator_nickname
+    object.project.project_owner
+  end
   
   def histories
     arel_table = History.arel_table

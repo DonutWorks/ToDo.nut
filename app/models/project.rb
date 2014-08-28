@@ -6,6 +6,14 @@ class Project < ActiveRecord::Base
   has_many :todos
   has_many :histories
 
+  delegate :nickname, to: :user, allow_nil: true
+  def project_owner
+    self.nickname
+  end
+
+  
+
+
   def fetch_members_by_nickname(nickname, count)
     members = assignees.arel_table
     

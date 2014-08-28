@@ -7,7 +7,7 @@
   </ul>
   <div class="panel panel-info col-md-9 pull-left no-padding">
     <% @notifications.each do |project, notis| %>
-    <div class="panel-heading"><%= link_to project.title, project %></div>
+    <div class="panel-heading"><%= link_to project.title, project_path(project.project_owner, project.title) %></div>
     <ul class="list-group">
       <%= render_activities(notis) %>
     </ul>

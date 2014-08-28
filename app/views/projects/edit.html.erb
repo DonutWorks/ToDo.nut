@@ -1,5 +1,5 @@
 <div class="form-container">
-
-  <%= render 'form' %>
-
+  <%= form_for @project, url: project_path(@project.project_owner, @project.title), :role => 'form' do |f|%>
+    <%= render partial: 'form', locals: {f: f} %>
+  <% end %>
 </div>

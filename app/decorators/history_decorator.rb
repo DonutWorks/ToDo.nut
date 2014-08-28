@@ -2,9 +2,11 @@ class HistoryDecorator < BaseDecorator
   decorates_association :user
   decorates_association :comments
   decorates_association :assignees
+  
   decorates_association :referenced_histories
 
   def description
+    
     attach_reference_link(object.description, object.project)
   end
 
@@ -13,6 +15,7 @@ class HistoryDecorator < BaseDecorator
   end
 
   def reference_link
+
     h.link_to "##{object.id}: #{object.title}", project_history_path(object.project, object)
   end
   
