@@ -3,7 +3,7 @@
 
     <div class="col-md-6">
       <h3>
-       <%= @history.title %>
+       <%= raw @history.title %>
       </h3>
     
     <p class="text-align-right">
@@ -22,17 +22,19 @@
       <%= assignee.email %><br />
       <% end %>
     </p>
-
-
-    <p class="word-break">
-      <%= simple_format(raw attach_reference_link(@history.description)) %>
+    
+    <p class="word-break markdown">
+      <%= raw @history.description %>
+      
     </p>
 
    <div>
       <% if @history.referenced_histories.count > 0 %>
       <strong>Referenced from</strong><br />
         <% @history.referenced_histories.each do |history| %>
+
           <%= link_to "##{history.phistory_id}: #{history.title}", project_history_path(@project.project_owner, @project.title, history.phistory_id) %><br />
+
         <% end %>
       <% end %>
    </div>
@@ -46,7 +48,7 @@
     <tbody>
       <% @history.comments.each do |comment| %>
       <tr>
-        <td><%= comment.contents %></td>
+        <td><%= raw comment.contents %></td>
         <td><%= comment.user.email %></td>
         <td><%= link_to 'Delete', project_history_comment_path(@project.project_owner, @project.title, @history.phistory_id, comment.id), method: :delete, :class => "btn btn-default" %> </td>
       </tr>

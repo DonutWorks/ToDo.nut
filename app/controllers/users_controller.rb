@@ -1,12 +1,15 @@
 class UsersController < ApplicationController
 	skip_before_action :authenticate_user!
+
   def show
   	@user = User.find_by_nickname(params[:nickname])
+
+    @projects = @user.assigned_projects
+    @histories = @user.assigned_histories
+
   end
 
   def merge
-    
-
     @user = User.find(params[:id])
     @provider = params[:provider]
 

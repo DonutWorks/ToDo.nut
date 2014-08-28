@@ -1,0 +1,16 @@
+<h1>Notifications</h1>
+
+<div class="row">
+  <ul class="nav nav-pills nav-stacked col-md-3 pull-left">
+    <%= nav_link_to "Unread", notifications_path %>
+    <%= nav_link_to "All Notifications", notifications_all_path %>
+  </ul>
+  <div class="panel panel-info col-md-9 pull-left no-padding">
+    <% @notifications.each do |project, notis| %>
+    <div class="panel-heading"><%= link_to project.title, project_path(project.project_owner, project.title) %></div>
+    <ul class="list-group">
+      <%= render_activities(notis) %>
+    </ul>
+    <% end %>
+  </div>
+</div>

@@ -69,3 +69,12 @@ gem 'cloudinary'
 
 # ActiveModel::Serializers extension
 gem "active_model_serializers"
+
+# Draper
+gem 'draper', '~> 1.3'
+
+# Message unread/read support
+gem 'unread'
+
+# Activity tracking
+gem 'public_activity'

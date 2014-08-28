@@ -19,6 +19,7 @@
 			<div>
 				<strong>Referenced from</strong><br />
 	    	<% @todo.histories.each do |history| %>
+
 	    		<%= link_to "##{history.phistory_id}: #{history.title}", project_history_path(@project.project_owner, @project.title, history.phistory_id) %><br />
 	    	<% end %>
 	   	</div>
