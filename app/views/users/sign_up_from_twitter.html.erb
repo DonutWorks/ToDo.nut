@@ -1,16 +1,23 @@
 <h1>새 이메일을 입력하세요 - Twitter</h1>
+
 <div class="form-container">
 	<%= form_for @user, url: sign_up_from_twitter_callback_users_path, method: "post" do |f| %>
 
+
+	<%= f.error_messages %>
+
+	<% if flash[:notice] %>
+	  <p class="notice"><%= flash[:notice] %></p>
+	<% end %>
 
 	<div class="form-group">
 		<%= f.label :email %>
 		<%= f.email_field :email, autofocus: true, class: "form-control"  %>
 	</div>
 
-	<%= f.hidden_field :provider, value: @provider %>
-	<%= f.hidden_field :uid, value: @uid %>
-	<%= f.hidden_field :nickname, value: @nickname %>
+	<%= f.hidden_field :provider, value: @user.provider %>
+	<%= f.hidden_field :uid, value: @user.uid %>
+	<%= f.hidden_field :nickname, value: @user.nickname %>
 
 	<%= f.submit :class => 'btn btn-success'%>
 

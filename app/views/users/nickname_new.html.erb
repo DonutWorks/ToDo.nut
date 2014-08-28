@@ -1,16 +1,24 @@
-
-<%= form_tag(nickname_new_callback_users_path, method: "post") do %>
+<div class="form-container">
+<%= form_for @user, url: nickname_new_callback_users_path, method: "post" do |f| %>
 	
 	<p>처음이십니다. 새로운 닉네임을 입력하세요</p>
 
-	<%= text_field_tag(:nickname) %>
+	<%= f.error_messages %>
 
+	<% if flash[:notice] %>
+	  <p class="notice"><%= flash[:notice] %></p>
+	<% end %>
 
-	<%= hidden_field_tag(:provider, @provider) %>
-	<%= hidden_field_tag(:uid, @uid) %>
-	<%= hidden_field_tag(:email, @email) %>
+	<div class="form-group">
+		<%= f.label :nickname %>
+		<%= f.text_field :nickname, autofocus: true, class: "form-control"  %>
+	</div>
 
+	<%= f.hidden_field :provider, value: @user.provider %>
+	<%= f.hidden_field :uid, value: @user.uid %>
+	<%= f.hidden_field :email, value: @user.email %>
+ 
+ 	<%= f.submit "Submit", class: "btn btn-primary" %>
 
- 	<%= submit_tag("Submit", class: "btn btn-primary") %>
 <% end %>
-
+</div>

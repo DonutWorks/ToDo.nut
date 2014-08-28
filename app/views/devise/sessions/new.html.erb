@@ -3,7 +3,12 @@
   	<div class="col-md-6">
       <h2>Sign in</h2>
 
+
+
       <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+
+      
+
         <div class="form-group">
           <%= f.label :email %>
           <%= f.email_field :email, autofocus: true, class: "form-control"  %>
@@ -34,5 +39,9 @@
     <div class="col-md-6">  
       <%= render "devise/shared/links" %>
     </div>
+
+    <% if flash[:notice] %>
+        <p class="notice"><%= flash[:notice] %></p>
+      <% end %>
   </div>
 </div>

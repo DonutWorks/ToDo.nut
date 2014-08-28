@@ -40,8 +40,12 @@ class User < ActiveRecord::Base
 
       if user = User.where(uid: access_token.uid, provider: access_token.provider).first
         return {data: user, status: :success}
-      elsif User.find_by_email(email)
-        return {data: nil, status: :duplicated}
+      elsif user = User.find_by_email(email)
+        if user.provider.nil?
+          return {data: nil, status: :duplicated}
+        else
+          return {data: user.provider, status: :duplicated_by_oauth}
+        end
       else
         return {data: nil, status: :first_login}
       end  

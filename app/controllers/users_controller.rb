@@ -8,49 +8,45 @@ class UsersController < ApplicationController
   end
 
   def merge_callback
-    @user = User.find_by_email(params[:email])
-    
-    if @user.valid_password?(params[:password])
-      @user.merge(@user.id, params[:provider], params[:uid])
 
-      sign_in_and_redirect @user, :event => :authentication
+    @user = User.find_by_email(params[:user].permit![:email])
+    
+    if @user.valid_password?(params[:user].permit![:password])
+      if @user.merge(@user.id, params[:user].permit![:provider], params[:user].permit![:uid])
+        sign_in_and_redirect @user, :event => :authentication
+      else
+        render merge_users_path
+      end
     else
-      redirect_to root_path
-    end        
+      flash[:notice] = "Password is not valid!"
+      render merge_users_path       
+    end
   end
 
   def nickname_new
   end
 
   def nickname_new_callback
-    @user = User.create!(
-      provider: params[:provider],
-      uid: params[:uid],
-      email: params[:email],
-      nickname: params[:nickname]
-    )
+    @user = User.new(params[:user].permit!)
 
-    sign_in_and_redirect @user, :event => :authentication
+    if @user.save
+      sign_in_and_redirect @user, :event => :authentication
+    else
+      render nickname_new_users_path
+    end    
+
   end
 
   def sign_up_from_twitter
   end
 
   def sign_up_from_twitter_callback
-    if User.find_by_email(params[:user][:email])
-      @user = User.new
-      render sign_up_from_twitter_users_path
-    else
-      @user = User.new(
-          provider: params[:user][:provider],
-          uid: params[:user][:uid],
-          nickname: params[:user][:nickname]
-        )
+    @user = User.new(params[:user].permit!)
 
-      @user.email = params[:user][:email]
-
-      @user.save!
+    if @user.save
       sign_in_and_redirect @user, :event => :authentication
-    end   
+    else
+      render sign_up_from_twitter_users_path
+    end 
   end
 end

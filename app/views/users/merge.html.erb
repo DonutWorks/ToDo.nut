@@ -2,13 +2,25 @@
 <h1>중복되는 이메일이 있어요 => <%= @user.email %></h1>
 <p>이 아이디와 통합하려면 기존 계정의 패스워드를 입력하세요</p>
 
-<%= form_tag(merge_callback_users_path, method: "post") do %>
-	<%= password_field_tag(:password) %>
-
-	<%= hidden_field_tag(:provider, @provider) %>
-	<%= hidden_field_tag(:uid, @uid) %>
-	<%= hidden_field_tag(:email, @email) %>
+<div class="form-container">
+<%= form_for @user, url: merge_callback_users_path, method: "post" do |f| %>
 	
- 	<%= submit_tag("Submit", class: "btn btn-primary") %>
+	<%= f.error_messages %>
 
+	<% if flash[:notice] %>
+	  <p class="notice"><%= flash[:notice] %></p>
+	<% end %>
+
+	<div class="form-group">
+		<%= f.label :password %>
+		<%= f.password_field :password, autofocus: true, class: "form-control"  %>
+	</div>
+
+	<%= f.hidden_field :provider, value: @user.provider %>
+	<%= f.hidden_field :uid, value: @user.uid %>
+	<%= f.hidden_field :email, value: @user.email %>
+
+ 	<%= f.submit "Submit", class: "btn btn-primary" %>
+ 	
 <% end %>
+</div>
