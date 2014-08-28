@@ -78,3 +78,6 @@ gem 'unread'
 
 # Activity tracking
 gem 'public_activity'
+
+#Mail
+gem 'mail'
