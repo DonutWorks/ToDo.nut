@@ -1,5 +1,5 @@
 <%= link_to project_history_path(activity.trackable.project.project_owner, activity.trackable.project.title,activity.trackable.phistory_id), class: "list-group-item", data: { noti_id: activity.id } do %>
-  <%= "#{activity.trackable.title}(##{activity.trackable.id})" %>
+  <%= "#{activity.trackable.title}(##{activity.trackable.phistory_id})" %>
   <strong> was updated. </strong>
   <span class="pull-right"><%= time_ago_in_words(activity.updated_at) %> ago</span>
 <% end %>
