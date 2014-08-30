@@ -6,6 +6,7 @@
 
 	<%= f.error_messages %>
 
+
 	<% if flash[:notice] %>
 	  <p class="notice"><%= flash[:notice] %></p>
 	<% end %>
@@ -15,9 +16,18 @@
 		<%= f.email_field :email, autofocus: true, class: "form-control"  %>
 	</div>
 
+	<% if f.error_message_on(:nickname) == "" %>
+		<%= f.hidden_field :nickname, value: @user.nickname %>
+	<% else %>
+		<div class="form-group">
+			<%= f.label :nickname %>
+			<%= f.text_field :nickname, autofocus: true, class: "form-control"  %>
+		</div>
+	<% end %>
+
+	
 	<%= f.hidden_field :provider, value: @user.provider %>
-	<%= f.hidden_field :uid, value: @user.uid %>
-	<%= f.hidden_field :nickname, value: @user.nickname %>
+	<%= f.hidden_field :uid, value: @user.uid %>	
 
 	<%= f.submit :class => 'btn btn-success'%>
 

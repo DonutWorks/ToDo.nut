@@ -32,6 +32,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
       when :duplicated
         @user = User.find_by_email(@user.email)
+        @user.provider = provider
+        @user.uid = request.env["omniauth.auth"].uid
+        
         render merge_users_path
 
       when :duplicated_by_oauth

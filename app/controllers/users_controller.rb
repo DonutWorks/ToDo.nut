@@ -9,10 +9,10 @@ class UsersController < ApplicationController
 
   def merge_callback
 
-    @user = User.find_by_email(params[:user].permit![:email])
+    @user = User.find_by_email(params[:user].permit[:email])
     
-    if @user.valid_password?(params[:user].permit![:password])
-      if @user.merge(@user.id, params[:user].permit![:provider], params[:user].permit![:uid])
+    if @user.valid_password?(params[:user].permit[:password])
+      if @user.merge(@user.id, params[:user].permit[:provider], params[:user].permit[:uid])
         sign_in_and_redirect @user, :event => :authentication
       else
         render merge_users_path
