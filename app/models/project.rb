@@ -7,7 +7,7 @@ class Project < ActiveRecord::Base
   has_many :histories, inverse_of: :project
 
   validates :user, presence: true
-  validates :title, presence: true, uniqueness: true
+  validates :title, presence: true, uniqueness: { scope: :user }
 
   def fetch_members_by_nickname(nickname, count)
     members = assignees.arel_table

@@ -15,29 +15,30 @@ class ProjectsController < ApplicationController
 
   def create
     @project = Project.new(project_params)
-    @project.user_id = current_user.id
-
-
+    @project.user = current_user
+    @users = User.all
+ 
     if @project.save
       #associate_project_with_todos!
       associate_project_with_assignees!
 
       SlackNotifier.notify("프로젝트 추가되었어용 : #{@project.title} (#{Rails.application.routes.url_helpers.project_url(@project)})")
       MailSender.send_email_when_create(current_user.email, @project)
+      redirect_to projects_path
+    else
+      flash[:error] = @project.errors.full_messages.join('\n')
+      render 'new'
     end
-    redirect_to projects_path
   end
   
   def detail
     @project = Project.find(params[:id])
-    
   end
 
   def show
     @todo = Todo.new    
     @todos = Todo.where(project_id: params[:id])
     @histories = History.where(project_id: params[:id])
-    
   end
 
   def edit
@@ -48,6 +49,7 @@ class ProjectsController < ApplicationController
 
   def update
     @project = Project.find(params[:id])
+    @users = User.all
 
     if @project.update(project_params)
       #associate_project_with_todos!
@@ -56,6 +58,7 @@ class ProjectsController < ApplicationController
       SlackNotifier.notify("프로젝트가 수정되었어용 : #{@project.title} (#{Rails.application.routes.url_helpers.project_url(@project)})")
       redirect_to @project
     else
+      flash[:error] = @project.errors.full_messages.join('\n')
       render 'edit'
     end
   end
