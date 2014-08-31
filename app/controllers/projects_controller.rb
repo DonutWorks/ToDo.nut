@@ -68,7 +68,7 @@ private
   def find_project
     #if project doesn't exist, this will make an exception.
     #Should make exception handler
-    @project = current_user.assigned_projects.where(title: params[:title]).first
+    @project = current_user.find_project(params[:title])
   end
     
 end

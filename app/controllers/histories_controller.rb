@@ -31,8 +31,7 @@ class HistoriesController < ApplicationController
   end
 
   def show
-    @history = @project.histories.find_by_phistory_id(params[:phistory_id])
-    @history = HistoryDecorator.find(@history.id)
+    @history = @project.find_history(params[:phistory_id])
 
     gon.project_id = @project.id
     gon.project_creator = @project.project_owner
@@ -40,7 +39,7 @@ class HistoriesController < ApplicationController
   end
 
   def edit
-    @history = @project.histories.find_by_phistory_id(params[:phistory_id])
+    @history = @project.find_history(params[:phistory_id])
     @todos = @project.todos
     @users = @project.assignees
     gon.project_creator = @project.project_owner
@@ -48,7 +47,7 @@ class HistoriesController < ApplicationController
   end
 
   def update
-    @history = @project.histories.find_by_phistory_id(params[:phistory_id])
+    @history = @project.find_history(params[:phistory_id])
     @history.attach_images!(params[:history][:images])
     @history.assign_users_with_ids!(params[:history][:assignee_ids])
 
@@ -61,7 +60,7 @@ class HistoriesController < ApplicationController
   end
 
   def destroy
-    @history = @project.histories.find_by_phistory_id(params[:phistory_id])
+    @history = @project.find_history(params[:phistory_id])
     @history.destroy
 
     redirect_to project_path(@project.user, @project)
@@ -79,6 +78,6 @@ class HistoriesController < ApplicationController
   end
 
   def find_project
-    @project = current_user.assigned_projects.find_by_title(params[:project_title])
+    @project = current_user.find_project(params[:project_title])
   end
 end

@@ -11,6 +11,14 @@ class Project < ActiveRecord::Base
     self.nickname
   end
 
+  def find_todo(pid)
+    todos.find_by_ptodo_id(pid).decorate
+  end
+
+  def find_history(pid)
+    histories.find_by_phistory_id(pid).decorate
+  end
+
   def to_param
     title
   end

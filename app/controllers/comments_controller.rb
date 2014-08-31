@@ -34,10 +34,10 @@ private
   end
 
   def find_project
-    @project = current_user.assigned_projects.find_by_title(params[:project_title])
+    @project = current_user.find_project(params[:project_title])
   end
 
   def find_history
-    @history = @project.histories.find_by_phistory_id(params[:history_phistory_id])
+    @history = @project.find_history(params[:history_phistory_id])
   end
 end

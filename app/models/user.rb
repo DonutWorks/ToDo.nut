@@ -24,6 +24,10 @@ class User < ActiveRecord::Base
 
   acts_as_reader
 
+  def find_project(title)
+    assigned_projects.find_by_title(title)
+  end
+
   def to_param
     nickname
   end
