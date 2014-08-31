@@ -26,7 +26,7 @@ Rails.application.routes.draw do
   resources :projects, :path =>'/:creator', param: :title do
     resources :todos, param: :ptodo_id do
       collection do
-        get 'list(/:id)', action: 'list', defaults: {format: 'json'}
+        get 'list(/:ptodo_id)', action: 'list', defaults: {format: 'json'}
       end
     end
 

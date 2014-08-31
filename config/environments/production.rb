@@ -90,10 +90,10 @@ Devise.setup do |config|
   config.omniauth :twitter, "fpk8sZFPaWCdgOt6N70lcH5MC", "WGvNsGWuKkSer8eteyPStT3EU7RMscfvayz3Llr0tw5LU2aWtT"
 end
 
-# Mail.defaults do
-#   delivery_method :smtp, :address    => "smtp.gmail.com",
-#                          :port       => 587,
-#                          :user_name  => 'donutworks.app@gmail.com',
-#                          :password   => 'donutwork',
-#                          :enable_ssl => true
-# end
+Mail.defaults do
+  delivery_method :smtp, :address    => "smtp.gmail.com",
+                         :port       => 587,
+                         :user_name  => 'donutworks.app@gmail.com',
+                         :password   => 'donutwork',
+                         :enable_ssl => true
+end
