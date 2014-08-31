@@ -32,6 +32,10 @@ class History < ActiveRecord::Base
     where(arel_table[:phistory_id].gteq(phistory_id)).take(count)
   end
 
+  def to_param
+    phistory_id
+  end
+
   def attach_images!(images)
     self.images.destroy_all
     images.each do |image|

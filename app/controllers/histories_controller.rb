@@ -23,7 +23,7 @@ class HistoriesController < ApplicationController
     @history.assign_users_with_ids!(params[:history][:assignee_ids])
 
     if @history.save
-      SlackNotifier.notify("히스토리가 생성되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.project_history_url(@project.project_owner, @project.title, @history)})")
+      SlackNotifier.notify("히스토리가 생성되었어용 : #{@history.title} (#{project_history_url(@project.project_owner, @project.title, @history)})")
       redirect_to project_history_path(@project.project_owner, @project.title, @history.phistory_id)
     else
       render 'new'
@@ -53,7 +53,7 @@ class HistoriesController < ApplicationController
     @history.assign_users_with_ids!(params[:history][:assignee_ids])
 
     if @history.save
-      SlackNotifier.notify("히스토리가 수정되었어용 : #{@history.title} (#{Rails.application.routes.url_helpers.project_history_url(@project.project_owner, @project.title, @history)})")
+      SlackNotifier.notify("히스토리가 수정되었어용 : #{@history.title} (#{project_history_url(@project.project_owner, @project.title, @history)})")
       redirect_to project_history_path(@project.project_owner, @project.title, @history.phistory_id)
     else
       render 'edit'

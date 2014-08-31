@@ -11,10 +11,13 @@ class Todo < ActiveRecord::Base
     where(arel_table[:ptodo_id].gteq(ptodo_id)).take(count)
   end
 
+  def to_param
+    ptodo_id
+  end
+
   private
   def ptodo_counter_increment
     self.ptodo_id = self.project.ptodo_counter + 1
     self.project.update(:ptodo_counter => self.project.ptodo_counter + 1)
-    
   end
 end

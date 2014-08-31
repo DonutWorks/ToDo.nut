@@ -1,9 +1,8 @@
 class ProjectsController < ApplicationController
 
-  respond_to :json
   before_action :find_project, except:[:index, :new, :create]
+  respond_to :json
   
-
   def new
     @project = Project.new
     @project.user = current_user
@@ -17,45 +16,34 @@ class ProjectsController < ApplicationController
   def create
     @project = Project.new(project_params)
     @project.user_id = current_user.id
-
+    @project.assign_users_with_ids!(params[:project][:assignee_ids])
 
     if @project.save
-      #associate_project_with_todos!
-      associate_project_with_assignees!
-
-
-      SlackNotifier.notify("프로젝트 추가되었어용 : #{@project.title} (#{Rails.application.routes.url_helpers.project_url(@project.project_owner, @project.title)})")
+      SlackNotifier.notify("프로젝트 추가되었어용 : #{@project.title} (#{project_url(@project.project_owner, @project.title)})")
       MailSender.send_email_when_create(current_user.email, @project)
-
     end
     redirect_to projects_path
   end
   
   def detail
-    
-    
+
   end
 
   def show
     @todo = Todo.new    
     @todos = @project.todos
     @histories = @project.histories
-    
   end
 
   def edit
-    
     @users = User.all
   end
 
   def update
-    
+    @project.assign_users_with_ids!(params[:project][:assignee_ids])
 
     if @project.update(project_params)
-      #associate_project_with_todos!
-      associate_project_with_assignees!
-
-      SlackNotifier.notify("프로젝트가 수정되었어용 : #{@project.title} (#{Rails.application.routes.url_helpers.project_url(@project.project_owner, @project.title)})")
+      SlackNotifier.notify("프로젝트가 수정되었어용 : #{@project.title} (#{project_url(@project.project_owner, @project.title)})")
       redirect_to detail_project_path(@project.project_owner, @project.title)
     else
       render 'edit'
@@ -63,29 +51,14 @@ class ProjectsController < ApplicationController
   end
   
   def destroy
-    
     @project.destroy
-
     redirect_to projects_path
   end
 
   def members
-    
     members = @project.fetch_members_by_nickname(params[:nickname], 5)
     respond_with members
   end
-
-  def associate_project_with_assignees!
-    @project.assignees.destroy_all
-    params[:project][:assignee_ids].select!(&:present?).each do |id|
-      project_user = ProjectUser.new
-      project_user.assigned_project_id = @project.id
-      project_user.assignee_id = id
-      project_user.save
-    end
-  end
-
-
 
 private 
   def project_params
@@ -93,12 +66,9 @@ private
   end
 
   def find_project
-    
+    #if project doesn't exist, this will make an exception.
+    #Should make exception handler
     @project = current_user.assigned_projects.where(title: params[:title]).first
-    
-      #if project doesn't exist, this will make an exception.
-      #Should make exception handler
   end
-
-  
+    
 end
