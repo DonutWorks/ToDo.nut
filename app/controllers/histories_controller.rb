@@ -24,7 +24,7 @@ class HistoriesController < ApplicationController
 
     if @history.save
       SlackNotifier.notify("히스토리가 생성되었어용 : #{@history.title} (#{project_history_url(@project.project_owner, @project.title, @history)})")
-      redirect_to project_history_path(@project.project_owner, @project.title, @history.phistory_id)
+      redirect_to project_history_path(@project.user, @project, @history)
     else
       render 'new'
     end
@@ -54,7 +54,7 @@ class HistoriesController < ApplicationController
 
     if @history.save
       SlackNotifier.notify("히스토리가 수정되었어용 : #{@history.title} (#{project_history_url(@project.project_owner, @project.title, @history)})")
-      redirect_to project_history_path(@project.project_owner, @project.title, @history.phistory_id)
+      redirect_to project_history_path(@project.user, @project, @history)
     else
       render 'edit'
     end
@@ -64,7 +64,7 @@ class HistoriesController < ApplicationController
     @history = @project.histories.find_by_phistory_id(params[:phistory_id])
     @history.destroy
 
-    redirect_to project_path(@project.project_owner, @project.title)
+    redirect_to project_path(@project.user, @project)
   end
 
   def list

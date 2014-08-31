@@ -20,13 +20,13 @@
       <h3>Assigned Projects</h3>
       <div>
       <% @projects.each do |project| %>
-        <p><%= link_to project.title, detail_project_path(project.project_owner, project.title) %></p>
+        <p><%= link_to project.title, detail_project_path(project.user, project) %></p>
       <% end %>
       </div>
       <h3>Assigned Histories</h3>
       <div>
       <% @histories.each do |history| %>
-        <p><%= link_to history.project.title + "/" + history.title, project_history_path(history.project.project_owner, history.project.title, history.phistory_id) %></p>
+        <p><%= link_to "#{history.project.title}/#{history.title}", project_history_path(history.project.user, history.project.title, history) %></p>
       <% end %>
       </div>
     </div>

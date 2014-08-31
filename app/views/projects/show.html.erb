@@ -9,7 +9,7 @@
 
   <div>
     <h1>History List</h1>
-    <%= link_to 'New History', new_project_history_path(@project.project_owner,@project.title), class: "btn btn-default float-right" %>
+    <%= link_to 'New History', new_project_history_path(@project.user, @project), class: "btn btn-default float-right" %>
   </div>
 
   <table id="histories" class="table table-condensed table-hover">
@@ -27,14 +27,14 @@
     <tbody>
       <% @histories.each do |history| %>
         <tr onmouseover="" style="cursor: pointer;">
-          <%= link_to project_history_path(@project.project_owner,@project.title,history.phistory_id) do %>
+          <%= link_to project_history_path(@project.user, @project, history) do %>
             <td><%= history.title %></td>
             <td><%= history.description %></td>
             <td><%= history.evented_at.strftime('%m/%d/%Y') %></td>
             <td class="text-center">
-              <%= link_to 'Show', project_history_path(@project.project_owner,@project.title,history.phistory_id), class: "btn btn-default show-history hidden"%>
-              <%= link_to 'Edit', edit_project_history_path(@project.project_owner,@project.title,history.phistory_id), class: "btn btn-default" %>
-              <%= link_to 'Delete', project_history_path(@project.project_owner,@project.title,history.phistory_id), method: :delete, class: "btn btn-default" %></td>
+              <%= link_to 'Show', project_history_path(@project.user, @project, history), class: "btn btn-default show-history hidden"%>
+              <%= link_to 'Edit', edit_project_history_path(@project.user, @project, history), class: "btn btn-default" %>
+              <%= link_to 'Delete', project_history_path(@project.user, @project, history), method: :delete, class: "btn btn-default" %></td>
           <% end %>
         </tr>
         
@@ -61,14 +61,14 @@
     <tbody>
       <% current_user.assigned_histories.where(project_id: @project.id).each do |history| %>
         <tr onmouseover="" style="cursor: pointer;">
-          <%= link_to project_history_path(@project.project_owner,@project.title,history.phistory_id) do %>
+          <%= link_to project_history_path(@project.user, @project, history) do %>
             <td><%= history.title %></td>
             <td><%= history.description %></td>
             <td><%= history.evented_at.strftime('%m/%d/%Y') %></td>
             <td class="text-center">
-              <%= link_to 'Show', project_history_path(@project.project_owner,@project.title,history.phistory_id), class: "btn btn-default show-history hidden"%>
-              <%= link_to 'Edit', edit_project_history_path(@project.project_owner,@project.title,history.phistory_id), class: "btn btn-default" %>
-              <%= link_to 'Delete', project_history_path(@project.project_owner,@project.title,history.phistory_id), method: :delete, class: "btn btn-default" %></td>
+              <%= link_to 'Show', project_history_path(@project.user, @project, history), class: "btn btn-default show-history hidden"%>
+              <%= link_to 'Edit', edit_project_history_path(@project.user, @project, history), class: "btn btn-default" %>
+              <%= link_to 'Delete', project_history_path(@project.user, @project, history), method: :delete, class: "btn btn-default" %></td>
           <% end %>
         </tr>
         

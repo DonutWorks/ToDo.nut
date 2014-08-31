@@ -44,7 +44,7 @@ class ProjectsController < ApplicationController
 
     if @project.update(project_params)
       SlackNotifier.notify("프로젝트가 수정되었어용 : #{@project.title} (#{project_url(@project.project_owner, @project.title)})")
-      redirect_to detail_project_path(@project.project_owner, @project.title)
+      redirect_to detail_project_path(@project.user, @project)
     else
       render 'edit'
     end

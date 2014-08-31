@@ -9,10 +9,10 @@ class BaseDecorator < Draper::Decorator
       h.link_to match, show_user_path(user)
     end
     ReferenceCheck::ForHistory.replace!(project, content) do |history, match|
-      h.link_to "#{history.title}(#{match})", project_history_path(project.project_owner, project.title, history.phistory_id)
+      h.link_to "#{history.title}(#{match})", project_history_path(project.user, project, history)
     end
     ReferenceCheck::ForTodo.replace!(project, content) do |todo, match|
-      h.link_to "#{todo.title}(#{match})", project_todo_path(project.project_owner, project.title, todo.ptodo_id)
+      h.link_to "#{todo.title}(#{match})", project_todo_path(project.user, project, todo)
     end
     content
   end

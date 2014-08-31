@@ -1,6 +1,6 @@
 <div class="form-container">
   
-  <%= form_for [@project, @history], :url => project_history_path(@project.project_owner, @project.title, @history.phistory_id), :role => 'form' do |f|%>
+  <%= form_for [@project, @history], :url => project_history_path(@project.user, @project, @history), :role => 'form' do |f|%>
     <%= render :partial => 'form', :locals => {:f =>f } %>
   <% end %>
 
