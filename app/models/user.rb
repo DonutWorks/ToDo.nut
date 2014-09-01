@@ -53,13 +53,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def merge(id, provider, uid)
-    user = User.find(id)
-    user.provider = provider
-    user.uid = uid
-    user.save!
-  end
-
   def update_from_twitter(id, email)
     user = User.find(id)
     user.email = email

@@ -16,7 +16,7 @@
 		<%= f.email_field :email, autofocus: true, class: "form-control"  %>
 	</div>
 
-	<% if f.error_message_on(:nickname) == "" %>
+	<% if f.error_message_on(:nickname).blank? %>
 		<%= f.hidden_field :nickname, value: @user.nickname %>
 	<% else %>
 		<div class="form-group">
