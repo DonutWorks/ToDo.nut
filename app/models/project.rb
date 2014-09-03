@@ -11,13 +11,27 @@ class Project < ActiveRecord::Base
     self.nickname
   end
 
-  
+  def find_todo(pid)
+    todos.find_by_ptodo_id(pid).decorate
+  end
 
+  def find_history(pid)
+    histories.find_by_phistory_id(pid).decorate
+  end
+
+  def to_param
+    title
+  end
 
   def fetch_members_by_nickname(nickname, count)
     members = assignees.arel_table
-    
     assignees.where(members[:nickname].matches("%#{nickname}%")).take(count)
   end
-  
+
+  def assign_users_with_ids!(user_ids)
+    assignees.destroy_all
+    user_ids.each do |user_id|
+      project_users.build(assignee_id: user_id)
+    end unless user_ids.nil?
+  end
 end

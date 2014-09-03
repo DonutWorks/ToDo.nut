@@ -38,6 +38,7 @@ module ReferenceCheck
       referenced.flatten!.map! do |term|
         find_method(project, term)
       end if !referenced.empty?
+      referenced
     end
 
     def self.pattern(pattern)

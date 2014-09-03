@@ -7,11 +7,11 @@ class CommentsController < ApplicationController
 
   def create
     @comment = Comment.new(comment_params)
-    @comment.user_id = current_user.id
-    @comment.history_id = @history.id
+    @comment.user = current_user
+    @comment.history = @history
 
     if @comment.save
-      redirect_to project_history_path(@project.project_owner, @project.title,params[:history_phistory_id]) 
+      redirect_to project_history_path(@project.user, @project, @history) 
     else 
       render 'new'
     end
@@ -22,26 +22,22 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-    
     @comment = @history.comments.find(params[:id])
     @comment.destroy
 
-    redirect_to project_history_path(@project.project_owner, @project.title,params[:history_phistory_id]) 
-
+    redirect_to project_history_path(@project.user, @project, @history) 
   end
-
 
 private
   def comment_params
     params.require(:comment).permit(:contents)
-    
   end
 
   def find_project
-    @project = current_user.assigned_projects.find_by_title(params[:project_title])
+    @project = current_user.find_project(params[:project_title])
   end
 
   def find_history
-    @history = @project.histories.find_by_phistory_id(params[:history_phistory_id])
+    @history = @project.find_history(params[:history_phistory_id])
   end
 end

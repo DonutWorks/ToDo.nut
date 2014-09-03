@@ -3,47 +3,38 @@ class TodosController < ApplicationController
   before_action :find_project
   respond_to :json
 
-
   def new
     @todo = Todo.new
-  
   end
 
   def create
     @todo = Todo.new(todo_params)
-    @todo.user_id = current_user.id
-    @todo.project_id = @project.id
-
+    @todo.user = current_user
+    @todo.project = @project
     
     if @todo.save
-      #url_helper -> project_todo_url is okay?
-
-      SlackNotifier.notify("투두가 추가되었어용 : #{@todo.title} (#{Rails.application.routes.url_helpers.project_todo_url(@project.project_owner, @project.title, @todo)})")
+      SlackNotifier.notify("투두가 추가되었어용 : #{@todo.title} (#{project_todo_url(@project.user, @project, @todo)})")
       MailSender.send_email_when_create(@current_user.email, @todo)
-      redirect_to project_path(@project.project_owner, @project.title)
+      redirect_to project_path(@project.user, @project)
     else 
       render 'new'
     end 
   end
 
   def show
-
-    @todo = TodoDecorator.find_by_ptodo_id(params[:ptodo_id])
-
-  
+    @todo = @project.find_todo(params[:ptodo_id])
   end
 
-  def edit
-    
-    @todo = @project.todos.find_by_ptodo_id(params[:ptodo_id])
+  def edit 
+    @todo = @project.find_todo(params[:ptodo_id])
   end
 
   def update 
-    @todo = @project.todos.find_by_ptodo_id(params[:ptodo_id])
+    @todo = @project.find_todo(params[:ptodo_id])
     
     if @todo.update(todo_params)
-      SlackNotifier.notify("투두가 추가되었어용 : #{@todo.title} (#{Rails.application.routes.url_helpers.project_todo_url(@project.project_owner, @project.title, @todo)})")
-      redirect_to project_path(@project.project_owner, @project.title)
+      SlackNotifier.notify("투두가 추가되었어용 : #{@todo.title} (#{project_todo_url(@project.user, @project, @todo)})")
+      redirect_to project_path(@project.user, @project)
     else
       render 'edit'
     end
@@ -61,7 +52,6 @@ private
   end
 
   def find_project
-    
-    @project = current_user.assigned_projects.find_by_title(params[:project_title])
+    @project = current_user.find_project(params[:project_title])
   end
 end

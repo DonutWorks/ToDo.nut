@@ -21,12 +21,12 @@ Rails.application.routes.draw do
   #resources :users, only: [:show]
 
   get 'projects/new', to: 'projects#new', as: 'new_project'
-  
-  
-  resources :projects, :path =>'/:creator', param: :title do
+
+  scope ':project_owner' do
+  resources :projects, param: :title, path: '/' do
     resources :todos, param: :ptodo_id do
       collection do
-        get 'list(/:id)', action: 'list', defaults: {format: 'json'}
+        get 'list(/:ptodo_id)', action: 'list', defaults: {format: 'json'}
       end
     end
 
@@ -41,8 +41,8 @@ Rails.application.routes.draw do
       get 'detail'
       get 'members(/:nickname)', action: 'members', as: 'members', defaults: {format: 'json'}
     end
-
   end
+end
 
   root 'projects#index'
 end
